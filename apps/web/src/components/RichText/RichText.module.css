@@ -21,3 +21,9 @@
   text-decoration-color: var(--accent);
   text-underline-offset: 0.15em;
 }
+
+.root u {
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}

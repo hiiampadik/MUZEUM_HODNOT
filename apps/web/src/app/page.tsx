@@ -149,7 +149,7 @@ export default async function HomePage() {
       )}
 
       {/* Project intro bubble */}
-      {(home?.introTitle || home?.introExcerpt) && (
+      {(home?.introTitle || home?.intro) && (
         <Container>
           <div className={styles.bubble} style={{ '--accent': accents.home } as CSSProperties}>
             <div className={styles.bubbleBody}>
@@ -158,7 +158,7 @@ export default async function HomePage() {
                   {home.introTitle}
                 </Title>
               )}
-              <IntroBubble excerpt={home?.introExcerpt} rest={home?.introRest} />
+              <IntroBubble value={home?.intro} />
             </div>
             {home?.introImage?.asset?._id && (
               <div className={styles.bubbleAside}>

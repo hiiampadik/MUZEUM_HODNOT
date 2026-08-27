@@ -8,6 +8,7 @@ const components: PortableTextComponents = {
     link: ({ children, value }) => (
       <Link href={(value as { href: string })?.href ?? '#'}>{children}</Link>
     ),
+    underline: ({ children }) => <u>{children}</u>,
   },
 };
 

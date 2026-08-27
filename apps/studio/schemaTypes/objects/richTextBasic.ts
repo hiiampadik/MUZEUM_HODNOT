@@ -17,6 +17,7 @@ export const richTextBasic = defineType({
         decorators: [
           { title: 'Tučné', value: 'strong' },
           { title: 'Kurzíva', value: 'em' },
+          { title: 'Podčiarknuté', value: 'underline' },
         ],
         annotations: [
           {

@@ -58,9 +58,8 @@ export const HOME_QUERY = defineQuery(/* groq */ `
     ${coverFields},
     introTitle,
     introImage{ ${imageFields} },
-    introExcerpt,
-    introRest,
-    "metaDescription": pt::text(introExcerpt)
+    intro,
+    "metaDescription": pt::text(intro)
   }
 `);
 

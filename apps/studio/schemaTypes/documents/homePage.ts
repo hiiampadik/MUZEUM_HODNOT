@@ -32,16 +32,11 @@ export const homePage = defineType({
       description: 'Dekoratívny obrázok vedľa textu.',
     }),
     defineField({
-      name: 'introExcerpt',
-      title: 'Popis projektu — úvod',
+      name: 'intro',
+      title: 'Popis projektu',
       type: 'richTextBasic',
-      description: 'Časť textu, ktorá sa zobrazí hneď.',
-    }),
-    defineField({
-      name: 'introRest',
-      title: 'Popis projektu — pokračovanie',
-      type: 'richTextBasic',
-      description: 'Zvyšok textu skrytý za tlačidlom „Rozbaliť".',
+      description:
+        'Na webe sa zobrazí prvých ~15 riadkov, zvyšok sa postupne stratí a rozbalí tlačidlom.',
     }),
   ],
   preview: {

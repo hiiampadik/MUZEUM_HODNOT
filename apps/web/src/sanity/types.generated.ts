@@ -359,8 +359,7 @@ export type HomePage = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  introExcerpt?: RichTextBasic;
-  introRest?: RichTextBasic;
+  intro?: RichTextBasic;
 };
 
 export type SiteSettings = {
@@ -523,14 +522,13 @@ export type SETTINGS_QUERYResult =
     }
   | null;
 // Variable: HOME_QUERY
-// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
+// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    intro,    "metaDescription": pt::text(intro)  }
 export type HOME_QUERYResult =
   | {
       cover: null;
       introTitle: null;
       introImage: null;
-      introExcerpt: null;
-      introRest: null;
+      intro: null;
       metaDescription: string;
     }
   | {
@@ -549,8 +547,7 @@ export type HOME_QUERYResult =
       } | null;
       introTitle: null;
       introImage: null;
-      introExcerpt: null;
-      introRest: null;
+      intro: null;
       metaDescription: string;
     }
   | {
@@ -581,8 +578,7 @@ export type HOME_QUERYResult =
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
       } | null;
-      introExcerpt: RichTextBasic | null;
-      introRest: RichTextBasic | null;
+      intro: RichTextBasic | null;
       metaDescription: string;
     }
   | null;
@@ -1171,7 +1167,7 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
-    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
+    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
     '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "experientialEducation": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    "excerpt": pt::text(abstract),\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;

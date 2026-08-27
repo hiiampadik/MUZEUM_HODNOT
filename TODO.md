@@ -12,11 +12,11 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [~] `CLAUDE.md`, `README.md`, `TODO.md`
 
 ## Blok 1 — Scaffold & infrastruktura
-- [ ] `pnpm-workspace.yaml`, root `package.json`, `.gitignore`, `.editorconfig`
-- [ ] `apps/web` — Next.js App Router + TS, `output: 'export'`, image loader, `.nojekyll`
-- [ ] ESLint + Prettier
-- [ ] `apps/studio` — Sanity Studio kostra (`sanity.config.ts`)
-- [ ] `git init` + první commit
+- [x] `pnpm-workspace.yaml`, root `package.json`, `.gitignore`, `.editorconfig`
+- [x] `apps/web` — Next.js App Router + TS, `output: 'export'`, `.nojekyll` (image loader → Blok 4)
+- [x] ESLint + Prettier
+- [x] `apps/studio` — Sanity Studio kostra (`sanity.config.ts`)
+- [x] `git init` + první commit (větev `main`)
 
 ## Blok 2 — Design systém / tokeny  *(hodnoty po schválení Figmy)*
 - [ ] `tokens.css` — `--space-*`, `--color-*`, `--radius-*`, breakpointy
@@ -26,17 +26,18 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [ ] Globální paragrafové/typo třídy
 
 ## Blok 3 — Sanity schémata  *(struktura schválená)*
-- [ ] `siteSettings` — navigace + patička (sociální sítě, Partneri textblok)
-- [ ] `homePage` — cover, navigační dlaždice, bublina, sekce výstav
-- [ ] `exhibition` — místo, vernisáž, trvání (tag Aktuálne), role, cover, galerie, abstract,
-      materiály, odkazy, „Dále se podíleli", přepínač detailu
-- [ ] `contactPage` — telefon, email, adresa, admin údaje, lidé, cover
-- [ ] `experientialEducation` — cover + page builder
-- [ ] `valueGenerator` — cover + page builder + mapa (body)
-- [ ] Sdílené objekty: `coverImage`, `richTextBasic`, `richTextFull`, `materialFile`,
-      `namedLink`, `roleWithPeople`, `socialLink`, `mapPoint`, `tile`
-- [ ] Page builder bloky: `textBlock`, `heading`, `decorativeImage`, `tileBlock`, `materialsBlock`
-- [ ] `sanity typegen` → generované typy
+- [x] `siteSettings` — navigace (donate link) + patička (sociální sítě, Partneri textblok)
+- [x] `homePage` — cover, navigační dlaždice (`heroTile`), bublina (excerpt + rest)
+- [x] `exhibition` — místo, vernisáž, trvání (tag Aktuálne derivován), role, cover, galerie,
+      abstract, materiály, odkazy, „Dále se podíleli", přepínač detailu
+- [x] `contactPage` — telefon, email, adresa, admin údaje, lidé, cover
+- [x] `experientialEducation` — cover + page builder
+- [x] `valueGenerator` — cover + page builder + mapa (body s geopoint)
+- [x] Sdílené objekty: `coverImage`, `richTextBasic`, `richTextFull`, `materialFile`,
+      `namedLink`, `roleWithPeople`, `socialLink`, `galleryImage`, `person`, `mapPoint`, `heroTile`
+- [x] Page builder bloky: `textBlock`, `headingBlock`, `decorativeImage`, `tileBlock`, `materialsBlock`
+- [x] Studio structure — singletony (fixní ID, bez duplicit)
+- [ ] `sanity typegen` → generované typy *(potřebuje reálný projekt — Blok 4/8)*
 
 ## Blok 4 — Základní komponenty + datová vrstva
 - [ ] `Button`, `Link`, `Tile`, typo komponenty, `CoverImage` (gradient + placeholder ditheru)

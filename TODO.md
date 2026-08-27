@@ -57,10 +57,12 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] Zážitkové vzdelávanie `/zazitkove-vzdelavanie` (page builder)
 - [x] Generátor hodnôt `/generator-hodnot` (page builder + placeholder mapy → Blok 6)
 
-## Blok 6 — Speciální efekty  *(po vizuálním schválení)*
-- [ ] Dithering cover obrázků (WebGL shader overlay + fallback)
-- [ ] Mapa (MapLibre + Supercluster — clustering, zoom, popover)
-- [ ] Rozbalovací bublina na homepage
+## Blok 6 — Speciální efekty
+- [x] Dithering cover obrázků (canvas Bayer ordered dithering + fallback img)
+- [x] Mapa (MapLibre, vestavěný clustering, zoom na cluster, popover)
+- [x] Rozbalovací bublina na homepage (clamp ~15 řádků + fade + „Čítať viac")
+- [ ] Produkce: nahradit OSM raster dlaždice keyed providerem (MapTiler) — před Blokem 8
+- [ ] Doplnit body mapy v CMS (zatím prázdné)
 
 ## Blok 7 — A11Y, SEO, výkon
 - [x] Metadata (metadataBase, per-page OG z coveru), `sitemap.xml`, `robots.txt`,

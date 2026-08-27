@@ -1,7 +1,6 @@
 .footer {
   background: var(--color-surface);
   padding-block: var(--space-xl);
-  margin-top: var(--space-3xl);
 }
 
 .grid {

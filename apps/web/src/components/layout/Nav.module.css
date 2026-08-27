@@ -1,8 +1,15 @@
 .nav {
-  position: sticky;
+  position: fixed;
+  inset-inline: 0;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   padding-block: var(--space-md);
+  pointer-events: none;
+}
+
+/* Keep the pills clickable while the transparent bar ignores pointer events. */
+.inner > * {
+  pointer-events: auto;
 }
 
 .inner {

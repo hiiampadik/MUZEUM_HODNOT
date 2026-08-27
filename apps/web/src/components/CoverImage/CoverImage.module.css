@@ -11,6 +11,16 @@
   display: block;
 }
 
+/* Dithered canvas layered over the fallback image. */
+.ditherCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
 /* Gradient that fades the image out. Direction depends on placement. */
 .gradient {
   position: absolute;

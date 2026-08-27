@@ -1,4 +1,6 @@
 import { SanityImage, type SanityImageValue } from '../SanityImage/SanityImage';
+import { Dither } from '../Dither/Dither';
+import { urlFor } from '@/sanity/lib/image';
 import styles from './CoverImage.module.css';
 
 type CoverImageProps = {
@@ -10,8 +12,8 @@ type CoverImageProps = {
 };
 
 /**
- * Cover image with a fade-out gradient. Used at the top and bottom of pages.
- * The dithering effect (Blok 6) will attach to the `data-dither` element.
+ * Cover image with a fade-out gradient + dithering (Blok 6).
+ * The plain <img> is the SSR/no-JS fallback; the dithered <canvas> layers on top.
  */
 export function CoverImage({
   value,
@@ -19,7 +21,17 @@ export function CoverImage({
   priority,
   className,
 }: CoverImageProps) {
-  if (!value?.asset?._id) return null;
+  const assetId = value?.asset?._id;
+  if (!assetId) return null;
+
+  const ditherSrc = urlFor({
+    asset: { _ref: assetId },
+    hotspot: value?.hotspot ?? undefined,
+    crop: value?.crop ?? undefined,
+  })
+    .width(1400)
+    .auto('format')
+    .url();
 
   return (
     <div
@@ -35,6 +47,7 @@ export function CoverImage({
         priority={priority}
         className={styles.image}
       />
+      <Dither src={ditherSrc} className={styles.ditherCanvas} />
       <div className={styles.gradient} aria-hidden="true" />
     </div>
   );

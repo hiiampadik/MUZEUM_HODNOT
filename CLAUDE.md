@@ -49,8 +49,11 @@ packages/*     shared code (add when needed)
 - Images come from the Sanity CDN (`@sanity/image-url`) + a custom Next image loader (for static export).
 - **Cover image**: used both at the top and bottom of a page, with a linear gradient (top fades
   downward, bottom fades upward).
-- **Dithering** is applied in React (do not pre-process images) — a WebGL shader overlay,
-  with a fallback and respect for `prefers-reduced-motion`.
+- **Dithering** is applied in React (do not pre-process images): `Dither` draws the image to
+  a canvas with Bayer ordered dithering and layers over the plain `<img>` fallback (so no-JS /
+  CORS-tainted cases still show the image). Integrated in `CoverImage`.
+- **Map** (`ValueMap`, Generátor): MapLibre GL with built-in GeoJSON clustering, dynamically
+  imported client-side. Uses OSM raster tiles in dev — swap for a keyed provider in production.
 
 ## Conventions — Sanity
 - Before writing schemas/queries, load `get_schema` and the relevant Sanity Rules (`groq`, `nextjs`).

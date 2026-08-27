@@ -16,8 +16,8 @@
 .titleUnderline {
   text-decoration: underline;
   text-decoration-color: var(--accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.08em;
+  text-decoration-thickness: 2.4px;
+  text-underline-offset: 0.16em;
 }
 
 .label {

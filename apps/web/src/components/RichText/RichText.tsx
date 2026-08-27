@@ -12,7 +12,8 @@ const components: PortableTextComponents = {
 };
 
 type RichTextProps = {
-  value?: PortableTextBlock[] | null;
+  // Accepts the generated Portable Text array shapes from any query.
+  value?: readonly unknown[] | null;
   className?: string;
 };
 
@@ -21,7 +22,7 @@ export function RichText({ value, className }: RichTextProps) {
   if (!value || value.length === 0) return null;
   return (
     <div className={[styles.root, className].filter(Boolean).join(' ')}>
-      <PortableText value={value} components={components} />
+      <PortableText value={value as PortableTextBlock[]} components={components} />
     </div>
   );
 }

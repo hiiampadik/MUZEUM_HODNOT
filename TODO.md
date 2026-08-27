@@ -46,12 +46,12 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] Sanity client (build-time, static export) + `@sanity/image-url` + GROQ dotazy (8×) + typegen
 
 ## Blok 5 — Stránky
-- [ ] Root layout (nav + footer)
-- [ ] Homepage
-- [ ] Výstava — listing + detail (`generateStaticParams`)
-- [ ] Kontakt
-- [ ] Zážitkové vzdělávanie (page builder)
-- [ ] Generátor hodnôt (page builder)
+- [x] Root layout (Nav klient + Footer, skip-link, fetch settings+contact)
+- [x] Homepage (cover, hero dlaždice, intro bublina, výstavy active/upcoming/past)
+- [x] Výstava — detail `/vystava/[slug]` (`generateStaticParams` + sentinel pro 0 výstav)
+- [x] Kontakt `/kontakt`
+- [x] Zážitkové vzdelávanie `/zazitkove-vzdelavanie` (page builder)
+- [x] Generátor hodnôt `/generator-hodnot` (page builder + placeholder mapy → Blok 6)
 
 ## Blok 6 — Speciální efekty  *(po vizuálním schválení)*
 - [ ] Dithering cover obrázků (WebGL shader overlay + fallback)

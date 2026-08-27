@@ -1,0 +1,24 @@
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: var(--space-md);
+  margin-block: var(--space-2xl);
+}
+
+.intro {
+  margin-block: var(--space-2xl);
+}
+
+.section {
+  margin-block: var(--space-2xl);
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-lg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--space-lg);
+}

@@ -1,0 +1,23 @@
+.builder > * + * {
+  margin-top: var(--space-xl);
+}
+
+.heading {
+  margin-bottom: var(--space-sm);
+}
+
+/* Decorative image gets a frontend effect (refined in Blok 6). */
+.decorative {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tile {
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tile > * + * {
+  margin-top: var(--space-md);
+}

@@ -61,6 +61,16 @@ packages/*     shared code (add when needed)
 - Images: `SanityImage` (next/image + custom CDN loader in `src/sanity/imageLoader.ts`).
   Sizing is done by the loader via the Sanity CDN; the base URL keeps hotspot/crop.
 
+## Conventions — pages & routing
+- Routes + provisional section accent colors live in `src/lib/routes.ts`. Set the accent
+  per page via inline `style={{ '--accent': accents.x }}` on the page's `<main>`.
+- Slovak URL slugs: `/kontakt`, `/zazitkove-vzdelavanie`, `/generator-hodnot`, `/vystava/[slug]`.
+- Exhibition categories (active/upcoming/past) are derived at build time from dates in
+  `src/lib/exhibitions.ts` — not stored in the CMS.
+- `output: export` rejects an empty param list for a dynamic route. `/vystava/[slug]`
+  emits a `_none` placeholder (renders 404) when there are zero openable exhibitions, so
+  the first build on an empty dataset still succeeds.
+
 ## Conventions — A11Y & SEO
 - Meet A11Y (semantics, focus states, keyboard, contrast, alt texts from the CMS).
 - SEO: Next Metadata API, `sitemap.xml`, `robots.txt`, JSON-LD, `lang="sk"`.

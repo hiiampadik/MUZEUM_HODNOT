@@ -64,7 +64,8 @@ export const HOME_QUERY = defineQuery(/* groq */ `
       customLink
     },
     introExcerpt,
-    introRest
+    introRest,
+    "metaDescription": pt::text(introExcerpt)
   }
 `);
 
@@ -91,6 +92,14 @@ export const EXHIBITION_SLUGS_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// Exhibitions for the sitemap (with last-modified timestamps).
+export const EXHIBITION_SITEMAP_QUERY = defineQuery(/* groq */ `
+  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
 export const EXHIBITION_QUERY = defineQuery(/* groq */ `
   *[_type == "exhibition" && slug.current == $slug][0]{
     _id,
@@ -107,7 +116,8 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     abstract,
     materials[]{ ${materialFields} },
     links[]{ _key, label, href },
-    contributors[]{ _key, role, people }
+    contributors[]{ _key, role, people },
+    "metaDescription": pt::text(abstract)
   }
 `);
 

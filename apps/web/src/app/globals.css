@@ -14,6 +14,19 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+/* Offset in-page anchors for the sticky nav. */
+:target {
+  scroll-margin-top: 72px;
+}
+
+/* Baseline keyboard focus indicator (components may override). */
+:focus-visible {
+  outline: 2px solid var(--accent, currentColor);
+  outline-offset: 2px;
 }
 
 body {
@@ -70,4 +83,22 @@ select {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Skip link: hidden until focused, then visible at the top-left. */
+.skip-link {
+  position: absolute;
+  left: var(--space-sm);
+  top: var(--space-sm);
+  z-index: 100;
+  padding: var(--space-2xs) var(--space-sm);
+  background: var(--color-fg);
+  color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }

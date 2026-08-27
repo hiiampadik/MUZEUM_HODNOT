@@ -6,9 +6,18 @@ import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { Heading } from '@/components/Typography/Typography';
-import { accents } from '@/lib/routes';
+import { accents, routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/metadata';
+import { ogImageUrl } from '@/sanity/lib/og';
 
-export const metadata: Metadata = { title: 'Zážitkové vzdelávanie' };
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
+  return pageMetadata({
+    title: 'Zážitkové vzdelávanie',
+    image: ogImageUrl(page?.cover),
+    path: routes.experientialEducation,
+  });
+}
 
 export default async function ExperientialEducationPage() {
   const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);

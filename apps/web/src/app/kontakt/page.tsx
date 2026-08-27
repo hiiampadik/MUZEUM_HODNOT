@@ -8,10 +8,19 @@ import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { RichText } from '@/components/RichText/RichText';
 import { Link } from '@/components/Link/Link';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
-import { accents } from '@/lib/routes';
+import { accents, routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/metadata';
+import { ogImageUrl } from '@/sanity/lib/og';
 import styles from './contact.module.css';
 
-export const metadata: Metadata = { title: 'Kontakt' };
+export async function generateMetadata(): Promise<Metadata> {
+  const contact = await client.fetch(CONTACT_QUERY);
+  return pageMetadata({
+    title: 'Kontakt',
+    image: ogImageUrl(contact?.cover),
+    path: routes.contact,
+  });
+}
 
 export default async function ContactPage() {
   const contact = await client.fetch(CONTACT_QUERY);

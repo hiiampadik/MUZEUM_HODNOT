@@ -59,9 +59,11 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [ ] Rozbalovací bublina na homepage
 
 ## Blok 7 — A11Y, SEO, výkon
-- [ ] Metadata, OG, `sitemap.xml`, `robots.txt`, JSON-LD, `lang="sk"`
-- [ ] Responzivita 320px, kontrast, focus, klávesnice, `prefers-reduced-motion`
-- [ ] axe / Lighthouse audit
+- [x] Metadata (metadataBase, per-page OG z coveru), `sitemap.xml`, `robots.txt`,
+      JSON-LD (Organization + ExhibitionEvent), `lang="sk"`, canonical
+- [x] Skip-link, focus-visible baseline, `scroll-margin`, `prefers-reduced-motion`
+- [ ] `NEXT_PUBLIC_SITE_URL` na produkční doménu (→ Blok 8)
+- [ ] axe / Lighthouse audit *(až s reálným obsahem a schváleným designem)*
 
 ## Blok 8 — Deploy & DNS
 - [ ] Sanity projekt + dataset `production` + CORS

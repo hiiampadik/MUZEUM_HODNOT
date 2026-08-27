@@ -612,13 +612,14 @@ export type SETTINGS_QUERYResult =
     }
   | null;
 // Variable: HOME_QUERY
-// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    heroTiles[]{      _key,      target,      title,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      customLink    },    introExcerpt,    introRest  }
+// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    heroTiles[]{      _key,      target,      title,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      customLink    },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
 export type HOME_QUERYResult =
   | {
       cover: null;
       heroTiles: null;
       introExcerpt: null;
       introRest: null;
+      metaDescription: string;
     }
   | {
       cover: {
@@ -637,6 +638,7 @@ export type HOME_QUERYResult =
       heroTiles: null;
       introExcerpt: null;
       introRest: null;
+      metaDescription: string;
     }
   | {
       cover: {
@@ -673,6 +675,7 @@ export type HOME_QUERYResult =
       }> | null;
       introExcerpt: RichTextBasic | null;
       introRest: RichTextBasic | null;
+      metaDescription: string;
     }
   | null;
 // Variable: EXHIBITIONS_QUERY
@@ -705,8 +708,14 @@ export type EXHIBITIONS_QUERYResult = Array<{
 export type EXHIBITION_SLUGS_QUERYResult = Array<{
   slug: string | null;
 }>;
+// Variable: EXHIBITION_SITEMAP_QUERY
+// Query: *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{    "slug": slug.current,    _updatedAt  }
+export type EXHIBITION_SITEMAP_QUERYResult = Array<{
+  slug: string | null;
+  _updatedAt: string;
+}>;
 // Variable: EXHIBITION_QUERY
-// Query: *[_type == "exhibition" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    roles[]{ _key, role, people },    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    gallery[]{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop, photographer },    abstract,    materials[]{   _key,  title,  "url": file.asset->url,  "extension": file.asset->extension,  "size": file.asset->size },    links[]{ _key, label, href },    contributors[]{ _key, role, people }  }
+// Query: *[_type == "exhibition" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    roles[]{ _key, role, people },    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    gallery[]{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop, photographer },    abstract,    materials[]{   _key,  title,  "url": file.asset->url,  "extension": file.asset->extension,  "size": file.asset->size },    links[]{ _key, label, href },    contributors[]{ _key, role, people },    "metaDescription": pt::text(abstract)  }
 export type EXHIBITION_QUERYResult = {
   _id: string;
   title: string | null;
@@ -766,6 +775,7 @@ export type EXHIBITION_QUERYResult = {
     role: string | null;
     people: string | null;
   }> | null;
+  metaDescription: string;
 } | null;
 // Variable: CONTACT_QUERY
 // Query: *[_id == "contactPage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    phone,    email,    address,    administrativeInfo,    people[]{      _key,      name,      position,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }    }  }
@@ -1239,10 +1249,11 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
-    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    heroTiles[]{\n      _key,\n      target,\n      title,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      customLink\n    },\n    introExcerpt,\n    introRest\n  }\n': HOME_QUERYResult;
+    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    heroTiles[]{\n      _key,\n      target,\n      title,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      customLink\n    },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;
-    '\n  *[_type == "exhibition" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    gallery[]{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer },\n    abstract,\n    materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n },\n    links[]{ _key, label, href },\n    contributors[]{ _key, role, people }\n  }\n': EXHIBITION_QUERYResult;
+    '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': EXHIBITION_SITEMAP_QUERYResult;
+    '\n  *[_type == "exhibition" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    gallery[]{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer },\n    abstract,\n    materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n },\n    links[]{ _key, label, href },\n    contributors[]{ _key, role, people },\n    "metaDescription": pt::text(abstract)\n  }\n': EXHIBITION_QUERYResult;
     '\n  *[_id == "contactPage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    phone,\n    email,\n    address,\n    administrativeInfo,\n    people[]{\n      _key,\n      name,\n      position,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n    }\n  }\n': CONTACT_QUERYResult;
     '\n  *[_id == "experientialEducation"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n\n  }\n': EXPERIENTIAL_EDUCATION_QUERYResult;
     '\n  *[_id == "valueGenerator"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n,\n    mapPoints[]{\n      _key,\n      title,\n      location,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      text,\n      link\n    }\n  }\n': VALUE_GENERATOR_QUERYResult;

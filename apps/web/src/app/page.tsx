@@ -1,6 +1,10 @@
 import type { CSSProperties } from 'react';
+import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
 import { HOME_QUERY, EXHIBITIONS_QUERY } from '@/sanity/queries';
+import { ogImageUrl } from '@/sanity/lib/og';
+import { siteUrl } from '@/sanity/env';
+import { pageMetadata } from '@/lib/metadata';
 import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { Tile } from '@/components/Tile/Tile';
@@ -15,6 +19,22 @@ const tileHref: Record<string, string> = {
   valueGenerator: routes.valueGenerator,
   experientialEducation: routes.experientialEducation,
   exhibitions: '#vystavy',
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await client.fetch(HOME_QUERY);
+  return pageMetadata({
+    description: home?.metaDescription,
+    image: ogImageUrl(home?.cover),
+    path: routes.home,
+  });
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Múzeum hodnôt',
+  url: siteUrl,
 };
 
 export default async function HomePage() {
@@ -33,6 +53,10 @@ export default async function HomePage() {
 
   return (
     <main style={{ '--accent': accents.home } as CSSProperties}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {home?.cover && <CoverImage value={home.cover} placement="top" priority />}
 
       <Container>

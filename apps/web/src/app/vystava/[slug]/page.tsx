@@ -13,7 +13,9 @@ import { RichText } from '@/components/RichText/RichText';
 import { Materials } from '@/components/Materials/Materials';
 import { Link } from '@/components/Link/Link';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
-import { accents } from '@/lib/routes';
+import { accents, routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/metadata';
+import { ogImageUrl } from '@/sanity/lib/og';
 import { formatDate, formatDateRange } from '@/lib/format';
 import styles from './exhibition.module.css';
 
@@ -38,7 +40,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const exhibition = await client.fetch(EXHIBITION_QUERY, { slug });
-  return { title: exhibition?.title ?? 'Výstava' };
+  return pageMetadata({
+    title: exhibition?.title ?? 'Výstava',
+    description: exhibition?.metaDescription,
+    image: ogImageUrl(exhibition?.cover),
+    path: routes.exhibition(slug),
+  });
 }
 
 export default async function ExhibitionPage({
@@ -66,8 +73,23 @@ export default async function ExhibitionPage({
     contributors,
   } = exhibition;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ExhibitionEvent',
+    name: title,
+    ...(startDate && { startDate }),
+    ...(endDate && { endDate }),
+    ...(place && { location: { '@type': 'Place', name: place } }),
+    ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
+    ...(ogImageUrl(cover) && { image: ogImageUrl(cover) }),
+  };
+
   return (
     <main style={{ '--accent': accents.exhibition } as CSSProperties}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {cover && <CoverImage value={cover} placement="top" priority />}
 
       <Container width="narrow">

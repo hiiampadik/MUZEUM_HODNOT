@@ -7,9 +7,18 @@ import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { ValueMap } from '@/components/ValueMap/ValueMap';
 import { Heading, Title } from '@/components/Typography/Typography';
-import { accents } from '@/lib/routes';
+import { accents, routes } from '@/lib/routes';
+import { pageMetadata } from '@/lib/metadata';
+import { ogImageUrl } from '@/sanity/lib/og';
 
-export const metadata: Metadata = { title: 'Generátor hodnôt' };
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await client.fetch(VALUE_GENERATOR_QUERY);
+  return pageMetadata({
+    title: 'Generátor hodnôt',
+    image: ogImageUrl(page?.cover),
+    path: routes.valueGenerator,
+  });
+}
 
 export default async function ValueGeneratorPage() {
   const page = await client.fetch(VALUE_GENERATOR_QUERY);

@@ -1,4 +1,4 @@
-import { SanityImage, type SanityImageValue } from '../SanityImage/SanityImage';
+import type { SanityImageValue } from '../SanityImage/SanityImage';
 import { Dither } from '../Dither/Dither';
 import { urlFor } from '@/sanity/lib/image';
 import styles from './CoverImage.module.css';
@@ -13,7 +13,8 @@ type CoverImageProps = {
 
 /**
  * Cover image with a fade-out gradient + dithering (Blok 6).
- * The plain <img> is the SSR/no-JS fallback; the dithered <canvas> layers on top.
+ * `Dither` renders the plain <img> (instant fallback) and a dithered <canvas>
+ * over it, both driven by the same single image request.
  */
 export function CoverImage({
   value,
@@ -24,12 +25,12 @@ export function CoverImage({
   const assetId = value?.asset?._id;
   if (!assetId) return null;
 
-  const ditherSrc = urlFor({
+  const src = urlFor({
     asset: { _ref: assetId },
     hotspot: value?.hotspot ?? undefined,
     crop: value?.crop ?? undefined,
   })
-    .width(1400)
+    .width(1800)
     .auto('format')
     .url();
 
@@ -40,14 +41,14 @@ export function CoverImage({
         .join(' ')}
       data-dither
     >
-      <SanityImage
-        value={value}
-        width={2000}
-        sizes="100vw"
+      <Dither
+        src={src}
+        alt={value?.alt ?? ''}
         priority={priority}
-        className={styles.image}
+        placement={placement}
+        imgClassName={styles.image}
+        canvasClassName={styles.ditherCanvas}
       />
-      <Dither src={ditherSrc} className={styles.ditherCanvas} />
       <div className={styles.gradient} aria-hidden="true" />
     </div>
   );

@@ -5,58 +5,101 @@ import { useEffect, useRef } from 'react';
 type DitherProps = {
   /** Source image URL (Sanity CDN, CORS-enabled). */
   src: string;
-  className?: string;
-  /** Quantization levels per channel (lower = stronger effect). */
+  alt?: string;
+  priority?: boolean;
+  /** Fade direction baked into the canvas: top fades down, bottom fades up. */
+  placement?: 'top' | 'bottom';
+  imgClassName?: string;
+  canvasClassName?: string;
+  /** Dither pixel size (Figma "Size"). Higher = chunkier. */
+  size?: number;
+  /** Quantization levels per channel (Figma "Levels"). */
   levels?: number;
 };
 
-// 4×4 Bayer ordered-dither threshold matrix, normalized to [0,1).
+// 4×4 Bayer ordered-dither threshold matrix, normalized to [-0.5, 0.5).
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(
   (v) => v / 16 - 0.5,
 );
 
+function readBg(el: Element): [number, number, number] {
+  const raw = getComputedStyle(el).getPropertyValue('--color-bg').trim() || '#ececf0';
+  const hex = raw.replace('#', '');
+  const n = parseInt(
+    hex.length === 3
+      ? hex
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : hex,
+    16,
+  );
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
 /**
- * Progressive-enhancement dithering overlay: draws the image to a canvas and
- * applies ordered (Bayer) dithering. Rendered on top of a plain <img> fallback,
- * so if canvas/CORS fails or JS is off, the original image still shows.
+ * Renders the plain <img> (instant, SSR/no-JS fallback) plus a <canvas> that
+ * composites a fade gradient onto the same image and then applies ordered
+ * (Bayer) dithering — so the fade dissolves in dithered dots, matching Figma.
  */
-export function Dither({ src, className, levels = 4 }: DitherProps) {
+export function Dither({
+  src,
+  alt = '',
+  priority,
+  placement = 'top',
+  imgClassName,
+  canvasClassName,
+  size = 2,
+  levels = 3,
+}: DitherProps) {
+  const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const img = imgRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) return;
+    if (!img || !canvas) return;
+    const container = canvas.parentElement;
+    if (!container) return;
 
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    let cancelled = false;
+    function draw() {
+      if (!img || !canvas || !container || !img.naturalWidth) return;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
 
-    function render() {
-      if (cancelled || !canvas || !ctx || !img.naturalWidth) return;
-      const parent = canvas.parentElement;
-      if (!parent) return;
-
-      // Cap resolution for a one-time CPU pass; CSS scales the canvas to fill.
-      const maxW = 1400;
-      const cw = Math.min(parent.clientWidth || img.naturalWidth, maxW);
-      const scale = cw / img.naturalWidth;
-      const ch = Math.round(img.naturalHeight * scale);
+      const rect = container.getBoundingClientRect();
+      const cw = Math.max(1, Math.round(rect.width / size));
+      const ch = Math.max(1, Math.round(rect.height / size));
+      if (cw < 2 || ch < 2) return;
       canvas.width = cw;
       canvas.height = ch;
 
-      ctx.drawImage(img, 0, 0, cw, ch);
+      // Cover-fit the image into the canvas.
+      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const dw = img.naturalWidth * s;
+      const dh = img.naturalHeight * s;
+      ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
 
+      // Bake the fade gradient (toward the page background) onto the image.
+      const [r, g, b] = readBg(container);
+      const grad = ctx.createLinearGradient(0, 0, 0, ch);
+      if (placement === 'top') {
+        grad.addColorStop(0.4, `rgba(${r},${g},${b},0)`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},1)`);
+      } else {
+        grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
+        grad.addColorStop(0.6, `rgba(${r},${g},${b},0)`);
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, cw, ch);
+
+      // Ordered dithering over the composited pixels.
       let image: ImageData;
       try {
         image = ctx.getImageData(0, 0, cw, ch);
       } catch {
-        // Tainted canvas (CORS) — leave the fallback <img> visible.
-        canvas.style.opacity = '0';
-        return;
+        return; // tainted — keep the <img> visible
       }
-
       const d = image.data;
       const step = levels - 1;
       for (let y = 0; y < ch; y++) {
@@ -71,23 +114,34 @@ export function Dither({ src, className, levels = 4 }: DitherProps) {
         }
       }
       ctx.putImageData(image, 0, 0);
-      canvas.style.opacity = '1';
+      canvas.classList.add('is-ready');
     }
 
-    img.onload = render;
-    img.onerror = () => {
-      if (canvas) canvas.style.opacity = '0';
-    };
-    img.src = src;
-
-    const ro = new ResizeObserver(() => render());
-    if (canvas.parentElement) ro.observe(canvas.parentElement);
+    if (img.complete) draw();
+    img.addEventListener('load', draw);
+    const ro = new ResizeObserver(() => draw());
+    ro.observe(container);
 
     return () => {
-      cancelled = true;
+      img.removeEventListener('load', draw);
       ro.disconnect();
     };
-  }, [src, levels]);
+  }, [src, size, levels, placement]);
 
-  return <canvas ref={canvasRef} aria-hidden="true" className={className} style={{ opacity: 0 }} />;
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        crossOrigin="anonymous"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
+        className={imgClassName}
+      />
+      <canvas ref={canvasRef} aria-hidden="true" className={canvasClassName} />
+    </>
+  );
 }

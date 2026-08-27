@@ -1,8 +1,11 @@
+import { Container } from '@/components/Container/Container';
+import { Heading, Text } from '@/components/Typography/Typography';
+
 export default function HomePage() {
   return (
-    <main style={{ padding: 'var(--space-xl)' }}>
-      <h1>Múzeum hodnôt</h1>
-      <p>Scaffold beží. Obsah pridáme v ďalších blokoch.</p>
-    </main>
+    <Container as="main">
+      <Heading>Múzeum hodnôt</Heading>
+      <Text>Obsah domovskej stránky pridáme v ďalšom bloku.</Text>
+    </Container>
   );
 }

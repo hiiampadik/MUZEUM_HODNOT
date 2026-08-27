@@ -37,12 +37,13 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
       `namedLink`, `roleWithPeople`, `socialLink`, `galleryImage`, `person`, `mapPoint`, `heroTile`
 - [x] Page builder bloky: `textBlock`, `headingBlock`, `decorativeImage`, `tileBlock`, `materialsBlock`
 - [x] Studio structure — singletony (fixní ID, bez duplicit)
-- [ ] `sanity typegen` → generované typy *(potřebuje reálný projekt — Blok 4/8)*
+- [x] `sanity typegen` → generované typy (`apps/web/src/sanity/types.generated.ts`)
 
 ## Blok 4 — Základní komponenty + datová vrstva
-- [ ] `Button`, `Link`, `Tile`, typo komponenty, `CoverImage` (gradient + placeholder ditheru)
-- [ ] `PortableText` renderery (`richTextBasic` / `richTextFull`)
-- [ ] Sanity client + `@sanity/image-url` + GROQ dotazy
+- [x] `Button`, `Link`, `Tile`, `Container` (3 šířky), typo komponenty (`Heading/Title/Label/Text`)
+- [x] `SanityImage` (custom loader) + `CoverImage` (gradient + placeholder ditheru)
+- [x] `RichText` PortableText renderer (`richTextBasic` / `richTextFull`)
+- [x] Sanity client (build-time, static export) + `@sanity/image-url` + GROQ dotazy (8×) + typegen
 
 ## Blok 5 — Stránky
 - [ ] Root layout (nav + footer)

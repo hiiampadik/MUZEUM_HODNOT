@@ -9,4 +9,5 @@ export default defineCliConfig({
     dataset,
   },
   autoUpdates: true,
+  // TypeGen config lives in sanity-typegen.json (read by the CLI version in use).
 });

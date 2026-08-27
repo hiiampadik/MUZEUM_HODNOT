@@ -45,6 +45,21 @@ importers:
 
   apps/web:
     dependencies:
+      '@portabletext/react':
+        specifier: ^3.2.0
+        version: 3.2.4(react@19.2.8)
+      '@portabletext/types':
+        specifier: ^2.0.13
+        version: 2.0.15
+      '@sanity/client':
+        specifier: ^7.6.0
+        version: 7.26.2
+      '@sanity/image-url':
+        specifier: ^1.1.0
+        version: 1.2.0
+      groq:
+        specifier: ^3.99.0
+        version: 3.99.0
       next:
         specifier: ^15.5.0
         version: 15.5.24(@types/node@22.20.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

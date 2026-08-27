@@ -15,9 +15,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 
   images: {
-    // No Next.js image optimization server in a static export.
-    // Responsive images are handled via the Sanity CDN (@sanity/image-url).
-    unoptimized: true,
+    // No Next.js optimization server in a static export — resize via the Sanity
+    // CDN through a custom loader (still emits a responsive srcset).
+    loader: 'custom',
+    loaderFile: './src/sanity/imageLoader.ts',
   },
 
   // Custom domain serves from the root, so no basePath is required.

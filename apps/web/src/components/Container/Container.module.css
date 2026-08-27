@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* Full-bleed with inner padding (e.g. exhibition gallery). */
+.full {
+  max-width: none;
+}
+
+/* Most blocks and the 3-column layout. */
+.content {
+  max-width: calc(var(--width-content) + 2 * var(--container-padding));
+}
+
+/* Reading width: exhibition body, education, value generator. */
+.narrow {
+  max-width: calc(var(--width-narrow) + 2 * var(--container-padding));
+}

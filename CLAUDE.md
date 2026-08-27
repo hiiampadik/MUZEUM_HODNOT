@@ -51,7 +51,15 @@ packages/*     shared code (add when needed)
 - Singletons (homePage, contactPage, siteSettings, experientialEducation, valueGenerator)
   hold a single document in the dataset.
 - Text blocks: `richTextBasic` (bold/italic/links/paragraphs) vs `richTextFull` (+ bullet lists, monospace).
-- After schema changes run `sanity typegen` and use the generated types in `web`.
+- Queries live in `apps/web/src/sanity/queries.ts` wrapped in `defineQuery` (from `groq`).
+  After schema/query changes run `pnpm --filter studio typegen` — it regenerates
+  `apps/web/src/sanity/types.generated.ts` (typegen config: `apps/studio/sanity-typegen.json`).
+- **Static export caveat:** never import from the `next-sanity` root — it pulls in Server
+  Actions (`defineLive`), which `output: 'export'` rejects. Import from `@sanity/client`,
+  `groq`, `@portabletext/react` instead. Data is fetched at build time via `client` (no Live
+  API, no Visual Editing, no draft mode in production); content updates come from a full rebuild.
+- Images: `SanityImage` (next/image + custom CDN loader in `src/sanity/imageLoader.ts`).
+  Sizing is done by the loader via the Sanity CDN; the base URL keeps hotspot/crop.
 
 ## Conventions — A11Y & SEO
 - Meet A11Y (semantics, focus states, keyboard, contrast, alt texts from the CMS).

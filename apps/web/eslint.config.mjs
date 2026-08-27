@@ -12,7 +12,19 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
-    ignores: ['.next/**', 'out/**', 'next-env.d.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
+  {
+    ignores: ['.next/**', 'out/**', 'next-env.d.ts', 'src/sanity/types.generated.ts'],
   },
 ];
 

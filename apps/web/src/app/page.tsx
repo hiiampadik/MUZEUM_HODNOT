@@ -1,8 +1,9 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
-import { HOME_QUERY, EXHIBITIONS_QUERY } from '@/sanity/queries';
+import { HOME_QUERY, HOME_TILE_COVERS_QUERY, EXHIBITIONS_QUERY } from '@/sanity/queries';
 import { ogImageUrl } from '@/sanity/lib/og';
+import type { SanityImageValue } from '@/components/SanityImage/SanityImage';
 import { siteUrl } from '@/sanity/env';
 import { pageMetadata } from '@/lib/metadata';
 import { Container } from '@/components/Container/Container';
@@ -17,26 +18,16 @@ import { routes, accents, accentPalette } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
 import styles from './home.module.css';
 
-type TargetPreset = {
+type Tile = {
+  key: string;
   eyebrow: string;
+  title: string;
   cta: string;
   emoji: string;
   accent: string;
   href: string;
+  image?: SanityImageValue;
 };
-
-function tilePreset(target: string | null | undefined, exhibitionsHref: string): TargetPreset {
-  switch (target) {
-    case 'exhibitions':
-      return { eyebrow: 'Aktuálne výstavy', cta: 'Zobraziť viac', emoji: '👀', accent: accents.exhibition, href: exhibitionsHref };
-    case 'valueGenerator':
-      return { eyebrow: 'Pre školy', cta: 'Otvoriť', emoji: '🔮', accent: accents.valueGenerator, href: routes.valueGenerator };
-    case 'experientialEducation':
-      return { eyebrow: 'Pre učiteľov', cta: 'Otvoriť', emoji: '👻', accent: accents.experientialEducation, href: routes.experientialEducation };
-    default:
-      return { eyebrow: '', cta: 'Otvoriť', emoji: '➡️', accent: accents.home, href: '#' };
-  }
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const home = await client.fetch(HOME_QUERY);
@@ -55,21 +46,52 @@ const jsonLd = {
 };
 
 export default async function HomePage() {
-  const [home, exhibitions] = await Promise.all([
+  const [home, tileCovers, exhibitions] = await Promise.all([
     client.fetch(HOME_QUERY),
+    client.fetch(HOME_TILE_COVERS_QUERY),
     client.fetch(EXHIBITIONS_QUERY),
   ]);
 
   const { active, upcoming, past } = groupExhibitions(exhibitions);
 
-  const activeOpenable = active.find((e) => e.canOpenDetail && e.slug);
-  const exhibitionsHref = activeOpenable?.slug
-    ? routes.exhibition(activeOpenable.slug)
-    : '#vystavy';
-
-  const tiles = (home?.heroTiles ?? []).filter((tile) =>
-    tile.target === 'exhibitions' ? active.length > 0 : true,
-  );
+  // Fixed hero tiles. The first (current exhibitions) only appears when some exist.
+  const activeExhibition = active[0];
+  const tiles: Tile[] = [];
+  if (activeExhibition) {
+    tiles.push({
+      key: 'exhibitions',
+      eyebrow: 'Aktuálne výstavy',
+      title: activeExhibition.title ?? 'Aktuálne výstavy',
+      cta: 'Zobraziť viac',
+      emoji: '👀',
+      accent: accents.exhibition,
+      href:
+        activeExhibition.canOpenDetail && activeExhibition.slug
+          ? routes.exhibition(activeExhibition.slug)
+          : '#vystavy',
+      image: activeExhibition.cover,
+    });
+  }
+  tiles.push({
+    key: 'valueGenerator',
+    eyebrow: 'Pre školy',
+    title: 'Generátor hodnôt do škôl',
+    cta: 'Otvoriť',
+    emoji: '🔮',
+    accent: accents.valueGenerator,
+    href: routes.valueGenerator,
+    image: tileCovers?.valueGenerator,
+  });
+  tiles.push({
+    key: 'experientialEducation',
+    eyebrow: 'Pre učiteľov',
+    title: 'Zážitkové vzdelávanie',
+    cta: 'Otvoriť',
+    emoji: '👻',
+    accent: accents.experientialEducation,
+    href: routes.experientialEducation,
+    image: tileCovers?.experientialEducation,
+  });
 
   return (
     <main style={{ '--accent': accents.home } as CSSProperties}>
@@ -95,44 +117,33 @@ export default async function HomePage() {
       {tiles.length > 0 && (
         <Container className={`${styles.tilesWrap} ${home?.cover ? styles.tilesOverlap : ''}`}>
           <div className={styles.tiles}>
-            {tiles.map((tile) => {
-              const preset = tilePreset(tile.target, exhibitionsHref);
-              const href =
-                tile.target === 'custom' ? tile.customLink?.href ?? '#' : preset.href;
-              const cta =
-                tile.target === 'custom' ? tile.customLink?.label ?? preset.cta : preset.cta;
-              const title =
-                tile.title ||
-                (tile.target === 'exhibitions' ? active[0]?.title : '') ||
-                '';
-              return (
-                <article
-                  key={tile._key}
-                  className={styles.tile}
-                  style={{ '--accent': preset.accent } as CSSProperties}
-                >
-                  <div className={styles.tileHead}>
-                    {preset.eyebrow && <Label>{preset.eyebrow}</Label>}
-                    <Title as="h2" underline>
-                      {title}
-                    </Title>
-                    <Button href={href} className={styles.tileButton}>
-                      <span aria-hidden="true">{preset.emoji}</span>
-                      {cta}
-                    </Button>
+            {tiles.map((tile) => (
+              <article
+                key={tile.key}
+                className={styles.tile}
+                style={{ '--accent': tile.accent } as CSSProperties}
+              >
+                <div className={styles.tileHead}>
+                  <Label>{tile.eyebrow}</Label>
+                  <Title as="h2" underline>
+                    {tile.title}
+                  </Title>
+                  <Button href={tile.href} className={styles.tileButton}>
+                    <span aria-hidden="true">{tile.emoji}</span>
+                    {tile.cta}
+                  </Button>
+                </div>
+                {tile.image?.asset?._id && (
+                  <div className={styles.tileMedia}>
+                    <SanityImage
+                      value={tile.image}
+                      width={700}
+                      sizes="(max-width: 900px) 100vw, 400px"
+                    />
                   </div>
-                  {tile.image?.asset?._id && (
-                    <div className={styles.tileMedia}>
-                      <SanityImage
-                        value={tile.image}
-                        width={700}
-                        sizes="(max-width: 900px) 100vw, 400px"
-                      />
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+                )}
+              </article>
+            ))}
           </div>
         </Container>
       )}

@@ -77,6 +77,9 @@ packages/*     shared code (add when needed)
 - Slovak URL slugs: `/kontakt`, `/zazitkove-vzdelavanie`, `/generator-hodnot`, `/vystava/[slug]`.
 - Exhibition categories (active/upcoming/past) are derived at build time from dates in
   `src/lib/exhibitions.ts` — not stored in the CMS.
+- Homepage hero tiles are **fixed and derived on the frontend** (not editable in the CMS):
+  tile 1 = current exhibitions (omitted when none), tile 2 = Generátor hodnôt, tile 3 =
+  Zážitkové vzdelávanie. Tile images use the target's cover.
 - `output: export` rejects an empty param list for a dynamic route. `/vystava/[slug]`
   emits a `_none` placeholder (renders 404) when there are zero openable exhibitions, so
   the first build on an empty dataset still succeeds.

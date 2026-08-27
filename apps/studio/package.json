@@ -10,15 +10,15 @@
     "typegen": "sanity schema extract --force && sanity typegen generate"
   },
   "dependencies": {
-    "sanity": "^3.68.0",
     "@sanity/icons": "^3.7.0",
-    "@sanity/vision": "^3.68.0",
+    "@sanity/vision": "^4.22.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sanity": "^4.22.0",
     "styled-components": "^6.1.15"
   },
   "devDependencies": {
-    "@sanity/cli": "^3.68.0",
+    "@sanity/cli": "^4.22.0",
     "@types/node": "^22.10.0",
     "typescript": "^5.7.0"
   }

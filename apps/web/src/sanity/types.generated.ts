@@ -13,25 +13,6 @@
  */
 
 // Source: schema.json
-export type HeroTile = {
-  _type: 'heroTile';
-  target?: 'exhibitions' | 'valueGenerator' | 'experientialEducation' | 'custom';
-  title?: string;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-  };
-  customLink?: NamedLink;
-};
-
 export type MapPoint = {
   _type: 'mapPoint';
   title?: string;
@@ -48,24 +29,7 @@ export type MapPoint = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  text?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: 'span';
-      _key: string;
-    }>;
-    style?: 'normal';
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: 'link';
-      _key: string;
-    }>;
-    level?: number;
-    _type: 'block';
-    _key: string;
-  }>;
+  text?: RichTextBasic;
   link?: NamedLink;
 };
 
@@ -130,6 +94,12 @@ export type MaterialFile = {
   };
 };
 
+export type NamedLink = {
+  _type: 'namedLink';
+  label?: string;
+  href?: string;
+};
+
 export type RichTextFull = Array<{
   children?: Array<{
     marks?: Array<string>;
@@ -167,6 +137,20 @@ export type RichTextBasic = Array<{
   _type: 'block';
   _key: string;
 }>;
+
+export type CoverImage = {
+  _type: 'coverImage';
+  asset?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+  };
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+};
 
 export type MaterialsBlock = {
   _type: 'materialsBlock';
@@ -247,19 +231,7 @@ export type ValueGenerator = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  cover?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'coverImage';
-  };
+  cover?: CoverImage;
   content?: PageBuilder;
   mapPoints?: Array<
     {
@@ -268,25 +240,36 @@ export type ValueGenerator = {
   >;
 };
 
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop';
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot';
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Geopoint = {
+  _type: 'geopoint';
+  lat?: number;
+  lng?: number;
+  alt?: number;
+};
+
 export type ExperientialEducation = {
   _id: string;
   _type: 'experientialEducation';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  cover?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'coverImage';
-  };
+  cover?: CoverImage;
   content?: PageBuilder;
 };
 
@@ -296,19 +279,7 @@ export type ContactPage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  cover?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'coverImage';
-  };
+  cover?: CoverImage;
   phone?: string;
   email?: string;
   address?: RichTextBasic;
@@ -338,19 +309,7 @@ export type Exhibition = {
       _key: string;
     } & RoleWithPeople
   >;
-  cover?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'coverImage';
-  };
+  cover?: CoverImage;
   gallery?: Array<
     {
       _key: string;
@@ -374,30 +333,19 @@ export type Exhibition = {
   >;
 };
 
+export type Slug = {
+  _type: 'slug';
+  current?: string;
+  source?: string;
+};
+
 export type HomePage = {
   _id: string;
   _type: 'homePage';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  cover?: {
-    asset?: {
-      _ref: string;
-      _type: 'reference';
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    _type: 'coverImage';
-  };
-  heroTiles?: Array<
-    {
-      _key: string;
-    } & HeroTile
-  >;
+  cover?: CoverImage;
   introTitle?: string;
   introImage?: {
     asset?: {
@@ -415,20 +363,6 @@ export type HomePage = {
   introRest?: RichTextBasic;
 };
 
-export type CoverImage = {
-  _type: 'coverImage';
-  asset?: {
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
-  };
-  media?: unknown;
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  alt?: string;
-};
-
 export type SiteSettings = {
   _id: string;
   _type: 'siteSettings';
@@ -442,12 +376,6 @@ export type SiteSettings = {
     } & SocialLink
   >;
   partners?: RichTextBasic;
-};
-
-export type NamedLink = {
-  _type: 'namedLink';
-  label?: string;
-  href?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -476,20 +404,15 @@ export type SanityImageDimensions = {
   aspectRatio?: number;
 };
 
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot';
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop';
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityImageMetadata = {
+  _type: 'sanity.imageMetadata';
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -512,6 +435,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: 'sanity.assetSourceData';
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -537,47 +467,17 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: 'sanity.imageMetadata';
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
-export type Geopoint = {
-  _type: 'geopoint';
-  lat?: number;
-  lng?: number;
-  alt?: number;
-};
-
-export type Slug = {
-  _type: 'slug';
-  current?: string;
-  source?: string;
-};
-
-export type SanityAssetSourceData = {
-  _type: 'sanity.assetSourceData';
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
 export type AllSanitySchemaTypes =
-  | HeroTile
   | MapPoint
   | Person
   | GalleryImage
   | SocialLink
   | RoleWithPeople
   | MaterialFile
+  | NamedLink
   | RichTextFull
   | RichTextBasic
+  | CoverImage
   | MaterialsBlock
   | TileBlock
   | DecorativeImage
@@ -585,24 +485,22 @@ export type AllSanitySchemaTypes =
   | TextBlock
   | PageBuilder
   | ValueGenerator
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Geopoint
   | ExperientialEducation
   | ContactPage
   | Exhibition
+  | Slug
   | HomePage
-  | CoverImage
   | SiteSettings
-  | NamedLink
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
-  | SanityImageHotspot
-  | SanityImageCrop
-  | SanityFileAsset
-  | SanityImageAsset
   | SanityImageMetadata
-  | Geopoint
-  | Slug
-  | SanityAssetSourceData;
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../web/src/sanity/queries.ts
 // Variable: SETTINGS_QUERY
@@ -625,11 +523,10 @@ export type SETTINGS_QUERYResult =
     }
   | null;
 // Variable: HOME_QUERY
-// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    heroTiles[]{      _key,      target,      title,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      customLink    },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
+// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
 export type HOME_QUERYResult =
   | {
       cover: null;
-      heroTiles: null;
       introTitle: null;
       introImage: null;
       introExcerpt: null;
@@ -650,7 +547,6 @@ export type HOME_QUERYResult =
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
       } | null;
-      heroTiles: null;
       introTitle: null;
       introImage: null;
       introExcerpt: null;
@@ -671,25 +567,6 @@ export type HOME_QUERYResult =
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
       } | null;
-      heroTiles: Array<{
-        _key: string;
-        target: 'custom' | 'exhibitions' | 'experientialEducation' | 'valueGenerator' | null;
-        title: string | null;
-        image: {
-          asset: {
-            _id: string;
-            url: string | null;
-            metadata: {
-              lqip: string | null;
-              dimensions: SanityImageDimensions | null;
-            } | null;
-          } | null;
-          alt: null;
-          hotspot: SanityImageHotspot | null;
-          crop: SanityImageCrop | null;
-        } | null;
-        customLink: NamedLink | null;
-      }> | null;
       introTitle: string | null;
       introImage: {
         asset: {
@@ -709,6 +586,36 @@ export type HOME_QUERYResult =
       metaDescription: string;
     }
   | null;
+// Variable: HOME_TILE_COVERS_QUERY
+// Query: {    "valueGenerator": *[_id == "valueGenerator"][0].cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    "experientialEducation": *[_id == "experientialEducation"][0].cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
+export type HOME_TILE_COVERS_QUERYResult = {
+  valueGenerator: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  experientialEducation: {
+    asset: {
+      _id: string;
+      url: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: SanityImageDimensions | null;
+      } | null;
+    } | null;
+    alt: string | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+};
 // Variable: EXHIBITIONS_QUERY
 // Query: *[_type == "exhibition"] | order(endDate desc){    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    "excerpt": pt::text(abstract),    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
 export type EXHIBITIONS_QUERYResult = Array<{
@@ -1253,24 +1160,7 @@ export type VALUE_GENERATOR_QUERYResult =
           hotspot: SanityImageHotspot | null;
           crop: SanityImageCrop | null;
         } | null;
-        text: Array<{
-          children?: Array<{
-            marks?: Array<string>;
-            text?: string;
-            _type: 'span';
-            _key: string;
-          }>;
-          style?: 'normal';
-          listItem?: never;
-          markDefs?: Array<{
-            href?: string;
-            _type: 'link';
-            _key: string;
-          }>;
-          level?: number;
-          _type: 'block';
-          _key: string;
-        }> | null;
+        text: RichTextBasic | null;
         link: NamedLink | null;
       }> | null;
     }
@@ -1281,7 +1171,8 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
-    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    heroTiles[]{\n      _key,\n      target,\n      title,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      customLink\n    },\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
+    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
+    '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "experientialEducation": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    "excerpt": pt::text(abstract),\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': EXHIBITION_SITEMAP_QUERYResult;

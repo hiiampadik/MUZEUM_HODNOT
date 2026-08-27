@@ -1,10 +1,11 @@
-import { defineType, defineField, defineArrayMember } from 'sanity';
+import { defineType, defineField } from 'sanity';
 import { HomeIcon } from '@sanity/icons';
 
 /**
  * Homepage (singleton).
  * Exhibitions are not referenced here — the frontend queries all exhibitions and
- * groups them (active / upcoming / past) by date.
+ * groups them (active / upcoming / past) by date. The three hero tiles are fixed
+ * and derived on the frontend (current exhibitions / value generator / education).
  */
 export const homePage = defineType({
   name: 'homePage',
@@ -16,14 +17,6 @@ export const homePage = defineType({
       name: 'cover',
       title: 'Cover obrázok',
       type: 'coverImage',
-    }),
-    defineField({
-      name: 'heroTiles',
-      title: 'Navigačné dlaždice',
-      type: 'array',
-      description: '2 – 3 dlaždice na začiatku stránky.',
-      of: [defineArrayMember({ type: 'heroTile' })],
-      validation: (rule) => rule.min(2).max(3),
     }),
     defineField({
       name: 'introTitle',

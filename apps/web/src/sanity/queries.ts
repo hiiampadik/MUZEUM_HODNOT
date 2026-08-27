@@ -56,18 +56,19 @@ export const SETTINGS_QUERY = defineQuery(/* groq */ `
 export const HOME_QUERY = defineQuery(/* groq */ `
   *[_id == "homePage"][0]{
     ${coverFields},
-    heroTiles[]{
-      _key,
-      target,
-      title,
-      image{ ${imageFields} },
-      customLink
-    },
     introTitle,
     introImage{ ${imageFields} },
     introExcerpt,
     introRest,
     "metaDescription": pt::text(introExcerpt)
+  }
+`);
+
+// Covers for the fixed hero tiles (value generator + experiential education).
+export const HOME_TILE_COVERS_QUERY = defineQuery(/* groq */ `
+  {
+    "valueGenerator": *[_id == "valueGenerator"][0].cover{ ${imageFields} },
+    "experientialEducation": *[_id == "experientialEducation"][0].cover{ ${imageFields} }
   }
 `);
 

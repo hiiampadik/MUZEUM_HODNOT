@@ -11,7 +11,6 @@ import { socialLink } from './objects/socialLink';
 import { galleryImage } from './objects/galleryImage';
 import { person } from './objects/person';
 import { mapPoint } from './objects/mapPoint';
-import { heroTile } from './objects/heroTile';
 
 // Page-builder blocks
 import { textBlock } from './blocks/textBlock';
@@ -57,7 +56,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   galleryImage,
   person,
   mapPoint,
-  heroTile,
 ];
 
 /** Document types that are singletons — excluded from generic Studio lists. */

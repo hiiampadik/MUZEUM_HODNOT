@@ -27,8 +27,8 @@ export default async function ContactPage() {
 
   return (
     <main className="page-main" style={{ '--accent': accents.contact } as CSSProperties}>
-      {contact?.cover && (
-        <CoverImage value={contact.cover} placement="top" priority background className="cover-bg-top" />
+      {contact?.topCover && (
+        <CoverImage value={contact.topCover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
@@ -92,8 +92,8 @@ export default async function ContactPage() {
         </Container>
       )}
 
-      {contact?.cover && (
-        <CoverImage value={contact.cover} placement="bottom" background className="cover-bg-bottom" />
+      {contact?.bottomCover && (
+        <CoverImage value={contact.bottomCover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

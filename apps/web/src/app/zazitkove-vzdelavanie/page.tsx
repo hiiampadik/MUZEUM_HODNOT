@@ -25,8 +25,8 @@ export default async function ExperientialEducationPage() {
 
   return (
     <main className="page-main" style={{ '--accent': accents.experientialEducation } as CSSProperties}>
-      {page?.cover && (
-        <CoverImage value={page.cover} placement="top" priority background className="cover-bg-top" />
+      {page?.topCover && (
+        <CoverImage value={page.topCover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
@@ -34,8 +34,8 @@ export default async function ExperientialEducationPage() {
         <PageBuilder content={page?.content} />
       </Container>
 
-      {page?.cover && (
-        <CoverImage value={page.cover} placement="bottom" background className="cover-bg-bottom" />
+      {page?.bottomCover && (
+        <CoverImage value={page.bottomCover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

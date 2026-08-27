@@ -60,6 +60,8 @@ export default async function ExhibitionPage({
     endDate,
     roles,
     cover,
+    topCover,
+    bottomCover,
     gallery,
     abstract,
     materials,
@@ -87,8 +89,8 @@ export default async function ExhibitionPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {cover && (
-        <CoverImage value={cover} placement="top" priority background className="cover-bg-top" />
+      {topCover && (
+        <CoverImage value={topCover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="content">
@@ -203,8 +205,8 @@ export default async function ExhibitionPage({
         )}
       </Container>
 
-      {cover && (
-        <CoverImage value={cover} placement="bottom" background className="cover-bg-bottom" />
+      {bottomCover && (
+        <CoverImage value={bottomCover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

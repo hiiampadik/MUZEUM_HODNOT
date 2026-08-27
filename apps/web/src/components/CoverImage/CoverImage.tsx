@@ -1,11 +1,12 @@
 import type { SanityImageValue } from '../SanityImage/SanityImage';
-import { Dither } from '../Dither/Dither';
-import { urlFor } from '@/sanity/lib/image';
+// Dithering is disabled — covers are uploaded as ready-made images (any fade is
+// baked into the file). Kept for easy re-enable. See Dither.tsx.
+// import { Dither } from '../Dither/Dither';
 import styles from './CoverImage.module.css';
 
 type CoverImageProps = {
   value: SanityImageValue;
-  /** top = fades downward (page header) · bottom = fades upward (above footer). */
+  /** top = header cover · bottom = cover above the footer. */
   placement?: 'top' | 'bottom';
   priority?: boolean;
   /** Render as an absolutely-positioned background layer behind page content. */
@@ -14,10 +15,11 @@ type CoverImageProps = {
 };
 
 /**
- * Cover image with a fade-out gradient + dithering (Blok 6).
- * `Dither` renders the plain <img> (instant fallback) and a dithered <canvas>
- * over it, both driven by the same single image request. With `background` the
- * whole cover sits behind page content (blended, non-interactive).
+ * Full-bleed cover image at the top / bottom of a page.
+ *
+ * The image is served in its ORIGINAL size (the raw asset URL — no CDN resizing
+ * or re-encoding) and stretched to the container's edges via CSS. Covers are
+ * prepared and uploaded manually, so no gradient or dithering is applied here.
  */
 export function CoverImage({
   value,
@@ -26,17 +28,9 @@ export function CoverImage({
   background,
   className,
 }: CoverImageProps) {
-  const assetId = value?.asset?._id;
-  if (!assetId) return null;
-
-  const src = urlFor({
-    asset: { _ref: assetId },
-    hotspot: value?.hotspot ?? undefined,
-    crop: value?.crop ?? undefined,
-  })
-    .width(1800)
-    .auto('format')
-    .url();
+  // Original, unscaled asset URL — do not run it through the resizing loader.
+  const src = value?.asset?.url;
+  if (!src) return null;
 
   return (
     <div
@@ -48,8 +42,17 @@ export function CoverImage({
       ]
         .filter(Boolean)
         .join(' ')}
-      data-dither
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={background ? '' : (value?.alt ?? '')}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
+        className={styles.image}
+      />
+      {/*
       <Dither
         src={src}
         alt={background ? '' : (value?.alt ?? '')}
@@ -59,6 +62,7 @@ export function CoverImage({
         canvasClassName={styles.ditherCanvas}
       />
       <div className={styles.gradient} aria-hidden="true" />
+      */}
     </div>
   );
 }

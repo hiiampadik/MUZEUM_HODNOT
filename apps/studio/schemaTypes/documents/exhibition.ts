@@ -91,9 +91,27 @@ export const exhibition = defineType({
     }),
     defineField({
       name: 'cover',
-      title: 'Cover obrázok',
+      title: 'Cover obrázok (náhľad)',
       type: 'coverImage',
       group: 'content',
+      description:
+        'Hlavný náhľadový obrázok — používa sa pre OG (zdieľanie) a dlaždicu na domovskej stránke. Bez ditheringu.',
+    }),
+    defineField({
+      name: 'topCover',
+      title: 'Cover — horný okraj',
+      type: 'coverImage',
+      group: 'content',
+      description:
+        'Obrázok pri vrchu stránky, roztiahnutý cez celú šírku. Nahráva sa v originálnej veľkosti (bez zmenšovania).',
+    }),
+    defineField({
+      name: 'bottomCover',
+      title: 'Cover — spodný okraj',
+      type: 'coverImage',
+      group: 'content',
+      description:
+        'Obrázok pri spodku stránky (nad pätičkou), roztiahnutý cez celú šírku. Originálna veľkosť.',
     }),
     defineField({
       name: 'gallery',

@@ -11,6 +11,12 @@ const imageFields = /* groq */ `
 
 const coverFields = /* groq */ `cover{ ${imageFields} }`;
 
+// Full-bleed top/bottom cover images (original size; rendered without scaling).
+const edgeCoverFields = /* groq */ `
+  topCover{ ${imageFields} },
+  bottomCover{ ${imageFields} }
+`;
+
 const materialFields = /* groq */ `
   _key,
   title,
@@ -56,6 +62,7 @@ export const SETTINGS_QUERY = defineQuery(/* groq */ `
 export const HOME_QUERY = defineQuery(/* groq */ `
   *[_id == "homePage"][0]{
     ${coverFields},
+    ${edgeCoverFields},
     introTitle,
     introImage{ ${imageFields} },
     intro,
@@ -115,6 +122,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     canOpenDetail,
     roles[]{ _key, role, people },
     ${coverFields},
+    ${edgeCoverFields},
     gallery[]{ ${imageFields}, photographer },
     abstract,
     materials[]{ ${materialFields} },
@@ -129,6 +137,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
 export const CONTACT_QUERY = defineQuery(/* groq */ `
   *[_id == "contactPage"][0]{
     ${coverFields},
+    ${edgeCoverFields},
     phone,
     email,
     address,
@@ -147,6 +156,7 @@ export const CONTACT_QUERY = defineQuery(/* groq */ `
 export const EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
   *[_id == "experientialEducation"][0]{
     ${coverFields},
+    ${edgeCoverFields},
     ${pageBuilderFields}
   }
 `);
@@ -156,6 +166,7 @@ export const EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
 export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `
   *[_id == "valueGenerator"][0]{
     ${coverFields},
+    ${edgeCoverFields},
     ${pageBuilderFields},
     mapPoints[]{
       _key,

@@ -31,8 +31,9 @@ packages/*     shared code (add when needed)
 - **Typography** has 4 roles: `heading`/`title` use the **Cy** display font (`--font-display`,
   title 34px with a dynamic accent underline), `label` uses **Geist Mono** (`--font-mono`),
   `body` uses **Geist** (`--font-body`). Geist/Geist Mono come from the `geist` package
-  (self-hosted via next/font). **Cy is proprietary** — drop `cy-regular.woff2` into
-  `apps/web/public/fonts/` (see its README); until then a serif fallback is used.
+  (self-hosted via next/font). **Cy** (family `"cy"`) loads from Adobe Fonts / Typekit
+  (`@import url('https://use.typekit.net/hcm5cdz.css')` in globals.css). The production
+  domain must be added to the Adobe Fonts project's allowed domains.
 - Design tokens (colors, spacing, radius) are derived from Figma in `src/styles/tokens.css`:
   page bg `#ececf0`, white surfaces, radius 13px (buttons) / 30px (cards).
 - **Accent system:** sections carry an accent color (title underline + button color). Driven by a

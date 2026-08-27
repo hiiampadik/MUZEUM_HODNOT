@@ -9,6 +9,7 @@ import { Heading } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
 import { ogImageUrl } from '@/sanity/lib/og';
+import builder from '@/components/pagebuilder/builderPage.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
@@ -24,14 +25,18 @@ export default async function ExperientialEducationPage() {
 
   return (
     <main style={{ '--accent': accents.experientialEducation } as CSSProperties}>
-      {page?.cover && <CoverImage value={page.cover} placement="top" priority />}
+      {page?.cover && (
+        <CoverImage value={page.cover} placement="top" priority className={builder.cover} />
+      )}
 
       <Container width="narrow">
-        <Heading>Zážitkové vzdelávanie</Heading>
+        <Heading className={builder.title}>Zážitkové vzdelávanie</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 
-      {page?.cover && <CoverImage value={page.cover} placement="bottom" />}
+      {page?.cover && (
+        <CoverImage value={page.cover} placement="bottom" className={builder.cover} />
+      )}
     </main>
   );
 }

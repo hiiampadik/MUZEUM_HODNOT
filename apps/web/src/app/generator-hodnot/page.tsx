@@ -10,6 +10,7 @@ import { Heading, Title } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
 import { ogImageUrl } from '@/sanity/lib/og';
+import builder from '@/components/pagebuilder/builderPage.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch(VALUE_GENERATOR_QUERY);
@@ -26,23 +27,27 @@ export default async function ValueGeneratorPage() {
 
   return (
     <main style={{ '--accent': accents.valueGenerator } as CSSProperties}>
-      {page?.cover && <CoverImage value={page.cover} placement="top" priority />}
+      {page?.cover && (
+        <CoverImage value={page.cover} placement="top" priority className={builder.cover} />
+      )}
 
       <Container width="narrow">
-        <Heading>Generátor hodnôt</Heading>
+        <Heading className={builder.title}>Generátor hodnôt</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 
       {points.length > 0 && (
         <Container>
-          <Title as="h2" underline>
+          <Title as="h2" underline className={builder.title}>
             Mapa
           </Title>
           <ValueMap points={points} />
         </Container>
       )}
 
-      {page?.cover && <CoverImage value={page.cover} placement="bottom" />}
+      {page?.cover && (
+        <CoverImage value={page.cover} placement="bottom" className={builder.cover} />
+      )}
     </main>
   );
 }

@@ -27,36 +27,43 @@ export default async function ContactPage() {
 
   return (
     <main style={{ '--accent': accents.contact } as CSSProperties}>
-      {contact?.cover && <CoverImage value={contact.cover} placement="top" priority />}
+      {contact?.cover && (
+        <CoverImage value={contact.cover} placement="top" priority className={styles.footerCover} />
+      )}
 
       <Container width="narrow">
-        <Heading>Kontakt</Heading>
+        <Heading className={styles.headerTitle}>Kontakt</Heading>
 
         <div className={styles.details}>
           {contact?.phone && (
-            <p>
+            <div className={styles.detailItem}>
               <Label>Telefón</Label>
-              <br />
-              <Link href={`tel:${contact.phone}`}>{contact.phone}</Link>
-            </p>
+              <Link href={`tel:${contact.phone}`} className={`${styles.pill} ${styles.pillPhone}`}>
+                <span aria-hidden="true">☎️</span>
+                {contact.phone}
+              </Link>
+            </div>
           )}
           {contact?.email && (
-            <p>
+            <div className={styles.detailItem}>
               <Label>E-mail</Label>
-              <br />
-              <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
-            </p>
+              <Link
+                href={`mailto:${contact.email}`}
+                className={`${styles.pill} ${styles.pillEmail}`}
+              >
+                <span aria-hidden="true">💌</span>
+                {contact.email}
+              </Link>
+            </div>
           )}
           {contact?.address && (
-            <div>
-              <Label>Adresa</Label>
-              <RichText value={contact.address} />
+            <div className={styles.detailItem}>
+              <RichText value={contact.address} className={styles.detailText} />
             </div>
           )}
           {contact?.administrativeInfo && (
-            <div>
-              <Label>Administratívne údaje</Label>
-              <RichText value={contact.administrativeInfo} />
+            <div className={styles.detailItem}>
+              <RichText value={contact.administrativeInfo} className={styles.detailText} />
             </div>
           )}
         </div>
@@ -72,24 +79,22 @@ export default async function ContactPage() {
               <li key={person._key} className={styles.person}>
                 {person.image?.asset?._id && (
                   <div className={styles.avatar}>
-                    <SanityImage value={person.image} width={320} sizes="160px" />
+                    <SanityImage value={person.image} width={448} sizes="224px" />
                   </div>
                 )}
-                <Text as="span" className={styles.name}>
-                  {person.name}
-                </Text>
-                {person.position && (
-                  <Text as="span" className={styles.position}>
-                    {person.position}
-                  </Text>
-                )}
+                <div className={styles.personCard}>
+                  <Title as="h3">{person.name}</Title>
+                  {person.position && <Text>{person.position}</Text>}
+                </div>
               </li>
             ))}
           </ul>
         </Container>
       )}
 
-      {contact?.cover && <CoverImage value={contact.cover} placement="bottom" />}
+      {contact?.cover && (
+        <CoverImage value={contact.cover} placement="bottom" className={styles.footerCover} />
+      )}
     </main>
   );
 }

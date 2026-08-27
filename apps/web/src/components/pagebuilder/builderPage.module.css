@@ -1,0 +1,11 @@
+.cover {
+  height: min(60vh, 720px);
+}
+
+.title {
+  text-align: center;
+  margin-top: min(-14vh, -100px);
+  margin-bottom: var(--space-2xl);
+  position: relative;
+  z-index: 1;
+}

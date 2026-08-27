@@ -1,10 +1,11 @@
-import type { ElementType, ReactNode } from 'react';
+import type { CSSProperties, ElementType, ReactNode } from 'react';
 import styles from './Typography.module.css';
 
 type BaseProps = {
   children: ReactNode;
   as?: ElementType;
   className?: string;
+  style?: CSSProperties;
 };
 
 function cx(...names: (string | false | undefined)[]) {
@@ -12,8 +13,12 @@ function cx(...names: (string | false | undefined)[]) {
 }
 
 /** Large display heading (CY font). Defaults to <h1>. */
-export function Heading({ children, as: Tag = 'h1', className }: BaseProps) {
-  return <Tag className={cx(styles.heading, className)}>{children}</Tag>;
+export function Heading({ children, as: Tag = 'h1', className, style }: BaseProps) {
+  return (
+    <Tag className={cx(styles.heading, className)} style={style}>
+      {children}
+    </Tag>
+  );
 }
 
 /** Section title (CY font), with an optional accent underline. Defaults to <h2>. */
@@ -21,21 +26,33 @@ export function Title({
   children,
   as: Tag = 'h2',
   className,
+  style,
   underline = false,
 }: BaseProps & { underline?: boolean }) {
   return (
-    <Tag className={cx(styles.title, underline && styles.titleUnderline, className)}>
+    <Tag
+      className={cx(styles.title, underline && styles.titleUnderline, className)}
+      style={style}
+    >
       {children}
     </Tag>
   );
 }
 
 /** Monospace label / eyebrow. Defaults to <span>. */
-export function Label({ children, as: Tag = 'span', className }: BaseProps) {
-  return <Tag className={cx(styles.label, className)}>{children}</Tag>;
+export function Label({ children, as: Tag = 'span', className, style }: BaseProps) {
+  return (
+    <Tag className={cx(styles.label, className)} style={style}>
+      {children}
+    </Tag>
+  );
 }
 
 /** Body text. Defaults to <p>. */
-export function Text({ children, as: Tag = 'p', className }: BaseProps) {
-  return <Tag className={cx(styles.text, className)}>{children}</Tag>;
+export function Text({ children, as: Tag = 'p', className, style }: BaseProps) {
+  return (
+    <Tag className={cx(styles.text, className)} style={style}>
+      {children}
+    </Tag>
+  );
 }

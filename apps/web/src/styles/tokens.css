@@ -55,7 +55,7 @@
   --font-body: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --font-size-heading: clamp(1.75rem, 4vw, 2.5rem);
+  --font-size-heading: clamp(2.5rem, 6vw, 4rem); /* → 64px, page hero title */
   --font-size-title: clamp(1.625rem, 4vw, 2.125rem); /* → 34px */
   --font-size-body: 1rem; /* 16px */
   --font-size-label: 0.875rem; /* 14px */
@@ -63,6 +63,7 @@
   --line-height-heading: 1.15;
   --line-height-body: 1.4;
   --letter-spacing-label: -0.02em; /* ≈ -0.28px @ 14px */
+  --letter-spacing-value: 0.02em; /* uppercase meta/name values */
 }
 
 /* Breakpoints (reference): --bp-sm 480 · --bp-md 768 · --bp-lg 1024 · --bp-xl 1200 */

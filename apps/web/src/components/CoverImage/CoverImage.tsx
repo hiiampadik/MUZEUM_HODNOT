@@ -8,18 +8,22 @@ type CoverImageProps = {
   /** top = fades downward (page header) · bottom = fades upward (above footer). */
   placement?: 'top' | 'bottom';
   priority?: boolean;
+  /** Render as an absolutely-positioned background layer behind page content. */
+  background?: boolean;
   className?: string;
 };
 
 /**
  * Cover image with a fade-out gradient + dithering (Blok 6).
  * `Dither` renders the plain <img> (instant fallback) and a dithered <canvas>
- * over it, both driven by the same single image request.
+ * over it, both driven by the same single image request. With `background` the
+ * whole cover sits behind page content (blended, non-interactive).
  */
 export function CoverImage({
   value,
   placement = 'top',
   priority,
+  background,
   className,
 }: CoverImageProps) {
   const assetId = value?.asset?._id;
@@ -36,14 +40,19 @@ export function CoverImage({
 
   return (
     <div
-      className={[styles.cover, styles[placement], className]
+      className={[
+        styles.cover,
+        styles[placement],
+        background && styles.background,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
       data-dither
     >
       <Dither
         src={src}
-        alt={value?.alt ?? ''}
+        alt={background ? '' : (value?.alt ?? '')}
         priority={priority}
         placement={placement}
         imgClassName={styles.image}

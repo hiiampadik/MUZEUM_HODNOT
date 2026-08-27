@@ -81,13 +81,15 @@ export default async function ExhibitionPage({
   };
 
   return (
-    <main style={{ '--accent': accents.exhibition } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.exhibition } as CSSProperties}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {cover && <CoverImage value={cover} placement="top" priority className={styles.footerCover} />}
+      {cover && (
+        <CoverImage value={cover} placement="top" priority background className="cover-bg-top" />
+      )}
 
       <Container width="content">
         <header className={styles.header}>
@@ -201,7 +203,9 @@ export default async function ExhibitionPage({
         )}
       </Container>
 
-      {cover && <CoverImage value={cover} placement="bottom" className={styles.footerCover} />}
+      {cover && (
+        <CoverImage value={cover} placement="bottom" background className="cover-bg-bottom" />
+      )}
     </main>
   );
 }

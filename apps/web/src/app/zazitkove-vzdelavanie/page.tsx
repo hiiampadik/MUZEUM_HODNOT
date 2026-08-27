@@ -24,9 +24,9 @@ export default async function ExperientialEducationPage() {
   const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
 
   return (
-    <main style={{ '--accent': accents.experientialEducation } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.experientialEducation } as CSSProperties}>
       {page?.cover && (
-        <CoverImage value={page.cover} placement="top" priority className={builder.cover} />
+        <CoverImage value={page.cover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
@@ -35,7 +35,7 @@ export default async function ExperientialEducationPage() {
       </Container>
 
       {page?.cover && (
-        <CoverImage value={page.cover} placement="bottom" className={builder.cover} />
+        <CoverImage value={page.cover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

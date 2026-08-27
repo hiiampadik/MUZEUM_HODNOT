@@ -1,8 +1,5 @@
 .headerTitle {
   text-align: center;
-  margin-top: min(-14vh, -100px);
-  position: relative;
-  z-index: 1;
 }
 
 .details {

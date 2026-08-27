@@ -94,7 +94,7 @@ export default async function HomePage() {
   });
 
   return (
-    <main style={{ '--accent': accents.home } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.home } as CSSProperties}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -103,19 +103,12 @@ export default async function HomePage() {
       <h1 className="sr-only">Múzeum hodnôt</h1>
 
       {home?.cover && (
-        <div className={styles.hero}>
-          <CoverImage
-            value={home.cover}
-            placement="top"
-            priority
-            className={styles.heroCover}
-          />
-        </div>
+        <CoverImage value={home.cover} placement="top" priority background className="cover-bg-top" />
       )}
 
       {/* Hero tiles */}
       {tiles.length > 0 && (
-        <Container className={`${styles.tilesWrap} ${home?.cover ? styles.tilesOverlap : ''}`}>
+        <Container>
           <div className={styles.tiles}>
             {tiles.map((tile) => (
               <article
@@ -199,7 +192,7 @@ export default async function HomePage() {
       )}
 
       {home?.cover && (
-        <CoverImage value={home.cover} placement="bottom" className={styles.footerCover} />
+        <CoverImage value={home.cover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

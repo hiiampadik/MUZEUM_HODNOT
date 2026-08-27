@@ -4,6 +4,24 @@
   overflow: hidden;
 }
 
+/* Background layer: sits behind page content, blended, non-interactive. */
+.cover.background {
+  position: absolute;
+  inset-inline: 0;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply; /* fallback */
+  mix-blend-mode: plus-darker;
+}
+
+.top.background {
+  top: 0;
+}
+
+.bottom.background {
+  bottom: 0;
+}
+
 .image {
   position: absolute;
   inset: 0;
@@ -31,7 +49,8 @@
   opacity: 1;
 }
 
-/* CSS gradient — no-JS fallback fade, sits under the dithered canvas. */
+/* CSS gradient — no-JS fallback fade, sits under the dithered canvas.
+   Long, gradual ramp so the dither thins out slowly. */
 .gradient {
   position: absolute;
   inset: 0;
@@ -40,11 +59,25 @@
 }
 
 .top .gradient {
-  background: linear-gradient(to bottom, transparent 40%, var(--color-bg) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(236, 236, 240, 0.05) 30%,
+    rgba(236, 236, 240, 0.25) 60%,
+    rgba(236, 236, 240, 0.7) 85%,
+    var(--color-bg) 100%
+  );
 }
 
 .bottom .gradient {
-  background: linear-gradient(to top, transparent 40%, var(--color-bg) 100%);
+  background: linear-gradient(
+    to top,
+    transparent 0%,
+    rgba(236, 236, 240, 0.05) 30%,
+    rgba(236, 236, 240, 0.25) 60%,
+    rgba(236, 236, 240, 0.7) 85%,
+    var(--color-bg) 100%
+  );
 }
 
 @keyframes coverFadeIn {

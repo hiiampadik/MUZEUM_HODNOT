@@ -5,9 +5,6 @@
   align-items: center;
   gap: var(--space-xs);
   text-align: center;
-  margin-top: min(-16vh, -120px);
-  position: relative;
-  z-index: 1;
 }
 
 .headerTitle {

@@ -26,9 +26,9 @@ export default async function ContactPage() {
   const contact = await client.fetch(CONTACT_QUERY);
 
   return (
-    <main style={{ '--accent': accents.contact } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.contact } as CSSProperties}>
       {contact?.cover && (
-        <CoverImage value={contact.cover} placement="top" priority className={styles.footerCover} />
+        <CoverImage value={contact.cover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
@@ -93,7 +93,7 @@ export default async function ContactPage() {
       )}
 
       {contact?.cover && (
-        <CoverImage value={contact.cover} placement="bottom" className={styles.footerCover} />
+        <CoverImage value={contact.cover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

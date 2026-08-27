@@ -26,9 +26,9 @@ export default async function ValueGeneratorPage() {
   const points = page?.mapPoints ?? [];
 
   return (
-    <main style={{ '--accent': accents.valueGenerator } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.valueGenerator } as CSSProperties}>
       {page?.cover && (
-        <CoverImage value={page.cover} placement="top" priority className={builder.cover} />
+        <CoverImage value={page.cover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
@@ -46,7 +46,7 @@ export default async function ValueGeneratorPage() {
       )}
 
       {page?.cover && (
-        <CoverImage value={page.cover} placement="bottom" className={builder.cover} />
+        <CoverImage value={page.cover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
   );

@@ -82,14 +82,26 @@ export function Dither({
 
       // Bake the fade gradient (toward the page background) onto the image.
       const [r, g, b] = readBg(container);
+      const c = (a: number) => `rgba(${r},${g},${b},${a})`;
       const grad = ctx.createLinearGradient(0, 0, 0, ch);
-      if (placement === 'top') {
-        grad.addColorStop(0.4, `rgba(${r},${g},${b},0)`);
-        grad.addColorStop(1, `rgba(${r},${g},${b},1)`);
-      } else {
-        grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
-        grad.addColorStop(0.6, `rgba(${r},${g},${b},0)`);
-      }
+      // Long, gradual ramp so the dithered dots thin out slowly toward the fade.
+      const stops: [number, number][] =
+        placement === 'top'
+          ? [
+              [0, 0],
+              [0.3, 0.05],
+              [0.6, 0.25],
+              [0.85, 0.7],
+              [1, 1],
+            ]
+          : [
+              [0, 1],
+              [0.15, 0.7],
+              [0.4, 0.25],
+              [0.7, 0.05],
+              [1, 0],
+            ];
+      stops.forEach(([pos, a]) => grad.addColorStop(pos, c(a)));
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, cw, ch);
 
@@ -135,7 +147,6 @@ export function Dither({
         ref={imgRef}
         src={src}
         alt={alt}
-        crossOrigin="anonymous"
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"

@@ -1,0 +1,72 @@
+# CLAUDE.md — Muzeum Hodnot
+
+Guidance for Claude Code (and humans) working in this repo. Keep it short and binding.
+
+## What this is
+A Slovak, **single-language** website (exhibitions + educational resources for schools),
+driven by the Sanity CMS. A static site deployed to GitHub Pages; content is edited in Sanity Studio.
+
+## Language
+- **Website UI and CMS content = Slovak** (copy, field labels in Studio, buttons).
+- **Code, identifiers, code comments, commit messages = English.**
+- Developer chat (Honza) may be in Czech. `TODO.md` and project notes are kept in Czech.
+
+## Stack
+- **Frontend:** Next.js (App Router) + TypeScript, **static export** (`output: 'export'`).
+- **Styling:** CSS Modules + CSS custom properties (no Tailwind, no runtime CSS-in-JS).
+- **CMS:** Sanity (Studio in `apps/studio`, deployed separately to `*.sanity.studio`).
+- **Package manager:** pnpm (monorepo, pnpm workspace).
+- **Hosting:** GitHub Pages + custom domain, Cloudflare DNS. Rebuilds via webhook → GitHub Actions.
+
+## Repo layout
+```
+apps/web       Next.js frontend (→ static export → Pages)
+apps/studio    Sanity Studio (schemas = source of truth for content)
+packages/*     shared code (add when needed)
+```
+
+## Conventions — styling & design system
+- **All sizing via tokens** — never hardcoded px. Use CSS variables:
+  `--space-*`, `--color-*`, `--radius-*`, `--font-*`. Defined in `apps/web/src/styles/tokens.css`.
+- **Typography** has 4 roles: `heading` (CY, large), `title` (CY, with a dynamic underline/accent),
+  `label` (monospace), `body`. Expressed as reusable classes/components.
+- **Accent system:** sections carry an accent color (title underline + button color). Driven by a
+  CSS variable `--accent` on the section wrapper — components read `var(--accent)`, not a fixed color.
+- **3 layout widths** (`Container`/`Section` component):
+  1. full-width with inner padding (gallery in Exhibition),
+  2. max **1200px** (most blocks, 3-column layout),
+  3. max **600px** (Exhibition body, Experiential education, Value generator).
+- **Reusable components:** `Button`, `Link`, `Tile`, typography components, `CoverImage`.
+- **Responsive from 320px.** Always test the smallest width.
+
+## Conventions — images & effects
+- Images come from the Sanity CDN (`@sanity/image-url`) + a custom Next image loader (for static export).
+- **Cover image**: used both at the top and bottom of a page, with a linear gradient (top fades
+  downward, bottom fades upward).
+- **Dithering** is applied in React (do not pre-process images) — a WebGL shader overlay,
+  with a fallback and respect for `prefers-reduced-motion`.
+
+## Conventions — Sanity
+- Before writing schemas/queries, load `get_schema` and the relevant Sanity Rules (`groq`, `nextjs`).
+- Singletons (homePage, contactPage, siteSettings, experientialEducation, valueGenerator)
+  hold a single document in the dataset.
+- Text blocks: `richTextBasic` (bold/italic/links/paragraphs) vs `richTextFull` (+ bullet lists, monospace).
+- After schema changes run `sanity typegen` and use the generated types in `web`.
+
+## Conventions — A11Y & SEO
+- Meet A11Y (semantics, focus states, keyboard, contrast, alt texts from the CMS).
+- SEO: Next Metadata API, `sitemap.xml`, `robots.txt`, JSON-LD, `lang="sk"`.
+
+## Scripts (after scaffolding)
+- `pnpm --filter web dev` — frontend dev server.
+- `pnpm --filter web build` — static export (must pass without errors).
+- `pnpm --filter studio dev` — Sanity Studio locally.
+
+## Roadmap
+Work is split into blocks 0–8, see `TODO.md`. We go from structural work (setup, CMS,
+components) to visual polish (final tokens, dithering, map), because the design is not yet
+finally approved.
+
+## Before starting visual work
+Final token values, fonts (CY, monospace) and exact layout depend on the approved Figma.
+Do not hardcode colors/sizes — keep them as tokens with provisional values and mark a TODO.

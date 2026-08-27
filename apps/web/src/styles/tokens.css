@@ -1,0 +1,54 @@
+/**
+ * Design tokens — provisional values.
+ * Final values (colors, spacing scale, fonts) depend on the approved Figma (Blok 2).
+ * Never hardcode px in components — reference these variables.
+ */
+
+:root {
+  /* Spacing scale */
+  --space-3xs: 0.25rem; /* 4px */
+  --space-2xs: 0.5rem; /* 8px */
+  --space-xs: 0.75rem; /* 12px */
+  --space-sm: 1rem; /* 16px */
+  --space-md: 1.5rem; /* 24px */
+  --space-lg: 2rem; /* 32px */
+  --space-xl: 3rem; /* 48px */
+  --space-2xl: 4rem; /* 64px */
+  --space-3xl: 6rem; /* 96px */
+
+  /* Layout widths */
+  --width-narrow: 600px;
+  --width-content: 1200px;
+  --container-padding: var(--space-md);
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Colors (provisional) */
+  --color-bg: #ffffff;
+  --color-fg: #111111;
+  --color-muted: #666666;
+  --color-border: #e5e5e5;
+
+  /* Accent — overridden per section via --accent on the wrapper */
+  --accent: #000000;
+
+  /* Typography (provisional — fonts CY / monospace resolved in Blok 2) */
+  --font-heading: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --font-size-heading: clamp(2.5rem, 6vw, 4.5rem);
+  --font-size-title: clamp(1.5rem, 3vw, 2.25rem);
+  --font-size-body: 1rem;
+  --font-size-label: 0.875rem;
+
+  --line-height-heading: 1.05;
+  --line-height-body: 1.6;
+}
+
+/* Breakpoints are documented here for reference; used via media queries in CSS Modules.
+   --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1200px; */

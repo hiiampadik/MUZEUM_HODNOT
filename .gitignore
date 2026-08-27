@@ -10,6 +10,7 @@ next-env.d.ts
 
 # sanity
 apps/studio/dist/
+apps/studio/schema.json
 .sanity/
 
 # production

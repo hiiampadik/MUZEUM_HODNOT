@@ -24,12 +24,13 @@ export function IntroBubble({ excerpt, rest }: IntroBubbleProps) {
             <RichText value={rest} />
           </div>
           <Button
-            variant="secondary"
+            variant="primary"
             aria-expanded={open}
             aria-controls={regionId}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? 'Zbaliť' : 'Zobraziť viac'}
+            <span aria-hidden="true">{open ? '⬆️' : '⬇️'}</span>
+            {open ? 'Zbaliť' : 'Čítať viac'}
           </Button>
         </>
       )}

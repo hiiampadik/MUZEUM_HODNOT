@@ -63,6 +63,8 @@ export const HOME_QUERY = defineQuery(/* groq */ `
       image{ ${imageFields} },
       customLink
     },
+    introTitle,
+    introImage{ ${imageFields} },
     introExcerpt,
     introRest,
     "metaDescription": pt::text(introExcerpt)
@@ -82,6 +84,7 @@ export const EXHIBITIONS_QUERY = defineQuery(/* groq */ `
     startDate,
     endDate,
     canOpenDetail,
+    "excerpt": pt::text(abstract),
     ${coverFields}
   }
 `);

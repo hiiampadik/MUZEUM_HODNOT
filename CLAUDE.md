@@ -64,6 +64,10 @@ packages/*     shared code (add when needed)
   Actions (`defineLive`), which `output: 'export'` rejects. Import from `@sanity/client`,
   `groq`, `@portabletext/react` instead. Data is fetched at build time via `client` (no Live
   API, no Visual Editing, no draft mode in production); content updates come from a full rebuild.
+- **Clean builds for content changes:** Next caches the prerender of static routes in `.next`.
+  After editing Sanity content, a rebuild that reuses `.next` can serve a stale homepage.
+  CI/webhook builds must run clean (fresh runner or `rm -rf .next` first) — do NOT persist the
+  `.next` cache across content-triggered rebuilds.
 - Images: `SanityImage` (next/image + custom CDN loader in `src/sanity/imageLoader.ts`).
   Sizing is done by the loader via the Sanity CDN; the base URL keeps hotspot/crop.
 

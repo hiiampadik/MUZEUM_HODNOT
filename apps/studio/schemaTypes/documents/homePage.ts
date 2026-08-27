@@ -26,6 +26,19 @@ export const homePage = defineType({
       validation: (rule) => rule.min(2).max(3),
     }),
     defineField({
+      name: 'introTitle',
+      title: 'Popis projektu — nadpis',
+      type: 'string',
+      description: 'Napr. „Múzeum hodnôt — Obrazová správa o Slovensku".',
+    }),
+    defineField({
+      name: 'introImage',
+      title: 'Popis projektu — obrázok',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Dekoratívny obrázok vedľa textu.',
+    }),
+    defineField({
       name: 'introExcerpt',
       title: 'Popis projektu — úvod',
       type: 'richTextBasic',

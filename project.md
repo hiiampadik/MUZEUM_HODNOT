@@ -20,7 +20,11 @@ Vytvoř si CLAUDE.MD, README.MD a TODO.MD. Rozvrhni si práci do větších blok
 
 ## Design
 - Design je ve Figmě. Zde máš zatím desing Homepage, ze kterého jde odvodit velké množství principů, co používáme.
-    @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=337-1315&m=dev
+    - Homepage @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=337-1315&m=dev
+    - Výstava @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=347-1489&m=dev
+    - Kontakt @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=361-2304&m=dev
+    - Zážitkové vzdělávání @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=422-5929&m=dev
+    - Generátor hodnot @https://www.figma.com/design/kv94h3ftHiTnK38W2u20Ne/Muzeum-Hodnot?node-id=414-4968&m=dev
 - Design používá 3 druhy šířek
   - Bloky roztažené až k okraji obsahující ale padding
     - Galerie ve Výstava

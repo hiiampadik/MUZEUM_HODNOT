@@ -398,6 +398,19 @@ export type HomePage = {
       _key: string;
     } & HeroTile
   >;
+  introTitle?: string;
+  introImage?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
   introExcerpt?: RichTextBasic;
   introRest?: RichTextBasic;
 };
@@ -612,11 +625,13 @@ export type SETTINGS_QUERYResult =
     }
   | null;
 // Variable: HOME_QUERY
-// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    heroTiles[]{      _key,      target,      title,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      customLink    },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
+// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    heroTiles[]{      _key,      target,      title,      image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      customLink    },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introExcerpt,    introRest,    "metaDescription": pt::text(introExcerpt)  }
 export type HOME_QUERYResult =
   | {
       cover: null;
       heroTiles: null;
+      introTitle: null;
+      introImage: null;
       introExcerpt: null;
       introRest: null;
       metaDescription: string;
@@ -636,6 +651,8 @@ export type HOME_QUERYResult =
         crop: SanityImageCrop | null;
       } | null;
       heroTiles: null;
+      introTitle: null;
+      introImage: null;
       introExcerpt: null;
       introRest: null;
       metaDescription: string;
@@ -673,13 +690,27 @@ export type HOME_QUERYResult =
         } | null;
         customLink: NamedLink | null;
       }> | null;
+      introTitle: string | null;
+      introImage: {
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
+        } | null;
+        alt: null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+      } | null;
       introExcerpt: RichTextBasic | null;
       introRest: RichTextBasic | null;
       metaDescription: string;
     }
   | null;
 // Variable: EXHIBITIONS_QUERY
-// Query: *[_type == "exhibition"] | order(endDate desc){    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
+// Query: *[_type == "exhibition"] | order(endDate desc){    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    "excerpt": pt::text(abstract),    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
 export type EXHIBITIONS_QUERYResult = Array<{
   _id: string;
   title: string | null;
@@ -689,6 +720,7 @@ export type EXHIBITIONS_QUERYResult = Array<{
   startDate: string | null;
   endDate: string | null;
   canOpenDetail: boolean | null;
+  excerpt: string;
   cover: {
     asset: {
       _id: string;
@@ -1249,8 +1281,8 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
-    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    heroTiles[]{\n      _key,\n      target,\n      title,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      customLink\n    },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
-    '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
+    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    heroTiles[]{\n      _key,\n      target,\n      title,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n      customLink\n    },\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    introExcerpt,\n    introRest,\n    "metaDescription": pt::text(introExcerpt)\n  }\n': HOME_QUERYResult;
+    '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    "excerpt": pt::text(abstract),\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': EXHIBITION_SITEMAP_QUERYResult;
     '\n  *[_type == "exhibition" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    gallery[]{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer },\n    abstract,\n    materials[]{ \n  _key,\n  title,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n },\n    links[]{ _key, label, href },\n    contributors[]{ _key, role, people },\n    "metaDescription": pt::text(abstract)\n  }\n': EXHIBITION_QUERYResult;

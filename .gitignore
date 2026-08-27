@@ -39,3 +39,6 @@ coverage/
 
 # misc
 *.tsbuildinfo
+
+# local CMS content drafts (not part of the repo)
+tmp/

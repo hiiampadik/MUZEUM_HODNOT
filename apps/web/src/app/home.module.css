@@ -1,24 +1,185 @@
+/* ---- Hero: cover with overlapping tiles ---- */
+.hero {
+  position: relative;
+}
+
+.heroCover {
+  height: min(70vh, 760px);
+}
+
+.tilesWrap {
+  position: relative;
+  z-index: 1;
+}
+
+.tilesOverlap {
+  margin-top: min(-32vh, -260px);
+}
+
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-md);
+}
+
+@media (max-width: 900px) {
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+  .tilesOverlap {
+    margin-top: min(-24vh, -160px);
+  }
+}
+
+/* ---- Hero tile ---- */
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: clip;
+  min-height: 460px;
+}
+
+.tileHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-inline: var(--space-md);
+}
+
+.tileButton {
+  align-self: flex-start;
+}
+
+.tileMedia {
+  flex: 1 0 auto;
+  min-height: 160px;
+}
+
+.tileMedia :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Intro bubble ---- */
+.bubble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: clip;
   margin-block: var(--space-2xl);
 }
 
-.intro {
-  margin-block: var(--space-2xl);
+.bubbleBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
 }
 
+.bubbleAside {
+  background: var(--color-surface-muted);
+  position: relative;
+  min-height: 240px;
+}
+
+.bubbleAside :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    grid-template-columns: 1fr;
+  }
+  .bubbleAside {
+    min-height: 200px;
+  }
+}
+
+/* ---- Exhibition sections ---- */
 .section {
   margin-block: var(--space-2xl);
 }
 
 .sectionTitle {
+  text-align: center;
+  display: block;
   margin-bottom: var(--space-lg);
 }
 
-.grid {
+.upcomingList {
+  display: flex;
+  flex-direction: column;
+}
+
+.upcomingRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-top: 2px dashed var(--color-border-strong);
+}
+
+.upcomingList .upcomingRow:last-child {
+  border-bottom: 2px dashed var(--color-border-strong);
+}
+
+.rowExcerpt {
+  max-width: 420px;
+}
+
+/* ---- Past exhibitions ---- */
+.pastList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pastCard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  gap: var(--space-lg);
+  grid-template-columns: 1fr 1fr;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: clip;
+  color: inherit;
+}
+
+.pastBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+.pastMedia {
+  position: relative;
+  min-height: 200px;
+}
+
+.pastMedia :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+a.pastCard:hover {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+@media (max-width: 640px) {
+  .pastCard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footerCover {
+  height: min(46vh, 520px);
+  margin-top: var(--space-2xl);
 }

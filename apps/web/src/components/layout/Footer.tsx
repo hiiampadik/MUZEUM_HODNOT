@@ -1,7 +1,7 @@
 import { Container } from '../Container/Container';
 import { Link } from '../Link/Link';
 import { RichText } from '../RichText/RichText';
-import { Label } from '../Typography/Typography';
+import { Title } from '../Typography/Typography';
 import type { SETTINGS_QUERYResult, CONTACT_QUERYResult } from '@/sanity/types.generated';
 import styles from './Footer.module.css';
 
@@ -19,9 +19,9 @@ export function Footer({ settings, contact }: FooterProps) {
         <div className={styles.grid}>
           {/* Contact — sourced from the Contact page */}
           <div>
-            <Label as="h2" className={styles.heading}>
+            <Title as="h2" className={styles.heading}>
               Kontakt
-            </Label>
+            </Title>
             {contact?.phone && (
               <p>
                 <Link href={`tel:${contact.phone}`}>{contact.phone}</Link>
@@ -38,9 +38,9 @@ export function Footer({ settings, contact }: FooterProps) {
           {/* Administrative info — also from the Contact page */}
           {contact?.administrativeInfo && (
             <div>
-              <Label as="h2" className={styles.heading}>
+              <Title as="h2" className={styles.heading}>
                 Administratívne údaje
-              </Label>
+              </Title>
               <RichText value={contact.administrativeInfo} />
             </div>
           )}
@@ -48,9 +48,9 @@ export function Footer({ settings, contact }: FooterProps) {
           {/* Partners */}
           {settings?.partners && (
             <div>
-              <Label as="h2" className={styles.heading}>
+              <Title as="h2" className={styles.heading}>
                 Partneri projektu
-              </Label>
+              </Title>
               <RichText value={settings.partners} />
             </div>
           )}
@@ -58,9 +58,9 @@ export function Footer({ settings, contact }: FooterProps) {
           {/* Social networks */}
           {social.length > 0 && (
             <div>
-              <Label as="h2" className={styles.heading}>
+              <Title as="h2" className={styles.heading}>
                 Sledujte nás
-              </Label>
+              </Title>
               <ul className={styles.social}>
                 {social.map((item) => (
                   <li key={item._key}>

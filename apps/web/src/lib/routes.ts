@@ -9,13 +9,25 @@ export const routes = {
 } as const;
 
 /**
- * Per-section accent colors. Provisional — final values come from the Figma.
- * Applied via inline `--accent` on the page/section wrapper.
+ * Per-section accent colors, from the Figma palette.
+ * Applied via inline `--accent` on the page/section wrapper (drives title
+ * underline + button color).
  */
 export const accents = {
-  home: '#1f6feb',
-  exhibition: '#c2410c',
-  contact: '#0f766e',
-  experientialEducation: '#7c3aed',
-  valueGenerator: '#b91c1c',
+  home: '#5594b4', // blue — project intro bubble
+  exhibition: '#66a755', // green — exhibitions
+  contact: '#a77d3f', // gold
+  experientialEducation: '#a77d3f', // gold — "Zážitkové vzdelávanie"
+  valueGenerator: '#c575e0', // purple — "Generátor hodnôt"
 } as const;
+
+/** Accent palette for cycling per-item colors (e.g. exhibition cards). */
+export const accentPalette = [
+  '#66a755',
+  '#5594b4',
+  '#c575e0',
+  '#a77d3f',
+  '#ffb6ed',
+  '#c1be66',
+  '#399135',
+] as const;

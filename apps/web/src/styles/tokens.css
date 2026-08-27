@@ -1,19 +1,18 @@
 /**
- * Design tokens — provisional values.
- * Final values (colors, spacing scale, fonts) depend on the approved Figma (Blok 2).
- * Never hardcode px in components — reference these variables.
+ * Design tokens — derived from the Figma design (Muzeum Hodnot).
+ * Reference components via these variables; never hardcode px/hex.
  */
 
 :root {
-  /* Spacing scale */
+  /* Spacing scale (4px base) */
   --space-3xs: 0.25rem; /* 4px */
   --space-2xs: 0.5rem; /* 8px */
   --space-xs: 0.75rem; /* 12px */
   --space-sm: 1rem; /* 16px */
-  --space-md: 1.5rem; /* 24px */
+  --space-md: 1.5rem; /* 24px — container padding, card padding */
   --space-lg: 2rem; /* 32px */
   --space-xl: 3rem; /* 48px */
-  --space-2xl: 4rem; /* 64px */
+  --space-2xl: 4rem; /* 64px — section gap */
   --space-3xl: 6rem; /* 96px */
 
   /* Layout widths */
@@ -22,33 +21,48 @@
   --container-padding: var(--space-md);
 
   /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 13px; /* buttons */
+  --radius-lg: 30px; /* cards, nav pills */
   --radius-full: 999px;
 
-  /* Colors (provisional) */
-  --color-bg: #ffffff;
-  --color-fg: #111111;
-  --color-muted: #666666;
-  --color-border: #e5e5e5;
+  /* Colors */
+  --color-bg: #ececf0; /* page background */
+  --color-surface: #ffffff; /* cards */
+  --color-surface-muted: #f8f8fa; /* subtle panels */
+  --color-fg: #000000;
+  --color-on-accent: #ffffff; /* text on an accent fill */
+  --color-muted: #6b6b6b;
+  --color-border: #ececf0;
+  --color-border-strong: #d2d2d2; /* dashed dividers */
 
-  /* Accent — overridden per section via --accent on the wrapper */
-  --accent: #000000;
+  /* Accent palette (underline + button color per section) */
+  --accent-green: #66a755;
+  --accent-green-dark: #399135;
+  --accent-purple: #c575e0;
+  --accent-purple-light: #d392ff;
+  --accent-gold: #a77d3f;
+  --accent-blue: #5594b4;
+  --accent-pink: #ffb6ed;
+  --accent-olive: #c1be66;
 
-  /* Typography (provisional — fonts CY / monospace resolved in Blok 2) */
-  --font-heading: system-ui, sans-serif;
-  --font-body: system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  /* Active section accent — overridden per section via inline --accent */
+  --accent: var(--accent-blue);
 
-  --font-size-heading: clamp(2.5rem, 6vw, 4.5rem);
-  --font-size-title: clamp(1.5rem, 3vw, 2.25rem);
-  --font-size-body: 1rem;
-  --font-size-label: 0.875rem;
+  /* Typography */
+  --font-cy: 'Cy';
+  --font-display: var(--font-cy), Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --line-height-heading: 1.05;
-  --line-height-body: 1.6;
+  --font-size-heading: clamp(1.75rem, 4vw, 2.5rem);
+  --font-size-title: clamp(1.625rem, 4vw, 2.125rem); /* → 34px */
+  --font-size-body: 1rem; /* 16px */
+  --font-size-label: 0.875rem; /* 14px */
+
+  --line-height-heading: 1.15;
+  --line-height-body: 1.4;
+  --letter-spacing-label: -0.02em; /* ≈ -0.28px @ 14px */
 }
 
-/* Breakpoints are documented here for reference; used via media queries in CSS Modules.
-   --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1200px; */
+/* Breakpoints (reference): --bp-sm 480 · --bp-md 768 · --bp-lg 1024 · --bp-xl 1200 */

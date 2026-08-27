@@ -28,8 +28,13 @@ packages/*     shared code (add when needed)
 ## Conventions — styling & design system
 - **All sizing via tokens** — never hardcoded px. Use CSS variables:
   `--space-*`, `--color-*`, `--radius-*`, `--font-*`. Defined in `apps/web/src/styles/tokens.css`.
-- **Typography** has 4 roles: `heading` (CY, large), `title` (CY, with a dynamic underline/accent),
-  `label` (monospace), `body`. Expressed as reusable classes/components.
+- **Typography** has 4 roles: `heading`/`title` use the **Cy** display font (`--font-display`,
+  title 34px with a dynamic accent underline), `label` uses **Geist Mono** (`--font-mono`),
+  `body` uses **Geist** (`--font-body`). Geist/Geist Mono come from the `geist` package
+  (self-hosted via next/font). **Cy is proprietary** — drop `cy-regular.woff2` into
+  `apps/web/public/fonts/` (see its README); until then a serif fallback is used.
+- Design tokens (colors, spacing, radius) are derived from Figma in `src/styles/tokens.css`:
+  page bg `#ececf0`, white surfaces, radius 13px (buttons) / 30px (cards).
 - **Accent system:** sections carry an accent color (title underline + button color). Driven by a
   CSS variable `--accent` on the section wrapper — components read `var(--accent)`, not a fixed color.
 - **3 layout widths** (`Container`/`Section` component):

@@ -2,74 +2,48 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  padding-block: var(--space-md);
 }
 
 .inner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
-  min-height: 56px;
+  justify-content: center;
+  gap: var(--space-2xs);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding: 10px var(--space-md);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-label);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-label);
+  white-space: nowrap;
 }
 
 .brand {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.125rem;
+  background: var(--color-fg);
+  color: var(--color-on-accent);
 }
 
-.toggle {
-  display: inline-flex;
-  background: none;
-  border: 0;
-  padding: var(--space-2xs);
-  cursor: pointer;
-}
-
-.list {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.link {
+  background: var(--color-surface);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.15s ease;
 }
 
 .link:hover,
 .link[aria-current='page'] {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+  border-color: var(--accent, var(--color-fg));
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .toggle {
-    display: inline-flex;
-  }
-
-  .list {
-    display: none;
-    position: absolute;
-    inset-inline: 0;
-    top: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--container-padding);
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .list.open {
-    display: flex;
-  }
-}
-
-@media (min-width: 769px) {
-  .toggle {
-    display: none;
-  }
+.link:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
 }

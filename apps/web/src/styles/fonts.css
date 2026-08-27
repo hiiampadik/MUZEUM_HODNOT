@@ -1,0 +1,12 @@
+/**
+ * Cy — the display typeface used for titles/headings (proprietary).
+ * Drop the font files into apps/web/public/fonts/ (see public/fonts/README.md).
+ * Until they exist, the browser falls back to the serif stack in --font-display.
+ */
+@font-face {
+  font-family: 'Cy';
+  src: url('/fonts/cy-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

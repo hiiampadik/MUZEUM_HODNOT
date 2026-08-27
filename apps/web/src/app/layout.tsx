@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { client } from '@/sanity/lib/client';
 import { SETTINGS_QUERY, CONTACT_QUERY } from '@/sanity/queries';
@@ -38,7 +40,7 @@ export default async function RootLayout({
   ]);
 
   return (
-    <html lang="sk">
+    <html lang="sk" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>
         <a href="#main" className="skip-link">
           Preskočiť na obsah

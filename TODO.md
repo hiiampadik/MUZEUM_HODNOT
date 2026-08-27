@@ -18,12 +18,16 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] `apps/studio` — Sanity Studio kostra (`sanity.config.ts`)
 - [x] `git init` + první commit (větev `main`)
 
-## Blok 2 — Design systém / tokeny  *(hodnoty po schválení Figmy)*
-- [ ] `tokens.css` — `--space-*`, `--color-*`, `--radius-*`, breakpointy
-- [ ] Typografie: heading (CY), title (CY + dynamické podtržení/akcent), label (mono), body
-- [ ] Accent systém (`--accent` na wrapperu sekce)
-- [ ] `Container`/`Section` — 3 šířky (full+padding / max 1200 / max 600)
-- [ ] Globální paragrafové/typo třídy
+## Blok 2 — Design systém / tokeny  *(z Figmy)*
+- [x] `tokens.css` — barvy (#ececf0 bg, surface, akcentní paleta), `--space-*`,
+      `--radius-*` (13 button / 30 karta), typografie
+- [x] Fonty: Geist + Geist Mono (`geist` balíček, self-host); Cy (display) — `@font-face`
+      + fallback, čeká na font soubor (`public/fonts/cy-regular.woff2`)
+- [x] Typografie: heading/title (Cy) + akcentní podtržení, label (Geist Mono), text (Geist)
+- [x] Accent systém (`--accent` per sekce, paleta v `routes.ts`)
+- [x] `Container` — 3 šířky (full+padding / max 1200 / max 600)
+- [x] Primitivy sladěné s Figmou: Button (pill), Nav (pilulky), Tile, Footer
+- [ ] Dodat font soubor Cy (proprietární) → `public/fonts/`
 
 ## Blok 3 — Sanity schémata  *(struktura schválená)*
 - [x] `siteSettings` — navigace (donate link) + patička (sociální sítě, Partneri textblok)

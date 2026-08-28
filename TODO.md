@@ -87,9 +87,11 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 
 
 ## Feedback
-- Výstava v CMS musí mít u Odkazů a Materiálů možnost přidat vlastní emoji
-- Když exhibition meta nemá 4. sloupec, tak vycentruj 3 sloupce. Stejné pro 2 sloupce.
-- Použíj dočasně CY písmo z public folder 
-- Mezi rozbaleným IntroBubble a buttonem na sbalení by měla být mezera.
-- Vyextrahuj UI texty do extérního souboru. 
-- U Coverů v CMS nepotřebujeme ALT.
+- [x] Výstava v CMS musí mít u Odkazů a Materiálů možnost přidat vlastní emoji
+- [x] Když exhibition meta nemá 4. sloupec, tak vycentruj 3 sloupce. Stejné pro 2 sloupce.
+- [x] Použíj dočasně CY písmo z public folder → `@font-face` v globals.css, Typekit `@import` zakomentovaný (TODO Blok 8)
+- [x] Mezi rozbaleným IntroBubble a buttonem na sbalení by měla být mezera.
+- [x] Vyextrahuj UI texty do extérního souboru → `src/lib/strings.ts`; nový CMS flag „Cudzojazyčná výstava" přepne UI na detailu výstavy do angličtiny (nav + pätička zůstávají SK)
+- [x] U Coverů v CMS nepotřebujeme ALT.
+- [ ] Přesuň z navigace položku muzeum hodnot - bude v levém horním rohu a bude mít ikonu domečku. Bude to kulatý button - stejně vysoký jako široký. Bude se ukazovat pouze mimo homepage.
+- [ ] Podívej se na obrázek v bubbleAside. Měl by být zarovnaný na horní stranu kontejneru s paddingem a směřovat směrem dolů za hranu kontejneru, kde už nebude vidět.

@@ -16,6 +16,12 @@ export const namedLink = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'emoji',
+      title: 'Emoji',
+      type: 'string',
+      description: 'Voliteľné emoji pred názvom. Ak je prázdne, použije sa ↗.',
+    }),
+    defineField({
       name: 'href',
       title: 'URL',
       type: 'url',
@@ -24,6 +30,9 @@ export const namedLink = defineType({
     }),
   ],
   preview: {
-    select: { title: 'label', subtitle: 'href' },
+    select: { title: 'label', subtitle: 'href', emoji: 'emoji' },
+    prepare({ title, subtitle, emoji }) {
+      return { title: [emoji, title].filter(Boolean).join(' '), subtitle };
+    },
   },
 });

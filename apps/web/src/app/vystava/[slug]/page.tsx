@@ -14,6 +14,7 @@ import { pageMetadata } from '@/lib/metadata';
 import { ogImageUrl } from '@/sanity/lib/og';
 import { formatDate, formatDateRange } from '@/lib/format';
 import { categorize } from '@/lib/exhibitions';
+import { getExhibitionStrings, type Locale } from '@/lib/strings';
 import styles from './exhibition.module.css';
 
 type Params = { slug: string };
@@ -34,8 +35,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const exhibition = await client.fetch(EXHIBITION_QUERY, { slug });
+  const locale: Locale = exhibition?.foreignLanguage ? 'en' : 'sk';
   return pageMetadata({
-    title: exhibition?.title ?? 'Výstava',
+    title: exhibition?.title ?? getExhibitionStrings(locale).fallbackTitle,
     description: exhibition?.metaDescription,
     image: ogImageUrl(exhibition?.cover),
     path: routes.exhibition(slug),
@@ -69,6 +71,8 @@ export default async function ExhibitionPage({
     contributors,
   } = exhibition;
 
+  const locale: Locale = exhibition.foreignLanguage ? 'en' : 'sk';
+  const t = getExhibitionStrings(locale);
   const isActive = categorize({ startDate, endDate }) === 'active';
 
   const jsonLd = {
@@ -83,7 +87,11 @@ export default async function ExhibitionPage({
   };
 
   return (
-    <main className="page-main" style={{ '--accent': accents.exhibition } as CSSProperties}>
+    <main
+      className="page-main"
+      lang={locale}
+      style={{ '--accent': accents.exhibition } as CSSProperties}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -97,13 +105,13 @@ export default async function ExhibitionPage({
         <header className={styles.header}>
           {place && <Label>{place}</Label>}
           <Heading className={styles.headerTitle}>{title}</Heading>
-          {isActive && <span className={styles.tag}>Aktuálne</span>}
+          {isActive && <span className={styles.tag}>{t.current}</span>}
         </header>
 
         <dl className={styles.meta}>
           {(startDate || endDate) && (
             <div className={styles.metaItem}>
-              <Label as="dt">Trvanie výstavy</Label>
+              <Label as="dt">{t.duration}</Label>
               <Text as="dd" className={styles.metaValue}>
                 {formatDateRange(startDate, endDate)}
               </Text>
@@ -111,7 +119,7 @@ export default async function ExhibitionPage({
           )}
           {openingDate && (
             <div className={styles.metaItem}>
-              <Label as="dt">Vernisáž</Label>
+              <Label as="dt">{t.opening}</Label>
               <Text as="dd" className={styles.metaValue}>
                 {formatDate(openingDate)}
               </Text>
@@ -148,13 +156,19 @@ export default async function ExhibitionPage({
             {materials && materials.length > 0 && (
               <div>
                 <Title as="h2" className={styles.attachTitle}>
-                  Materiály
+                  {t.materials}
                 </Title>
                 <div className={styles.pills}>
                   {materials.map((m) =>
                     m.url ? (
-                      <Pill key={m._key} href={m.url} download color="#272727" emoji="📁">
-                        {m.title || 'Súbor'}
+                      <Pill
+                        key={m._key}
+                        href={m.url}
+                        download
+                        color="#272727"
+                        emoji={m.emoji || '📁'}
+                      >
+                        {m.title || t.fileFallback}
                       </Pill>
                     ) : null,
                   )}
@@ -165,7 +179,7 @@ export default async function ExhibitionPage({
             {links && links.length > 0 && (
               <div>
                 <Title as="h2" className={styles.attachTitle}>
-                  Odkazy
+                  {t.links}
                 </Title>
                 <div className={styles.pills}>
                   {links.map((link, i) => (
@@ -173,7 +187,7 @@ export default async function ExhibitionPage({
                       key={link._key}
                       href={link.href ?? '#'}
                       color={accentPalette[i % accentPalette.length]}
-                      emoji="↗"
+                      emoji={link.emoji || '↗'}
                     >
                       {link.label}
                     </Pill>
@@ -187,7 +201,7 @@ export default async function ExhibitionPage({
         {contributors && contributors.length > 0 && (
           <section className={styles.credits}>
             <Title as="h2" className={styles.creditsTitle}>
-              Ďalej sa podieľali
+              {t.contributors}
             </Title>
             <div className={styles.creditsList}>
               {contributors.map((c) => (

@@ -43,6 +43,15 @@ export const exhibition = defineType({
       initialValue: true,
     }),
     defineField({
+      name: 'foreignLanguage',
+      title: 'Cudzojazyčná výstava',
+      type: 'boolean',
+      group: 'main',
+      description:
+        'Ak je zapnuté, UI texty na detaile tejto výstavy budú v angličtine. Navigácia a pätička zostávajú po slovensky.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'place',
       title: 'Miesto',
       type: 'string',

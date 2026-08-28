@@ -1,5 +1,15 @@
-@import url('https://use.typekit.net/hcm5cdz.css');
 @import '../styles/tokens.css';
+
+/* TODO(Blok 8): switch back to Adobe Fonts / Typekit once the production domain
+   is on the allowed-domains list (@import url('https://use.typekit.net/hcm5cdz.css')).
+   Temporarily self-host the Cy display font from /public. */
+@font-face {
+  font-family: 'cy';
+  src: url('/Cy-SemiBold.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Minimal reset */
 *,

@@ -20,6 +20,7 @@ const edgeCoverFields = /* groq */ `
 const materialFields = /* groq */ `
   _key,
   title,
+  emoji,
   "url": file.asset->url,
   "extension": file.asset->extension,
   "size": file.asset->size
@@ -120,13 +121,14 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     startDate,
     endDate,
     canOpenDetail,
+    foreignLanguage,
     roles[]{ _key, role, people },
     ${coverFields},
     ${edgeCoverFields},
     gallery[]{ ${imageFields}, photographer },
     abstract,
     materials[]{ ${materialFields} },
-    links[]{ _key, label, href },
+    links[]{ _key, label, emoji, href },
     contributors[]{ _key, role, people },
     "metaDescription": pt::text(abstract)
   }

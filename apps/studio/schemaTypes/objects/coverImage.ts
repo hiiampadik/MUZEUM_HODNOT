@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType } from 'sanity';
 import { ImageIcon } from '@sanity/icons';
 
 /**
@@ -11,13 +11,5 @@ export const coverImage = defineType({
   type: 'image',
   icon: ImageIcon,
   options: { hotspot: true },
-  fields: [
-    defineField({
-      name: 'alt',
-      title: 'Alternatívny text',
-      type: 'string',
-      description: 'Popis obrázka pre čítačky obrazovky a SEO.',
-      validation: (rule) => rule.required(),
-    }),
-  ],
+  // Covers are decorative (rendered as dithered backgrounds) — no alt needed.
 });

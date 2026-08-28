@@ -9,6 +9,7 @@ import styles from './PageBuilder.module.css';
 type MaterialItem = {
   _key: string;
   title: string | null;
+  emoji?: string | null;
   url: string | null;
 };
 
@@ -28,7 +29,7 @@ function MaterialPills({ items }: { items: readonly MaterialItem[] }) {
     <div className={styles.pills}>
       {items.map((m) =>
         m.url ? (
-          <Pill key={m._key} href={m.url} download color="#272727" emoji="📁">
+          <Pill key={m._key} href={m.url} download color="#272727" emoji={m.emoji || '📁'}>
             {m.title || 'Súbor'}
           </Pill>
         ) : null,

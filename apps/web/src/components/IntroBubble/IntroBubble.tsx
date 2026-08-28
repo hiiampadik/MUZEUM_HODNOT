@@ -20,7 +20,7 @@ export function IntroBubble({ value }: IntroBubbleProps) {
   if (!value || value.length === 0) return null;
 
   return (
-    <div>
+    <div className={styles.root}>
       <div
         id={regionId}
         className={`${styles.text} ${open ? '' : styles.clamped}`}

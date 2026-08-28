@@ -16,6 +16,12 @@ export const materialFile = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'emoji',
+      title: 'Emoji',
+      type: 'string',
+      description: 'Voliteľné emoji pred názvom. Ak je prázdne, použije sa 📁.',
+    }),
+    defineField({
       name: 'file',
       title: 'Súbor',
       type: 'file',
@@ -23,9 +29,12 @@ export const materialFile = defineType({
     }),
   ],
   preview: {
-    select: { title: 'title' },
-    prepare({ title }) {
-      return { title: title || 'Materiál', subtitle: 'Materiál na stiahnutie' };
+    select: { title: 'title', emoji: 'emoji' },
+    prepare({ title, emoji }) {
+      return {
+        title: [emoji, title].filter(Boolean).join(' ') || 'Materiál',
+        subtitle: 'Materiál na stiahnutie',
+      };
     },
   },
 });

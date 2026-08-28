@@ -86,12 +86,24 @@
   background: var(--color-surface-muted);
   position: relative;
   min-height: 240px;
+  overflow: hidden;
 }
 
+/* Top-aligned with padding; the image keeps its aspect ratio and bleeds down
+   past the container's bottom edge, where `overflow: hidden` clips it. */
 .bubbleAside :global(img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  right: var(--space-md);
+  width: auto;
+  height: auto;
+  max-width: none;
+
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  mix-blend-mode: multiply;
 }
 
 @media (max-width: 768px) {

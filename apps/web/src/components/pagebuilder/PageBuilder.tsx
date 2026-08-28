@@ -54,7 +54,7 @@ function renderBlock(block: Block, index: number) {
           key={block._key}
           as={level}
           underline
-          className={styles.heading}
+          className={`${styles.heading} ${level === 'h3' ? styles.heading3 : ''}`}
           // Vary the underline accent per heading, matching the design.
           style={{ '--accent': accent } as CSSProperties}
         >

@@ -38,9 +38,6 @@ export default async function ValueGeneratorPage() {
 
       {points.length > 0 && (
         <Container>
-          <Title as="h2" underline className={builder.title}>
-            Mapa
-          </Title>
           <ValueMap points={points} />
         </Container>
       )}

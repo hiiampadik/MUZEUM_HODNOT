@@ -40,6 +40,12 @@ html {
   outline-offset: 2px;
 }
 
+/* Text selection highlight. */
+::selection {
+  background: var(--accent-blue-light);
+  color: var(--color-fg);
+}
+
 body {
   min-height: 100dvh;
   font-family: var(--font-body);

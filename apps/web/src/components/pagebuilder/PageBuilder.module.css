@@ -10,7 +10,23 @@
 }
 
 .heading {
-  text-align: center;
+  width: 100%;
+  text-align: left;
+}
+
+/* Sub-heading: smaller, and the block right after it sits tight. */
+.heading3 {
+  font-size: var(--font-size-subtitle);
+  text-decoration: none;
+}
+
+/* Top-level section gap is --space-2xl; these pairs collapse to --space-md.
+   A negative top margin cancels part of the flex gap. Scoped to direct
+   children only — inside a .card the gap is already --space-md, so applying
+   this there would overshoot into an overlap. */
+.builder > .heading3 + *,
+.builder > .card + .card {
+  margin-top: calc(var(--space-xs) - var(--space-2xl));
 }
 
 /* Decorative image: centered, gets a frontend effect (dither in Blok 6). */

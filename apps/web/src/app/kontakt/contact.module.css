@@ -30,18 +30,13 @@
 }
 
 /* ---- People ---- */
-.peopleTitle {
-  text-align: center;
-  display: block;
-  margin-bottom: var(--space-xl);
-}
 
 .people {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-xl) var(--space-md);
   list-style: none;
-  margin: 0;
+  margin: var(--space-3xl) 0 0 0;
   padding: 0;
 }
 

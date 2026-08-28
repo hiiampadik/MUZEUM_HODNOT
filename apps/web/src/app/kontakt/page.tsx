@@ -66,9 +66,6 @@ export default async function ContactPage() {
 
       {contact?.people && contact.people.length > 0 && (
         <Container>
-          <Title as="h2" underline className={styles.peopleTitle}>
-            Ľudia v projekte
-          </Title>
           <ul className={styles.people}>
             {contact.people.map((person) => (
               <li key={person._key} className={styles.person}>

@@ -204,7 +204,7 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
     <div className={styles.upcomingRow} style={{ '--accent': accent } as CSSProperties}>
       <div>
         {year && <Label as="p">{year}</Label>}
-        <Title as="h3" underline>
+        <Title as="h3">
           {exhibition.title}
         </Title>
       </div>
@@ -223,7 +223,7 @@ function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: 
       <div className={styles.pastBody}>
         <div className={styles.pastSection}>
           <Label as="p">{formatDateRange(startDate, endDate)}</Label>
-          <Title as="h3" underline>
+          <Title as="h3">
             {title}
           </Title>
         </div>

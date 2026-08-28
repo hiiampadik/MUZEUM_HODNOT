@@ -44,8 +44,9 @@
   }
 }
 
-/* Outline on a surface (nav links). */
+/* Outline on a surface (nav links). Border matches the page background. */
 .surface {
   background: var(--color-surface);
   color: var(--color-fg);
+  border-color: var(--color-bg);
 }

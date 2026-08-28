@@ -50,16 +50,3 @@
   align-items: flex-start;
   gap: var(--space-2xs);
 }
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3xs);
-  padding: var(--space-3xs) var(--space-xs);
-  border-radius: var(--radius-md);
-  background: #272727;
-  color: var(--color-on-accent);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-label);
-  letter-spacing: var(--letter-spacing-label);
-}

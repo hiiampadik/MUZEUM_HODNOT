@@ -13,6 +13,13 @@
   margin-bottom: var(--space-sm);
 }
 
+/* Footer body copy uses the mono label font. */
+.footer :global(p) {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-label);
+}
+
 .social {
   display: flex;
   gap: var(--space-sm);
@@ -33,6 +40,8 @@
   height: 100%;
 }
 
-.socialLink:hover {
-  color: var(--accent);
+@media (hover: hover) {
+  .socialLink:hover {
+    color: var(--accent);
+  }
 }

@@ -29,11 +29,11 @@ export function IntroBubble({ value }: IntroBubbleProps) {
       </div>
       <Button
         variant="primary"
+        emoji={open ? '⬆️' : '⬇️'}
         aria-expanded={open}
         aria-controls={regionId}
         onClick={() => setOpen((v) => !v)}
       >
-        <span aria-hidden="true">{open ? '⬆️' : '⬇️'}</span>
         {open ? 'Zbaliť' : 'Čítať viac'}
       </Button>
     </div>

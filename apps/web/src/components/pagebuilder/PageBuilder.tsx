@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { RichText } from '../RichText/RichText';
 import { SanityImage, type SanityImageValue } from '../SanityImage/SanityImage';
 import { Title } from '../Typography/Typography';
+import { Pill } from '../Pill/Pill';
 import { accentPalette } from '@/lib/routes';
 import styles from './PageBuilder.module.css';
 
@@ -27,10 +28,9 @@ function MaterialPills({ items }: { items: readonly MaterialItem[] }) {
     <div className={styles.pills}>
       {items.map((m) =>
         m.url ? (
-          <a key={m._key} href={m.url} download className={styles.pill}>
-            <span aria-hidden="true">📁</span>
+          <Pill key={m._key} href={m.url} download color="#272727" emoji="📁">
             {m.title || 'Súbor'}
-          </a>
+          </Pill>
         ) : null,
       )}
     </div>

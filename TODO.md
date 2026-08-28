@@ -84,3 +84,12 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - Přesné hodnoty tokenů + fonty (CY, monospace) → finální Figma
 - Vlastní doména + Cloudflare zóna → před Blokem 8
 - Sdílet page builder `experientialEducation` × `valueGenerator` 1:1?
+
+
+## Feedback
+- Výstava v CMS musí mít u Odkazů a Materiálů možnost přidat vlastní emoji
+- Když exhibition meta nemá 4. sloupec, tak vycentruj 3 sloupce. Stejné pro 2 sloupce.
+- Použíj dočasně CY písmo z public folder 
+- Mezi rozbaleným IntroBubble a buttonem na sbalení by měla být mezera.
+- Vyextrahuj UI texty do extérního souboru. 
+- U Coverů v CMS nepotřebujeme ALT.

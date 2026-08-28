@@ -1,0 +1,35 @@
+/**
+ * Shared emoji-hover behavior for Button and Pill.
+ *
+ * On hover the leading emoji fades out while the label slides to the center of
+ * the control. The emoji keeps a fixed width and only its opacity animates, so
+ * the control's overall width never changes — only the text moves.
+ *
+ * Apply `.wrap` to the interactive root, `.emoji` to the leading icon span, and
+ * `.label` to the text span. All three must come from this module so the
+ * `.wrap:hover` descendant selectors resolve.
+ */
+
+.emoji {
+  display: inline-flex;
+  justify-content: center;
+  flex: none;
+  /* Fixed footprint: reserves space + acts as the gap before the label. */
+  width: 1.5em;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.label {
+  transition: transform 0.2s ease;
+}
+
+@media (hover: hover) {
+  .wrap:hover .emoji {
+    opacity: 0;
+  }
+  /* Shift by half the emoji footprint so the label lands centered. */
+  .wrap:hover .label {
+    transform: translateX(-0.75em);
+  }
+}

@@ -11,8 +11,10 @@
   transition: box-shadow 0.15s ease;
 }
 
-a.tile:hover {
-  box-shadow: 0 0 0 2px var(--accent);
+@media (hover: hover) {
+  a.tile:hover {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
 }
 
 a.tile:focus-visible {

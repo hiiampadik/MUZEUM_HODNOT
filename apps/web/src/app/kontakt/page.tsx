@@ -6,7 +6,7 @@ import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { RichText } from '@/components/RichText/RichText';
-import { Link } from '@/components/Link/Link';
+import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
@@ -38,22 +38,17 @@ export default async function ContactPage() {
           {contact?.phone && (
             <div className={styles.detailItem}>
               <Label>Telefón</Label>
-              <Link href={`tel:${contact.phone}`} className={`${styles.pill} ${styles.pillPhone}`}>
-                <span aria-hidden="true">☎️</span>
+              <Pill href={`tel:${contact.phone}`} color="#904646" emoji="☎️">
                 {contact.phone}
-              </Link>
+              </Pill>
             </div>
           )}
           {contact?.email && (
             <div className={styles.detailItem}>
               <Label>E-mail</Label>
-              <Link
-                href={`mailto:${contact.email}`}
-                className={`${styles.pill} ${styles.pillEmail}`}
-              >
-                <span aria-hidden="true">💌</span>
+              <Pill href={`mailto:${contact.email}`} color="#2b2b2b" emoji="💌">
                 {contact.email}
-              </Link>
+              </Pill>
             </div>
           )}
           {contact?.address && (

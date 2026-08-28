@@ -1,3 +1,5 @@
+# TODO
+
 # Muzeum Hodnot
 Muzeum Hodnot je slovenský jednojazyčný web, který obsahuje výstavy a nabízí vzdělávací podklady pro školy.
 I když tento soubor je psaný česky, UI webu a CMS bude slovensky, programátorská část bude tradičně anglicky. Komunikace developera a claude může probíhat v češtině.

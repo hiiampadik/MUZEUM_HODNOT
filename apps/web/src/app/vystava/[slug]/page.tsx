@@ -7,7 +7,7 @@ import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { RichText } from '@/components/RichText/RichText';
-import { Link } from '@/components/Link/Link';
+import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes, accentPalette } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
@@ -153,10 +153,9 @@ export default async function ExhibitionPage({
                 <div className={styles.pills}>
                   {materials.map((m) =>
                     m.url ? (
-                      <a key={m._key} href={m.url} download className={`${styles.pill} ${styles.pillDark}`}>
-                        <span aria-hidden="true">📁</span>
+                      <Pill key={m._key} href={m.url} download color="#272727" emoji="📁">
                         {m.title || 'Súbor'}
-                      </a>
+                      </Pill>
                     ) : null,
                   )}
                 </div>
@@ -170,15 +169,14 @@ export default async function ExhibitionPage({
                 </Title>
                 <div className={styles.pills}>
                   {links.map((link, i) => (
-                    <Link
+                    <Pill
                       key={link._key}
                       href={link.href ?? '#'}
-                      className={styles.pill}
-                      style={{ background: accentPalette[i % accentPalette.length] } as CSSProperties}
+                      color={accentPalette[i % accentPalette.length]}
+                      emoji="↗"
                     >
-                      <span aria-hidden="true">↗</span>
                       {link.label}
-                    </Link>
+                    </Pill>
                   ))}
                 </div>
               </div>

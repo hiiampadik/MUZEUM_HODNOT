@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Link } from '../Link/Link';
+import { Pill } from '../Pill/Pill';
 import { Container } from '../Container/Container';
 import { routes } from '@/lib/routes';
 import styles from './Nav.module.css';
@@ -23,28 +23,27 @@ export function Nav({ donateLink }: NavProps) {
     <nav className={styles.nav} aria-label="Hlavná navigácia">
       <Container>
         <div className={styles.inner}>
-          <Link href={routes.home} className={`${styles.pill} ${styles.brand}`}>
-            <span aria-hidden="true">✨</span>
-            <span>Múzeum hodnôt</span>
-          </Link>
+          <Pill href={routes.home} size="lg" emoji="✨">
+            Múzeum hodnôt
+          </Pill>
 
           {items.map((item) => (
-            <Link
+            <Pill
               key={item.href}
               href={item.href}
-              className={`${styles.pill} ${styles.link}`}
+              variant="surface"
+              size="lg"
+              emoji={item.emoji}
               aria-current={pathname === item.href ? 'page' : undefined}
             >
-              <span aria-hidden="true">{item.emoji}</span>
-              <span>{item.label}</span>
-            </Link>
+              {item.label}
+            </Pill>
           ))}
 
           {donateLink?.href && (
-            <Link href={donateLink.href} className={`${styles.pill} ${styles.link}`}>
-              <span aria-hidden="true">💝</span>
-              <span>{donateLink.label || 'Darovať'}</span>
-            </Link>
+            <Pill href={donateLink.href} variant="surface" size="lg" emoji="💝">
+              {donateLink.label || 'Darovať'}
+            </Pill>
           )}
         </div>
       </Container>

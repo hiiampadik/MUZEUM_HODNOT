@@ -35,6 +35,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
+  font-weight: 500;
   color: var(--color-fg);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
@@ -50,7 +51,11 @@ video {
 
 a {
   color: inherit;
-  text-decoration: none;
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 button,
@@ -79,15 +84,15 @@ select {
   position: relative;
   z-index: 0;
   /* Generous breathing room: content clears the top cover's dithered header. */
-  padding-top: clamp(220px, 36vh, 440px);
+  padding-top: clamp(220px, 66vh, none);
   /* Reserve enough space at the bottom that the whole bottom cover band
      (its dithered image) is visible below the content, with a gap above it. */
-  padding-bottom: clamp(340px, 48vh, 580px);
+  padding-bottom: 50vw;
 }
 
 /* Homepage starts sooner — the hero tiles sit higher, close under the nav. */
 .page-main--home {
-  padding-top: clamp(120px, 18vh, 230px);
+  padding-top: clamp(120px, 40vh, none);
 }
 
 /* Cover height follows the full-bleed image (original aspect ratio). */

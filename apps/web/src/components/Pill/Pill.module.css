@@ -1,4 +1,4 @@
-.button {
+.pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -10,41 +10,42 @@
   font-weight: 500;
   letter-spacing: var(--letter-spacing-label);
   line-height: 1.2;
+  text-decoration: none;
   cursor: pointer;
-  text-align: center;
   transition:
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease;
 }
 
-.button:focus-visible {
-  outline: 2px solid var(--accent);
+.pill:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
   outline-offset: 2px;
 }
 
-/* Filled with the section accent color. */
-.primary {
-  background: var(--accent);
+/* ---- Size ---- */
+/* Larger pill used in the main navigation. */
+.lg {
+  padding: 10px var(--space-md);
+  border-radius: var(--radius-lg);
+  white-space: nowrap;
+}
+
+/* ---- Variants ---- */
+/* Solid fill; background comes from --pill-bg (set via the `color` prop). */
+.solid {
+  background: var(--pill-bg, var(--color-fg));
   color: var(--color-on-accent);
-  text-decoration: none;
 }
 
 @media (hover: hover) {
-  .primary:hover {
+  .solid:hover {
     filter: brightness(0.94);
   }
 }
 
-/* Outline on a surface. */
-.secondary {
+/* Outline on a surface (nav links). */
+.surface {
   background: var(--color-surface);
   color: var(--color-fg);
-  border-color: var(--color-border);
-}
-
-@media (hover: hover) {
-  .secondary:hover {
-    border-color: var(--accent);
-  }
 }

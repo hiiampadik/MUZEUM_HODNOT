@@ -121,8 +121,7 @@ export default async function HomePage() {
                   <Title as="h2" underline>
                     {tile.title}
                   </Title>
-                  <Button href={tile.href} className={styles.tileButton}>
-                    <span aria-hidden="true">{tile.emoji}</span>
+                  <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
                     {tile.cta}
                   </Button>
                 </div>

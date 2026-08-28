@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2xl);
+  gap: var(--space-md);
 }
 
 .block {
@@ -23,15 +23,16 @@
   font-size: var(--font-size-subtitle);
 }
 
-/* Top-level section gap is --space-2xl; these pairs collapse to --space-md.
-   A negative top margin cancels part of the flex gap. Scoped to direct
-   children only — inside a .card the gap is already --space-md, so applying
-   this there would overshoot into an overlap. */
 .builder > .heading3 + *,
 .builder > .card + .card,
 .builder > .block + .block {
-  margin-top: calc(var(--space-xs) - var(--space-2xl));
+  margin-top: calc(var(--space-xs) - var(--space-md));
 }
+
+.builder > .heading {
+  margin: var(--space-sm) 0 0;
+}
+
 
 /* Decorative image: centered, gets a frontend effect (dither in Blok 6). */
 .decorative {

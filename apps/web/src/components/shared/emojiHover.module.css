@@ -8,6 +8,12 @@
  * Apply `.wrap` to the interactive root, `.emoji` to the leading icon span, and
  * `.label` to the text span. All three must come from this module so the
  * `.wrap:hover` descendant selectors resolve.
+ *
+ * `.group` + `.groupTrigger` is an optional remote trigger: put `.group` on an
+ * ancestor (e.g. a card head) and `.groupTrigger` on a specific element inside
+ * it (e.g. a clickable title). Hovering the trigger animates the emoji/label the
+ * same way a direct hover on `.wrap` would — without the rest of the group
+ * reacting.
  */
 
 .emoji {
@@ -18,6 +24,12 @@
   width: 1.5em;
   opacity: 1;
   transition: opacity 0.2s ease;
+  /* Safari paints native color-emoji glyphs without a compositing layer, so an
+     opacity transition on them jumps 1→0 instead of fading. Promoting the span
+     to its own GPU layer makes the opacity interpolate smoothly. */
+  will-change: opacity;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
 }
 
 .label {
@@ -25,11 +37,13 @@
 }
 
 @media (hover: hover) {
-  .wrap:hover .emoji {
+  .wrap:hover .emoji,
+  .group:has(.groupTrigger:hover) .emoji {
     opacity: 0;
   }
   /* Shift by half the emoji footprint so the label lands centered. */
-  .wrap:hover .label {
+  .wrap:hover .label,
+  .group:has(.groupTrigger:hover) .label {
     transform: translateX(-0.75em);
   }
 }

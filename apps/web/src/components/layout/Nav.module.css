@@ -4,18 +4,54 @@
   top: 0;
   z-index: 20;
   padding-block: var(--space-md);
-  padding-inline: var(--space-xl);
   pointer-events: none;
 }
 
+/* Centered column: brand pill stacked above the nav pill row. */
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
 /* Keep the pills clickable while the transparent bar ignores pointer events. */
-.inner > * {
+.inner > *,
+.brand {
   pointer-events: auto;
 }
 
-/* Round, icon-only home button — top-left corner. Square (width == height) via
-   a fixed size + full radius. Hidden by default (opacity), revealed via
-   .homeVisible (always off-homepage; on the homepage only after scrolling). */
+/* Brand pill — always-visible link home, above the nav row. White surface with
+   the same border as the nav pills; title-size display text. Minimal vertical
+   padding keeps it roughly the same height as the other pills. */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.05em 32px 0.13em;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  border: 1px solid var(--color-bg);
+  font-family: var(--font-display);
+  font-size: var(--font-size-title);
+  line-height: 1;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+}
+
+@media (hover: hover) {
+  .brand:hover {
+    filter: brightness(0.94);
+  }
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
+}
+
+/* Round, icon-only home button — replaced by the .brand pill above.
 .home {
   position: fixed;
   left: var(--container-padding);
@@ -38,9 +74,7 @@
   pointer-events: auto;
 }
 
-/* Home.svg recolored white via a mask (the source file is a solid black shape). */
 .homeIcon {
-  /*height: 45%;*/
   height: 100%;
   aspect-ratio: 14 / 18;
   background-color: var(--color-fg);
@@ -70,6 +104,7 @@
   outline: 2px solid var(--accent, var(--color-fg));
   outline-offset: 2px;
 }
+*/
 
 .inner {
   display: flex;

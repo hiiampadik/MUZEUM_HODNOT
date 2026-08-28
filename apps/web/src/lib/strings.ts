@@ -14,11 +14,11 @@
 /** Site-wide brand + metadata. */
 export const site = {
   /** Brand / organisation name. */
-  name: 'Múzeum hodnôt',
+  name: 'Múzeum Hodnôt',
   /** Per-page <title> template; `%s` is the page title. */
-  titleTemplate: '%s — Múzeum hodnôt',
+  titleTemplate: '%s — Múzeum Hodnôt',
   /** Site-wide meta description. */
-  description: 'Múzeum hodnôt — výstavy a vzdelávacie podklady pre školy.',
+  description: 'Múzeum Hodnôt — výstavy a vzdelávacie podklady pre školy.',
   /** Skip-to-content accessibility link. */
   skipToContent: 'Preskočiť na obsah',
 } as const;
@@ -29,6 +29,8 @@ export const nav = {
   homeAriaLabel: 'Domov',
   /** Home logo abbreviation. */
   brandAbbr: 'MH',
+  /** Full brand name (nav brand pill; uppercased via CSS). */
+  brandName: 'Múzeum Hodnôt',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
   experientialEducation: 'Zážitkové vzdelávanie',
@@ -72,7 +74,7 @@ export const home = {
 /** Page metadata titles + <h1>/heading copy. */
 export const pages = {
   contact: 'Kontakt',
-  valueGenerator: 'Generátor hodnôt',
+  valueGenerator: 'Generátor hodnôt do škôl',
   experientialEducation: 'Zážitkové vzdelávanie',
 } as const;
 

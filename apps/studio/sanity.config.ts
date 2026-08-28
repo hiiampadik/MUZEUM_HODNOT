@@ -9,7 +9,7 @@ const dataset = process.env.SANITY_STUDIO_DATASET ?? 'production';
 
 export default defineConfig({
   name: 'default',
-  title: 'Múzeum hodnôt',
+  title: 'Múzeum Hodnôt',
 
   projectId,
   dataset,

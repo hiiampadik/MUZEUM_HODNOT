@@ -17,6 +17,7 @@ import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
 import { routes, accents, accentPalette } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
 import {site, home as homeStrings, pages} from '@/lib/strings';
+import hover from '@/components/shared/emojiHover.module.css';
 import styles from './home.module.css';
 
 type Tile = {
@@ -113,7 +114,7 @@ export default async function HomePage() {
       {/* Hero tiles */}
       {tiles.length > 0 && (
         <Container>
-          <h1 className={styles.siteTitle}>{site.name}</h1>
+          <h1 className={'sr-only'}>{site.name}</h1>
           <div className={styles.tiles}>
             {tiles.map((tile) => (
               <article
@@ -121,10 +122,12 @@ export default async function HomePage() {
                 className={styles.tile}
                 style={{ '--accent': tile.accent } as CSSProperties}
               >
-                <div className={styles.tileHead}>
+                <div className={`${styles.tileHead} ${hover.group}`}>
                   <Label>{tile.eyebrow}</Label>
                   <Title as="h2">
-                    {tile.title}
+                    <Link href={tile.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>
+                      {tile.title}
+                    </Link>
                   </Title>
                   <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
                     {tile.cta}

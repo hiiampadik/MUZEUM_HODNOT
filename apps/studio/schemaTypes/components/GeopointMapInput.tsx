@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { set, setIfMissing, type ObjectInputProps } from 'sanity';
-import * as maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+// Type-only import (fully erased at build time) — the runtime module is loaded
+// dynamically inside the effect below. A static `import ... from 'maplibre-gl'`
+// breaks `sanity schema extract` (typegen), because Node can't resolve the
+// package's non-exported entry during config evaluation.
+import type * as MapLibreGL from 'maplibre-gl';
 
 type Geopoint = { _type?: string; lat?: number; lng?: number; alt?: number };
 
@@ -35,8 +38,8 @@ export function GeopointMapInput(props: ObjectInputProps) {
   const geo = value as Geopoint | undefined;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<maplibregl.Map | null>(null);
-  const markerRef = useRef<maplibregl.Marker | null>(null);
+  const mapRef = useRef<MapLibreGL.Map | null>(null);
+  const markerRef = useRef<MapLibreGL.Marker | null>(null);
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodeResult[]>([]);
@@ -82,54 +85,69 @@ export function GeopointMapInput(props: ObjectInputProps) {
     }
   }, [query]);
 
-  // Create the map once.
+  // Create the map once. maplibre-gl is imported dynamically (runtime-only) so
+  // that static schema extraction never has to resolve the package.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const hasPoint = typeof geo?.lat === 'number' && typeof geo?.lng === 'number';
-    const map = new maplibregl.Map({
-      container,
-      style: {
-        version: 8,
-        sources: {
-          osm: {
-            type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-            tileSize: 256,
-            attribution: '© OpenStreetMap',
+    let disposed = false;
+    let cleanup = () => {};
+
+    void (async () => {
+      const maplibregl = await import('maplibre-gl');
+      await import('maplibre-gl/dist/maplibre-gl.css');
+      if (disposed || !containerRef.current) return;
+
+      const hasPoint = typeof geo?.lat === 'number' && typeof geo?.lng === 'number';
+      const map = new maplibregl.Map({
+        container,
+        style: {
+          version: 8,
+          sources: {
+            osm: {
+              type: 'raster',
+              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              attribution: '© OpenStreetMap',
+            },
           },
+          layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
         },
-        layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
-      },
-      center: hasPoint ? [geo!.lng as number, geo!.lat as number] : DEFAULT_CENTER,
-      zoom: hasPoint ? 12 : DEFAULT_ZOOM,
-    });
-    mapRef.current = map;
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+        center: hasPoint ? [geo!.lng as number, geo!.lat as number] : DEFAULT_CENTER,
+        zoom: hasPoint ? 12 : DEFAULT_ZOOM,
+      });
+      mapRef.current = map;
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-    const marker = new maplibregl.Marker({ draggable: true, color: ACCENT });
-    if (hasPoint) marker.setLngLat([geo!.lng as number, geo!.lat as number]).addTo(map);
-    markerRef.current = marker;
+      const marker = new maplibregl.Marker({ draggable: true, color: ACCENT });
+      if (hasPoint) marker.setLngLat([geo!.lng as number, geo!.lat as number]).addTo(map);
+      markerRef.current = marker;
 
-    map.on('click', (e: maplibregl.MapMouseEvent) => {
-      marker.setLngLat(e.lngLat).addTo(map);
-      setLatLng(e.lngLat.lat, e.lngLat.lng);
-    });
-    marker.on('dragend', () => {
-      const p = marker.getLngLat();
-      setLatLng(p.lat, p.lng);
-    });
+      map.on('click', (e: MapLibreGL.MapMouseEvent) => {
+        marker.setLngLat(e.lngLat).addTo(map);
+        setLatLng(e.lngLat.lat, e.lngLat.lng);
+      });
+      marker.on('dragend', () => {
+        const p = marker.getLngLat();
+        setLatLng(p.lat, p.lng);
+      });
 
-    // Studio panels can settle after mount; keep the map sized to its container.
-    const ro = new ResizeObserver(() => map.resize());
-    ro.observe(container);
+      // Studio panels can settle after mount; keep the map sized to its container.
+      const ro = new ResizeObserver(() => map.resize());
+      ro.observe(container);
+
+      cleanup = () => {
+        ro.disconnect();
+        map.remove();
+        mapRef.current = null;
+        markerRef.current = null;
+      };
+    })();
 
     return () => {
-      ro.disconnect();
-      map.remove();
-      mapRef.current = null;
-      markerRef.current = null;
+      disposed = true;
+      cleanup();
     };
     // Create once; external value changes are handled by the sync effect below.
     // eslint-disable-next-line react-hooks/exhaustive-deps

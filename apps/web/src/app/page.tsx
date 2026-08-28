@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
 import { HOME_QUERY, HOME_TILE_COVERS_QUERY, EXHIBITIONS_QUERY } from '@/sanity/queries';
@@ -12,7 +12,7 @@ import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { Button } from '@/components/Button/Button';
 import { IntroBubble } from '@/components/IntroBubble/IntroBubble';
 import { Link } from '@/components/Link/Link';
-import { Title, Label, Text } from '@/components/Typography/Typography';
+import { Title, Label, Text, Underline } from '@/components/Typography/Typography';
 import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
 import { routes, accents, accentPalette } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
@@ -22,7 +22,7 @@ import styles from './home.module.css';
 type Tile = {
   key: string;
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   cta: string;
   emoji: string;
   accent: string;
@@ -62,7 +62,7 @@ export default async function HomePage() {
     tiles.push({
       key: 'exhibitions',
       eyebrow: homeStrings.currentExhibitions,
-      title: activeExhibition.title ?? homeStrings.currentExhibitions,
+      title: <Underline>{activeExhibition.title ?? homeStrings.currentExhibitions}</Underline>,
       cta: homeStrings.showMore,
       emoji: '👀',
       accent: accents.exhibition,
@@ -76,7 +76,12 @@ export default async function HomePage() {
   tiles.push({
     key: 'valueGenerator',
     eyebrow: homeStrings.forSchools,
-    title: homeStrings.valueGeneratorTitle,
+    title: (
+      <>
+        <Underline>{homeStrings.valueGeneratorLead}</Underline>
+        {homeStrings.valueGeneratorSuffix}
+      </>
+    ),
     cta: homeStrings.open,
     emoji: '🔮',
     accent: accents.valueGenerator,
@@ -86,7 +91,7 @@ export default async function HomePage() {
   tiles.push({
     key: 'experientialEducation',
     eyebrow: homeStrings.forTeachers,
-    title: homeStrings.experientialEducationTitle,
+    title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
     cta: homeStrings.open,
     emoji: '👻',
     accent: accents.experientialEducation,
@@ -119,7 +124,7 @@ export default async function HomePage() {
               >
                 <div className={styles.tileHead}>
                   <Label>{tile.eyebrow}</Label>
-                  <Title as="h2" underline>
+                  <Title as="h2">
                     {tile.title}
                   </Title>
                   <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
@@ -142,15 +147,14 @@ export default async function HomePage() {
       )}
 
       {/* Project intro bubble */}
-      {(home?.introTitle || home?.intro) && (
+      {home?.intro && (
         <Container>
           <div className={styles.bubble} style={{ '--accent': accents.home } as CSSProperties}>
             <div className={styles.bubbleBody}>
-              {home?.introTitle && (
-                <Title as="h2" underline>
-                  {home.introTitle}
-                </Title>
-              )}
+              <Title as="h2">
+                <Underline>{homeStrings.introTitleLead}</Underline>
+                {homeStrings.introTitleSuffix}
+              </Title>
               <IntroBubble value={home?.intro} />
             </div>
             {home?.introImage?.asset?._id && (
@@ -206,7 +210,7 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
       <div>
         {year && <Label as="p">{year}</Label>}
         <Title as="h3">
-          {exhibition.title}
+          <Underline>{exhibition.title}</Underline>
         </Title>
       </div>
       {blurb && (
@@ -225,7 +229,7 @@ function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: 
         <div className={styles.pastSection}>
           <Label as="p">{formatDateRange(startDate, endDate)}</Label>
           <Title as="h3">
-            {title}
+            <Underline className={styles.pastCardUnderline}>{title}</Underline>
           </Title>
         </div>
         {roleList.length > 0 && (

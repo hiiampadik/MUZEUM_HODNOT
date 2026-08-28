@@ -39,6 +39,20 @@ export function Title({
   );
 }
 
+/**
+ * Inline accent underline for part of a Title/Heading — wrap only the words
+ * that should carry the underline, leaving the rest of the heading plain.
+ */
+export function Underline({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <span className={cx(styles.titleUnderline, className)}>{children}</span>;
+}
+
 /** Monospace label / eyebrow. Defaults to <span>. */
 export function Label({ children, as: Tag = 'span', className, style }: BaseProps) {
   return (

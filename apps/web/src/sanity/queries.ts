@@ -64,7 +64,6 @@ export const HOME_QUERY = defineQuery(/* groq */ `
   *[_id == "homePage"][0]{
     ${coverFields},
     ${edgeCoverFields},
-    introTitle,
     introImage{ ${imageFields} },
     intro,
     "metaDescription": pt::text(intro)

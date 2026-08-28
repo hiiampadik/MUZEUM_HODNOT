@@ -234,17 +234,26 @@
 .pastMedia {
   position: relative;
   min-height: 200px;
+  overflow: hidden;
 }
 
 .pastMedia :global(img) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease-in-out;
 }
 
 @media (hover: hover) {
   a.pastCard:hover {
-    box-shadow: 0 0 0 2px var(--accent);
+    img {
+      transform: scale(1.03);
+    }
+
+    /* Hide the title underline while hovering a clickable exhibition. */
+    .pastCardUnderline {
+      text-decoration: none;
+    }
   }
 }
 

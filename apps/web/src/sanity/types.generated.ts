@@ -359,7 +359,6 @@ export type HomePage = {
   cover?: CoverImage;
   topCover?: CoverImage;
   bottomCover?: CoverImage;
-  introTitle?: string;
   introImage?: {
     asset?: {
       _ref: string;
@@ -535,13 +534,12 @@ export type SETTINGS_QUERYResult =
     }
   | null;
 // Variable: HOME_QUERY
-// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introTitle,    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    intro,    "metaDescription": pt::text(intro)  }
+// Query: *[_id == "homePage"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    introImage{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    intro,    "metaDescription": pt::text(intro)  }
 export type HOME_QUERYResult =
   | {
       cover: null;
       topCover: null;
       bottomCover: null;
-      introTitle: null;
       introImage: null;
       intro: null;
       metaDescription: string;
@@ -586,7 +584,6 @@ export type HOME_QUERYResult =
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
       } | null;
-      introTitle: null;
       introImage: null;
       intro: null;
       metaDescription: string;
@@ -631,7 +628,6 @@ export type HOME_QUERYResult =
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
       } | null;
-      introTitle: string | null;
       introImage: {
         asset: {
           _id: string;
@@ -1462,7 +1458,7 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
-    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
+    '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
     '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "experientialEducation": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    summary,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;

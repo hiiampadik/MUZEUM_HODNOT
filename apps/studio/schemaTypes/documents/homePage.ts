@@ -35,12 +35,6 @@ export const homePage = defineType({
         'Obrázok pri spodku stránky (nad pätičkou), roztiahnutý cez celú šírku. Originálna veľkosť.',
     }),
     defineField({
-      name: 'introTitle',
-      title: 'Popis projektu — nadpis',
-      type: 'string',
-      description: 'Napr. „Múzeum hodnôt — Obrazová správa o Slovensku".',
-    }),
-    defineField({
       name: 'introImage',
       title: 'Popis projektu — obrázok',
       type: 'image',

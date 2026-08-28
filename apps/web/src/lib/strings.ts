@@ -50,12 +50,23 @@ export const home = {
   currentExhibitions: 'Aktuálne výstavy',
   showMore: 'Zobraziť viac',
   forSchools: 'Pre školy',
-  valueGeneratorTitle: 'Generátor hodnôt do škôl',
+  /**
+   * Value-generator tile title. Only the lead is underlined; the suffix stays
+   * plain (see the hero tiles on the homepage).
+   */
+  valueGeneratorLead: 'Generátor hodnôt',
+  valueGeneratorSuffix: ' do škôl',
   forTeachers: 'Pre učiteľov',
   experientialEducationTitle: 'Zážitkové vzdelávanie',
   open: 'Otvoriť',
   upcoming: 'Chystané výstavy',
   past: 'Uplynulé',
+  /**
+   * Project-intro heading (moved out of the CMS). Only the lead is underlined;
+   * note the intentional capital H, matching the footer's brand heading.
+   */
+  introTitleLead: 'Múzeum Hodnôt',
+  introTitleSuffix: ' – obrazová správa o Slovensku',
 } as const;
 
 /** Page metadata titles + <h1>/heading copy. */

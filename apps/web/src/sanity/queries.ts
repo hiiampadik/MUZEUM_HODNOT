@@ -125,7 +125,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     roles[]{ _key, role, people },
     ${coverFields},
     ${edgeCoverFields},
-    gallery[]{ ${imageFields}, photographer },
+    gallery[]{ _key, ${imageFields}, photographer },
     abstract,
     materials[]{ ${materialFields} },
     links[]{ _key, label, emoji, href },

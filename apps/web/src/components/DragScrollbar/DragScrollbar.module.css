@@ -1,0 +1,64 @@
+.root {
+  display: block;
+}
+
+.viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Hide the native scrollbar — the custom one below replaces it. */
+  scrollbar-width: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Track sits --space-2xl below the gallery, capped at the 600px content width
+   and centered, inset to the container padding on narrow screens. */
+.trackWrap {
+  margin-top: var(--space-2xl);
+  margin-inline: auto;
+  max-width: min(600px, calc(100vw - var(--container-padding) * 2));
+  /* Reserve space even when hidden so the layout doesn't jump. */
+  visibility: hidden;
+}
+
+.trackWrap[data-visible] {
+  visibility: visible;
+}
+
+.track {
+  position: relative;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-strong);
+  cursor: pointer;
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  height: 10px;
+  min-width: 24px;
+  border-radius: var(--radius-full);
+  background: var(--color-fg);
+  cursor: grab;
+  touch-action: none;
+}
+
+/* Enlarge the touch/hit area without changing the visual height. */
+.thumb::before {
+  content: '';
+  position: absolute;
+  inset-block: calc(-1 * var(--space-2xs));
+  inset-inline: 0;
+}
+
+.thumb:active {
+  cursor: grabbing;
+}
+
+.thumb:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+}

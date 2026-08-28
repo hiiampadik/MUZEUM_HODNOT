@@ -6,6 +6,7 @@ import { Pill } from '../Pill/Pill';
 import { Link } from '../Link/Link';
 import { Container } from '../Container/Container';
 import { routes } from '@/lib/routes';
+import { nav } from '@/lib/strings';
 import styles from './Nav.module.css';
 
 type NavProps = {
@@ -13,9 +14,9 @@ type NavProps = {
 };
 
 const items = [
-  { href: routes.contact, label: 'Kontakt', emoji: '🤹' },
-  { href: routes.valueGenerator, label: 'Generátor hodnôt', emoji: '🔮' },
-  { href: routes.experientialEducation, label: 'Zážitkové vzdelávanie', emoji: '👻' },
+  { href: routes.contact, label: nav.contact, emoji: '🤹' },
+  { href: routes.valueGenerator, label: nav.valueGenerator, emoji: '🔮' },
+  { href: routes.experientialEducation, label: nav.experientialEducation, emoji: '👻' },
 ];
 
 export function Nav({ donateLink }: NavProps) {
@@ -35,15 +36,15 @@ export function Nav({ donateLink }: NavProps) {
   const showHome = offHome || scrolled;
 
   return (
-    <nav className={styles.nav} aria-label="Hlavná navigácia">
+    <nav className={styles.nav} aria-label={nav.ariaLabel}>
       <Link
         href={routes.home}
         className={`${styles.home} ${showHome ? styles.homeVisible : ''}`}
-        aria-label="Domov"
+        aria-label={nav.homeAriaLabel}
         aria-hidden={!showHome}
         tabIndex={showHome ? undefined : -1}
       >
-        <span className={styles.homeName}>MH</span>
+        <span className={styles.homeName}>{nav.brandAbbr}</span>
         <span className={styles.homeIcon} aria-hidden="true" />
       </Link>
 
@@ -64,7 +65,7 @@ export function Nav({ donateLink }: NavProps) {
 
           {donateLink?.href && (
             <Pill href={donateLink.href} variant="surface" size="lg" emoji="💝">
-              {donateLink.label || 'Darovať'}
+              {donateLink.label || nav.donateFallback}
             </Pill>
           )}
         </div>

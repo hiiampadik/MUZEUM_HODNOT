@@ -1,3 +1,4 @@
+import { common } from '@/lib/strings';
 import styles from './Materials.module.css';
 
 export type MaterialItem = {
@@ -29,7 +30,7 @@ export function Materials({ items }: { items: readonly MaterialItem[] }) {
         return (
           <li key={item._key} className={styles.item}>
             <a href={item.url} download>
-              <span>{item.title || 'Súbor'}</span>
+              <span>{item.title || common.fileFallback}</span>
               {meta && <span className={styles.meta}>{meta}</span>}
             </a>
           </li>

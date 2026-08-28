@@ -8,13 +8,14 @@ import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { Heading } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { pages } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import builder from '@/components/pagebuilder/builderPage.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
   return pageMetadata({
-    title: 'Zážitkové vzdelávanie',
+    title: pages.experientialEducation,
     image: ogImageUrl(page?.cover),
     path: routes.experientialEducation,
   });
@@ -30,7 +31,7 @@ export default async function ExperientialEducationPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.title}>Zážitkové vzdelávanie</Heading>
+        <Heading className={builder.title}>{pages.experientialEducation}</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 

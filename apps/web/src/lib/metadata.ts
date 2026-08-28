@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { siteUrl } from '@/sanity/env';
+import { site } from '@/lib/strings';
 
 type PageMetaInput = {
   title?: string;
@@ -19,7 +20,7 @@ export function pageMetadata({ title, description, image, path }: PageMetaInput)
     alternates: { canonical: path },
     openGraph: {
       type: 'website',
-      siteName: 'Múzeum hodnôt',
+      siteName: site.name,
       locale: 'sk_SK',
       title,
       description: desc,

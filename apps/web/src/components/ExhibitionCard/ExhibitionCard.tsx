@@ -4,6 +4,7 @@ import { Title, Text } from '../Typography/Typography';
 import { routes } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
 import type { ExhibitionCard as ExhibitionCardData } from '@/lib/exhibitions';
+import { common } from '@/lib/strings';
 import styles from './ExhibitionCard.module.css';
 
 type Props = {
@@ -20,7 +21,7 @@ export function ExhibitionCard({ exhibition, active, compact }: Props) {
 
   const inner = (
     <article className={styles.card}>
-      {active && <span className={styles.tag}>Aktuálne</span>}
+      {active && <span className={styles.tag}>{common.currentTag}</span>}
       {!compact && cover?.asset?._id && (
         <div className={styles.media}>
           <SanityImage value={cover} width={800} sizes="(max-width: 768px) 100vw, 400px" />

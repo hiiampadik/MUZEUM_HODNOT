@@ -16,6 +16,7 @@ import { Title, Label, Text } from '@/components/Typography/Typography';
 import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
 import { routes, accents, accentPalette } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
+import { site, home as homeStrings } from '@/lib/strings';
 import styles from './home.module.css';
 
 type Tile = {
@@ -41,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Múzeum hodnôt',
+  name: site.name,
   url: siteUrl,
 };
 
@@ -60,9 +61,9 @@ export default async function HomePage() {
   if (activeExhibition) {
     tiles.push({
       key: 'exhibitions',
-      eyebrow: 'Aktuálne výstavy',
-      title: activeExhibition.title ?? 'Aktuálne výstavy',
-      cta: 'Zobraziť viac',
+      eyebrow: homeStrings.currentExhibitions,
+      title: activeExhibition.title ?? homeStrings.currentExhibitions,
+      cta: homeStrings.showMore,
       emoji: '👀',
       accent: accents.exhibition,
       href:
@@ -74,9 +75,9 @@ export default async function HomePage() {
   }
   tiles.push({
     key: 'valueGenerator',
-    eyebrow: 'Pre školy',
-    title: 'Generátor hodnôt do škôl',
-    cta: 'Otvoriť',
+    eyebrow: homeStrings.forSchools,
+    title: homeStrings.valueGeneratorTitle,
+    cta: homeStrings.open,
     emoji: '🔮',
     accent: accents.valueGenerator,
     href: routes.valueGenerator,
@@ -84,9 +85,9 @@ export default async function HomePage() {
   });
   tiles.push({
     key: 'experientialEducation',
-    eyebrow: 'Pre učiteľov',
-    title: 'Zážitkové vzdelávanie',
-    cta: 'Otvoriť',
+    eyebrow: homeStrings.forTeachers,
+    title: homeStrings.experientialEducationTitle,
+    cta: homeStrings.open,
     emoji: '👻',
     accent: accents.experientialEducation,
     href: routes.experientialEducation,
@@ -100,7 +101,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <h1 className="sr-only">Múzeum hodnôt</h1>
+      <h1 className="sr-only">{site.name}</h1>
 
       {home?.topCover && (
         <CoverImage value={home.topCover} placement="top" priority background className="cover-bg-top" />
@@ -165,7 +166,7 @@ export default async function HomePage() {
       {upcoming.length > 0 && (
         <Container as="section" className={styles.section}>
           <Title as="h2" underline className={styles.sectionTitle}>
-            Chystané výstavy
+            {homeStrings.upcoming}
           </Title>
           <div className={styles.upcomingList}>
             {upcoming.map((ex, i) => (
@@ -180,7 +181,7 @@ export default async function HomePage() {
         <Container as="section" className={styles.section}>
           <div id="vystavy" />
           <Title as="h2" underline className={styles.sectionTitle}>
-            Uplynulé
+            {homeStrings.past}
           </Title>
           <div className={styles.pastList}>
             {past.map((ex, i) => (

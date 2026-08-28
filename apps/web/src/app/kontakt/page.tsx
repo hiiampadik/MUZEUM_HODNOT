@@ -10,13 +10,14 @@ import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { pages, contact as contactStrings } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import styles from './contact.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const contact = await client.fetch(CONTACT_QUERY);
   return pageMetadata({
-    title: 'Kontakt',
+    title: pages.contact,
     image: ogImageUrl(contact?.cover),
     path: routes.contact,
   });
@@ -32,12 +33,12 @@ export default async function ContactPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={styles.headerTitle}>Kontakt</Heading>
+        <Heading className={styles.headerTitle}>{pages.contact}</Heading>
 
         <div className={styles.details}>
           {contact?.phone && (
             <div className={styles.detailItem}>
-              <Label>Telefón</Label>
+              <Label>{contactStrings.phone}</Label>
               <Pill href={`tel:${contact.phone}`} color="#904646" emoji="☎️">
                 {contact.phone}
               </Pill>
@@ -45,7 +46,7 @@ export default async function ContactPage() {
           )}
           {contact?.email && (
             <div className={styles.detailItem}>
-              <Label>E-mail</Label>
+              <Label>{contactStrings.email}</Label>
               <Pill href={`mailto:${contact.email}`} color="#2b2b2b" emoji="💌">
                 {contact.email}
               </Pill>

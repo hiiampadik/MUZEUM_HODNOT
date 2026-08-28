@@ -4,6 +4,7 @@ import { SanityImage, type SanityImageValue } from '../SanityImage/SanityImage';
 import { Title } from '../Typography/Typography';
 import { Pill } from '../Pill/Pill';
 import { accentPalette } from '@/lib/routes';
+import { common } from '@/lib/strings';
 import styles from './PageBuilder.module.css';
 
 type MaterialItem = {
@@ -30,7 +31,7 @@ function MaterialPills({ items }: { items: readonly MaterialItem[] }) {
       {items.map((m) =>
         m.url ? (
           <Pill key={m._key} href={m.url} download color="#272727" emoji={m.emoji || '📁'}>
-            {m.title || 'Súbor'}
+            {m.title || common.fileFallback}
           </Pill>
         ) : null,
       )}

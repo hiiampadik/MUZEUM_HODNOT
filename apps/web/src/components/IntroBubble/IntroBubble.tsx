@@ -3,6 +3,7 @@
 import { useState, useId } from 'react';
 import { RichText } from '../RichText/RichText';
 import { Button } from '../Button/Button';
+import { common } from '@/lib/strings';
 import styles from './IntroBubble.module.css';
 
 type IntroBubbleProps = {
@@ -34,7 +35,7 @@ export function IntroBubble({ value }: IntroBubbleProps) {
         aria-controls={regionId}
         onClick={() => setOpen((v) => !v)}
       >
-        {open ? 'Zbaliť' : 'Čítať viac'}
+        {open ? common.collapse : common.readMore}
       </Button>
     </div>
   );

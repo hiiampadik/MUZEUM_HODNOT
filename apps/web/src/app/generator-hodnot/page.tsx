@@ -9,13 +9,14 @@ import { ValueMap } from '@/components/ValueMap/ValueMap';
 import { Heading, Title } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { pages } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import builder from '@/components/pagebuilder/builderPage.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch(VALUE_GENERATOR_QUERY);
   return pageMetadata({
-    title: 'Generátor hodnôt',
+    title: pages.valueGenerator,
     image: ogImageUrl(page?.cover),
     path: routes.valueGenerator,
   });
@@ -32,7 +33,7 @@ export default async function ValueGeneratorPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.title}>Generátor hodnôt</Heading>
+        <Heading className={builder.title}>{pages.valueGenerator}</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 

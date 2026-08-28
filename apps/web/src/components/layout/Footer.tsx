@@ -3,6 +3,7 @@ import { Link } from '../Link/Link';
 import { RichText } from '../RichText/RichText';
 import { Title } from '../Typography/Typography';
 import type { SETTINGS_QUERYResult, CONTACT_QUERYResult } from '@/sanity/types.generated';
+import { footer } from '@/lib/strings';
 import styles from './Footer.module.css';
 
 type FooterProps = {
@@ -20,7 +21,7 @@ export function Footer({ settings, contact }: FooterProps) {
           {/* Contact — sourced from the Contact page */}
           <div>
             <Title as="h2" className={styles.heading}>
-              Kontakt
+              {footer.contact}
             </Title>
             {contact?.phone && (
               <p>
@@ -39,7 +40,7 @@ export function Footer({ settings, contact }: FooterProps) {
           {contact?.administrativeInfo && (
             <div>
               <Title as="h2" className={styles.heading}>
-                Administratívne údaje
+                {footer.administrative}
               </Title>
               <RichText value={contact.administrativeInfo} />
             </div>
@@ -49,7 +50,7 @@ export function Footer({ settings, contact }: FooterProps) {
           {settings?.partners && (
             <div>
               <Title as="h2" className={styles.heading}>
-                Partneri projektu
+                {footer.partners}
               </Title>
               <RichText value={settings.partners} />
             </div>
@@ -59,7 +60,7 @@ export function Footer({ settings, contact }: FooterProps) {
           {social.length > 0 && (
             <div>
               <Title as="h2" className={styles.heading}>
-                Sledujte nás
+                {footer.social}
               </Title>
               <ul className={styles.social}>
                 {social.map((item) => (

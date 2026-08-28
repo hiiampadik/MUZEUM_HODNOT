@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { urlFor } from '@/sanity/lib/image';
 import type { SanityImageValue } from '../SanityImage/SanityImage';
+import { common } from '@/lib/strings';
 import styles from './ValueMap.module.css';
 
 export type MapPointData = {
@@ -77,7 +78,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
             ? urlFor({ asset: { _ref: p.image.asset._id } }).width(320).height(180).fit('crop').url()
             : '',
           linkHref: p.link?.href ?? '',
-          linkLabel: p.link?.label ?? 'Viac',
+          linkLabel: p.link?.label ?? common.moreLink,
         },
       }));
 
@@ -219,7 +220,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
 
   return (
     <div className={styles.wrap}>
-      <div ref={containerRef} className={styles.map} role="application" aria-label="Mapa bodov" />
+      <div ref={containerRef} className={styles.map} role="application" aria-label={common.mapAriaLabel} />
       {/* Accessible / no-JS fallback list */}
       <ul className="sr-only">
         {points.map((p) => (

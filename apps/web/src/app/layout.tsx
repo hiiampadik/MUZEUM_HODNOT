@@ -7,22 +7,23 @@ import { SETTINGS_QUERY, CONTACT_QUERY } from '@/sanity/queries';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { siteUrl } from '@/sanity/env';
+import { site } from '@/lib/strings';
 
-const description = 'Múzeum hodnôt — výstavy a vzdelávacie podklady pre školy.';
+const description = site.description;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Múzeum hodnôt',
-    template: '%s — Múzeum hodnôt',
+    default: site.name,
+    template: site.titleTemplate,
   },
   description,
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    siteName: 'Múzeum hodnôt',
+    siteName: site.name,
     locale: 'sk_SK',
-    title: 'Múzeum hodnôt',
+    title: site.name,
     description,
     url: siteUrl,
   },
@@ -43,7 +44,7 @@ export default async function RootLayout({
     <html lang="sk" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>
         <a href="#main" className="skip-link">
-          Preskočiť na obsah
+          {site.skipToContent}
         </a>
         <Nav donateLink={settings?.donateLink} />
         <div id="main" tabIndex={-1}>

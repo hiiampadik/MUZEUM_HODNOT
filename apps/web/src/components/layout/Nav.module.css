@@ -51,6 +51,40 @@
   outline-offset: 2px;
 }
 
+/* Split brand text: first letters stay, the rest collapses to initials. */
+.brandInner {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Collapsible run of glyphs. The 1fr → 0fr grid track animates width smoothly
+   (with the child clipped via overflow), and opacity fades the text out. */
+.brandRest {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  vertical-align: baseline;
+  transition:
+    grid-template-columns 0.35s ease,
+    opacity 0.25s ease;
+}
+
+.brandRest > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.collapsed .brandRest {
+  grid-template-columns: 0fr;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brandRest {
+    transition: none;
+  }
+}
+
 /* Round, icon-only home button — replaced by the .brand pill above.
 .home {
   position: fixed;

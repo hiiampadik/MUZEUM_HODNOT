@@ -14,8 +14,8 @@ type NavProps = {
 
 const items = [
   { href: routes.contact, label: 'Kontakt', emoji: '🤹' },
-  { href: routes.experientialEducation, label: 'Zážitkové vzdelávanie', emoji: '👻' },
   { href: routes.valueGenerator, label: 'Generátor hodnôt', emoji: '🔮' },
+  { href: routes.experientialEducation, label: 'Zážitkové vzdelávanie', emoji: '👻' },
 ];
 
 export function Nav({ donateLink }: NavProps) {
@@ -43,6 +43,7 @@ export function Nav({ donateLink }: NavProps) {
         aria-hidden={!showHome}
         tabIndex={showHome ? undefined : -1}
       >
+        <span className={styles.homeName}>MH</span>
         <span className={styles.homeIcon} aria-hidden="true" />
       </Link>
 

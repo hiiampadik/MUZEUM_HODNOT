@@ -137,7 +137,7 @@ export default async function ExhibitionPage({
       </Container>
 
       {gallery && gallery.length > 0 && (
-        <Container width="content">
+        <Container width="full" className={styles.noPadding}>
           <ul className={styles.gallery}>
             {gallery.map((photo) => (
               <li key={photo.asset?._id} className={styles.photo}>

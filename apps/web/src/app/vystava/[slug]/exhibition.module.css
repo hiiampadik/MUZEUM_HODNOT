@@ -50,13 +50,17 @@
 }
 
 /* ---- Gallery ---- */
+.noPadding {
+  padding: 0;
+}
+
 .gallery {
   display: flex;
   gap: var(--space-2xs);
   overflow-x: auto;
+  overflow-y: hidden ;
   scroll-snap-type: x mandatory;
   margin-block: var(--space-2xl);
-  border-radius: var(--radius-lg);
   list-style: none;
   padding: 0;
 }
@@ -68,6 +72,16 @@
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
+
+  &:first-child {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    margin-left: var(--container-padding);
+  }
+
+  &:last-child {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    margin-right: var(--container-padding);
+  }
 }
 
 .photo :global(img) {

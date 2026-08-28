@@ -25,7 +25,8 @@
    children only — inside a .card the gap is already --space-md, so applying
    this there would overshoot into an overlap. */
 .builder > .heading3 + *,
-.builder > .card + .card {
+.builder > .card + .card,
+.builder > .block + .block {
   margin-top: calc(var(--space-xs) - var(--space-2xl));
 }
 

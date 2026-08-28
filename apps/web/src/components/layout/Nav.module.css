@@ -26,8 +26,6 @@
   justify-content: center;
   width: 2.45rem;
   height: 2.45rem;
-  border-radius: var(--radius-full);
-  background: var(--color-fg);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -43,12 +41,23 @@
 /* Home.svg recolored white via a mask (the source file is a solid black shape). */
 .homeIcon {
   /*height: 45%;*/
-  height: 55%;
+  height: 100%;
   aspect-ratio: 14 / 18;
-  background-color: var(--color-on-accent);
+  background-color: var(--color-fg);
   -webkit-mask: url(/Home.svg) center / contain no-repeat;
   mask: url(/Home.svg) center / contain no-repeat;
-  margin-bottom: 0.2em;
+}
+
+.homeName {
+  position: absolute;
+  z-index: 1;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-label);
+  color: var(--color-surface);
 }
 
 @media (hover: hover) {

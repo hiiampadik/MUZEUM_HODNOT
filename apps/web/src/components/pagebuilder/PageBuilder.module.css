@@ -14,10 +14,13 @@
   text-align: left;
 }
 
-/* Sub-heading: smaller, and the block right after it sits tight. */
-.heading3 {
+/* Sub-heading: smaller, and the block right after it sits tight. The compound
+   selector (both classes are always present on the element) outranks
+   Typography's single-class .title, so the size wins regardless of the order
+   the CSS-module bundles land in. The underline is dropped in the component,
+   not fought here. */
+.heading.heading3 {
   font-size: var(--font-size-subtitle);
-  text-decoration: none;
 }
 
 /* Top-level section gap is --space-2xl; these pairs collapse to --space-md.
@@ -32,15 +35,21 @@
 
 /* Decorative image: centered, gets a frontend effect (dither in Blok 6). */
 .decorative {
-  max-width: 384px;
   margin-inline: auto;
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  width: fit-content;
+  /* Backdrop in the page colour so the image's white areas multiply against it.
+     Needed because the nearest stacking context (.page-main) is transparent —
+     the actual page background sits on <body>, outside it. */
+  background: var(--color-bg);
 }
 
 .decorative :global(img) {
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 200px;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  mix-blend-mode: multiply;
 }
 
 /* Materials / tile card */

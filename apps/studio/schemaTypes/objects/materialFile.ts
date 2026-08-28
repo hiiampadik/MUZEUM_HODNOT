@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { DocumentIcon } from '@sanity/icons';
+import { EmojiInput } from '../components/EmojiInput';
 
 /** A downloadable file with a display name. Used in exhibitions and page builders. */
 export const materialFile = defineType({
@@ -20,6 +21,7 @@ export const materialFile = defineType({
       title: 'Emoji',
       type: 'string',
       description: 'Voliteľné emoji pred názvom. Ak je prázdne, použije sa 📁.',
+      components: { input: EmojiInput },
     }),
     defineField({
       name: 'file',

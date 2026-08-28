@@ -2,6 +2,11 @@
   margin-block: var(--space-2xl);
 }
 
+/* Positioning context for the map + its overlay panel. */
+.mapArea {
+  position: relative;
+}
+
 .map {
   width: 100%;
   height: min(70vh, 600px);
@@ -11,30 +16,70 @@
   background: var(--color-surface-muted);
 }
 
-/* Popover content */
-.popup :global(.maplibregl-popup-content) {
+/*
+ * Fixed-size popover panel, pinned to the left edge of the map. Top/bottom are
+ * both anchored so the height is constant regardless of content; the width is
+ * fixed too (capped to the map on narrow screens). Content scrolls internally.
+ */
+.panel {
+  position: absolute;
+  inset-block: var(--space-md);
+  left: var(--space-md);
+  width: min(320px, calc(100% - 2 * var(--space-md)));
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  overflow-y: auto;
+
+  background: var(--color-surface);
   border-radius: var(--radius-md);
-  padding: var(--space-sm);
-  font-family: var(--font-body);
-  font-weight: 500;
 }
 
-.popupImage {
-  width: 100%;
-  height: auto;
+/* Larger close cross in the top-right corner. */
+.close {
+  position: absolute;
+  top: var(--space-2xs);
+  right: var(--space-2xs);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
   border-radius: var(--radius-sm);
-  margin-bottom: var(--space-2xs);
+  background: transparent;
+  color: var(--color-fg);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
-.popupTitle {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  margin-bottom: var(--space-3xs);
+.close:hover {
+  background: var(--color-bg);
 }
 
-.popupLink {
-  display: inline-block;
-  margin-top: var(--space-2xs);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
+.close:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
+}
+
+/* Keep the title clear of the close button. */
+.panelTitle {
+  margin: 0;
+  padding-right: var(--space-2xl);
+}
+
+.panelText {
+  flex: 0 1 auto;
+}
+
+/* Pill sits at the bottom of the fixed-height panel. */
+.panelPill {
+  margin-top: auto;
+  align-self: flex-start;
 }

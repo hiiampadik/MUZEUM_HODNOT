@@ -12,11 +12,11 @@ import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { Button } from '@/components/Button/Button';
 import { IntroBubble } from '@/components/IntroBubble/IntroBubble';
 import { Link } from '@/components/Link/Link';
-import { Title, Label, Text, Underline } from '@/components/Typography/Typography';
+import {Title, Label, Text, Underline, Heading} from '@/components/Typography/Typography';
 import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
 import { routes, accents, accentPalette } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
-import { site, home as homeStrings } from '@/lib/strings';
+import {site, home as homeStrings, pages} from '@/lib/strings';
 import styles from './home.module.css';
 
 type Tile = {
@@ -106,8 +106,6 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <h1 className="sr-only">{site.name}</h1>
-
       {home?.topCover && (
         <CoverImage value={home.topCover} placement="top" priority background className="cover-bg-top" />
       )}
@@ -115,6 +113,7 @@ export default async function HomePage() {
       {/* Hero tiles */}
       {tiles.length > 0 && (
         <Container>
+          <h1 className={styles.siteTitle}>{site.name}</h1>
           <div className={styles.tiles}>
             {tiles.map((tile) => (
               <article
@@ -146,6 +145,8 @@ export default async function HomePage() {
         </Container>
       )}
 
+      <div className={styles.spacer} />
+
       {/* Project intro bubble */}
       {home?.intro && (
         <Container>
@@ -165,6 +166,8 @@ export default async function HomePage() {
           </div>
         </Container>
       )}
+
+      <div className={styles.spacer} />
 
       {/* Upcoming exhibitions */}
       {upcoming.length > 0 && (
@@ -204,11 +207,13 @@ export default async function HomePage() {
 
 function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
   const year = exhibition.startDate?.slice(0, 4);
+  const place = exhibition.place;
   const blurb = exhibition.summary;
   return (
     <div className={styles.upcomingRow} style={{ '--accent': accent } as CSSProperties}>
       <div>
         {year && <Label as="p">{year}</Label>}
+        {place && <Label as="p">{place}</Label>}
         <Title as="h3">
           <Underline>{exhibition.title}</Underline>
         </Title>
@@ -221,13 +226,16 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
 }
 
 function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
-  const { title, slug, startDate, endDate, canOpenDetail, cover, summary, roles } = exhibition;
+  const { title, slug, startDate, endDate, canOpenDetail, cover, summary, roles, place } = exhibition;
   const roleList = roles ?? [];
   const body = (
     <>
       <div className={styles.pastBody}>
         <div className={styles.pastSection}>
-          <Label as="p">{formatDateRange(startDate, endDate)}</Label>
+          <div>
+            <Label as="p">{formatDateRange(startDate, endDate)}</Label>
+            {place && <Label as="p">{place}</Label>}
+          </div>
           <Title as="h3">
             <Underline className={styles.pastCardUnderline}>{title}</Underline>
           </Title>

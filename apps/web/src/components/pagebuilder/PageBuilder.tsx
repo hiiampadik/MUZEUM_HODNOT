@@ -50,12 +50,15 @@ function renderBlock(block: Block, index: number) {
 
     case 'headingBlock': {
       const level = block.level === 'h3' ? 'h3' : 'h2';
+      const isSub = level === 'h3';
       return (
         <Title
           key={block._key}
           as={level}
-          underline
-          className={`${styles.heading} ${level === 'h3' ? styles.heading3 : ''}`}
+          // Page-builder sub-headings are smaller and never underlined; only
+          // section titles (h2) carry the accent underline.
+          underline={!isSub}
+          className={`${styles.heading} ${isSub ? styles.heading3 : ''}`}
           // Vary the underline accent per heading, matching the design.
           style={{ '--accent': accent } as CSSProperties}
         >

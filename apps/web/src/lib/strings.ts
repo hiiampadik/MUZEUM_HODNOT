@@ -93,6 +93,8 @@ export const common = {
   moreLink: 'Viac',
   /** ValueMap container aria-label. */
   mapAriaLabel: 'Mapa bodov',
+  /** ValueMap popover close button label. */
+  mapClose: 'Zavrieť',
   /** "Active exhibition" tag. */
   currentTag: 'Aktuálne',
 } as const;

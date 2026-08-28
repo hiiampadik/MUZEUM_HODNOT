@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { LinkIcon } from '@sanity/icons';
+import { EmojiInput } from '../components/EmojiInput';
 
 /** A link with a display label (exhibition links, tile targets, map point link). */
 export const namedLink = defineType({
@@ -20,6 +21,7 @@ export const namedLink = defineType({
       title: 'Emoji',
       type: 'string',
       description: 'Voliteľné emoji pred názvom. Ak je prázdne, použije sa ↗.',
+      components: { input: EmojiInput },
     }),
     defineField({
       name: 'href',

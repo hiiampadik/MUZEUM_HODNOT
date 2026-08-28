@@ -12,6 +12,7 @@
   "dependencies": {
     "@sanity/icons": "^3.7.0",
     "@sanity/vision": "^4.22.0",
+    "emoji-picker-react": "^4.19.1",
     "maplibre-gl": "^6.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

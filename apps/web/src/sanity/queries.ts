@@ -21,7 +21,7 @@ const materialFields = /* groq */ `
   _key,
   title,
   emoji,
-  "url": file.asset->url,
+  "url": file.asset->url + "?dl=" + file.asset->originalFilename,
   "extension": file.asset->extension,
   "size": file.asset->size
 `;
@@ -174,7 +174,6 @@ export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `
       _key,
       title,
       location,
-      image{ ${imageFields} },
       text,
       link
     }

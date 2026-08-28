@@ -1,45 +1,47 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { urlFor } from '@/sanity/lib/image';
-import type { SanityImageValue } from '../SanityImage/SanityImage';
 import { common } from '@/lib/strings';
+import { Title } from '@/components/Typography/Typography';
+import { RichText } from '@/components/RichText/RichText';
+import { Pill } from '@/components/Pill/Pill';
 import styles from './ValueMap.module.css';
 
 export type MapPointData = {
   _key: string;
   title: string | null;
   location?: { lat?: number | null; lng?: number | null } | null;
-  image?: SanityImageValue;
   text?: readonly unknown[] | null;
   link?: { label?: string | null; href?: string | null } | null;
 };
 
-function plainText(blocks?: readonly unknown[] | null): string {
-  if (!Array.isArray(blocks)) return '';
-  return blocks
-    .map((b) => {
-      const block = b as { children?: { text?: string }[] };
-      return (block.children ?? []).map((c) => c.text ?? '').join('');
-    })
-    .join(' ')
-    .trim();
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"]/g, (c) =>
-    c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : '&quot;',
-  );
-}
-
 /**
  * Interactive map for the value generator. MapLibre with built-in clustering:
- * clicking a cluster zooms in, clicking a point opens a popover. An accessible
- * list is kept in the DOM as a no-JS / screen-reader fallback.
+ * clicking a cluster zooms in, clicking a point selects it (highlighted purple)
+ * and opens a fixed-size popover panel pinned to the left of the map. An
+ * accessible list is kept in the DOM as a no-JS / screen-reader fallback.
  */
 export function ValueMap({ points }: { points: readonly MapPointData[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<import('maplibre-gl').Map | undefined>(undefined);
+  // Generated id of the currently highlighted feature (for feature-state).
+  const selectedIdRef = useRef<number | string | undefined>(undefined);
+  const [selected, setSelected] = useState<MapPointData | null>(null);
+
+  // Clear the highlight on whichever point is currently selected.
+  const clearHighlight = () => {
+    const map = mapRef.current;
+    if (map && selectedIdRef.current !== undefined) {
+      map.setFeatureState({ source: 'points', id: selectedIdRef.current }, { selected: false });
+    }
+    selectedIdRef.current = undefined;
+  };
+
+  const closePanel = () => {
+    clearHighlight();
+    setSelected(null);
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -70,16 +72,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           type: 'Point' as const,
           coordinates: [p.location!.lng as number, p.location!.lat as number],
         },
-        properties: {
-          key: p._key,
-          title: p.title ?? '',
-          text: plainText(p.text),
-          image: p.image?.asset?._id
-            ? urlFor({ asset: { _ref: p.image.asset._id } }).width(320).height(180).fit('crop').url()
-            : '',
-          linkHref: p.link?.href ?? '',
-          linkLabel: p.link?.label ?? common.moreLink,
-        },
+        properties: { key: p._key },
       }));
 
       const bounds = new maplibre.LngLatBounds();
@@ -94,6 +87,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
         bounds,
         fitBoundsOptions: { padding: 64, maxZoom: 12 },
       });
+      mapRef.current = map;
 
       map.addControl(new maplibre.NavigationControl({ showCompass: false }), 'top-right');
       map.on('error', (e) => console.error('[ValueMap]', e.error?.message ?? e));
@@ -126,15 +120,18 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           map.setPaintProperty(id, prop, color);
         }
 
+        // `generateId` gives every feature a stable numeric id so feature-state
+        // can drive the selected-point highlight.
         map.addSource('points', {
           type: 'geojson',
           data: { type: 'FeatureCollection', features },
           cluster: true,
           clusterRadius: 50,
+          generateId: true,
         });
 
-        const accent =
-          getComputedStyle(container).getPropertyValue('--accent').trim() || '#5594b4';
+        const cs = getComputedStyle(container);
+        const green = cs.getPropertyValue('--accent-green').trim() || '#66a755';
 
         map.addLayer({
           id: 'clusters',
@@ -142,7 +139,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           source: 'points',
           filter: ['has', 'point_count'],
           paint: {
-            'circle-color': accent,
+            'circle-color': green,
             'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 30, 30],
             'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
@@ -162,10 +159,22 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           source: 'points',
           filter: ['!', ['has', 'point_count']],
           paint: {
-            'circle-color': accent,
+            // Default: green fill / white stroke. Selected: white fill / green
+            // stroke (feature-state driven).
+            'circle-color': [
+              'case',
+              ['boolean', ['feature-state', 'selected'], false],
+              '#ffffff',
+              green,
+            ],
             'circle-radius': 9,
             'circle-stroke-width': 2,
-            'circle-stroke-color': '#ffffff',
+            'circle-stroke-color': [
+              'case',
+              ['boolean', ['feature-state', 'selected'], false],
+              green,
+              '#ffffff',
+            ],
           },
         });
 
@@ -182,21 +191,25 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
         map.on('click', 'unclustered', (e) => {
           if (!map || !e.features?.[0]) return;
           const f = e.features[0];
-          const p = f.properties as Record<string, string>;
-          const coords = (
-            f.geometry as { coordinates: [number, number] }
-          ).coordinates.slice() as [number, number];
-          const html = `
-            <div>
-              ${p.image ? `<img src="${p.image}" alt="" class="${styles.popupImage}" />` : ''}
-              <div class="${styles.popupTitle}">${escapeHtml(p.title)}</div>
-              ${p.text ? `<div>${escapeHtml(p.text)}</div>` : ''}
-              ${p.linkHref ? `<a href="${escapeHtml(p.linkHref)}" class="${styles.popupLink}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.linkLabel)}</a>` : ''}
-            </div>`;
-          new maplibre.Popup({ className: styles.popup, maxWidth: '280px' })
-            .setLngLat(coords)
-            .setHTML(html)
-            .addTo(map);
+          const key = (f.properties as Record<string, string>).key;
+          const point = points.find((p) => p._key === key) ?? null;
+
+          clearHighlight();
+          if (f.id !== undefined) {
+            map.setFeatureState({ source: 'points', id: f.id }, { selected: true });
+            selectedIdRef.current = f.id;
+          }
+          setSelected(point);
+        });
+
+        // Clicking the empty basemap (no point / cluster under the cursor) closes
+        // the panel and clears the highlight.
+        map.on('click', (e) => {
+          if (!map) return;
+          const hits = map.queryRenderedFeatures(e.point, {
+            layers: ['unclustered', 'clusters'],
+          });
+          if (hits.length === 0) closePanel();
         });
 
         const setPointer = (v: boolean) => {
@@ -213,14 +226,52 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
       cancelled = true;
       resizeObserver?.disconnect();
       map?.remove();
+      mapRef.current = undefined;
+      selectedIdRef.current = undefined;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [points]);
 
   if (!points || points.length === 0) return null;
 
   return (
     <div className={styles.wrap}>
-      <div ref={containerRef} className={styles.map} role="application" aria-label={common.mapAriaLabel} />
+      <div className={styles.mapArea}>
+        <div
+          ref={containerRef}
+          className={styles.map}
+          role="application"
+          aria-label={common.mapAriaLabel}
+        />
+        {selected && (
+          <div className={styles.panel} role="dialog" aria-label={selected.title ?? ''}>
+            <button
+              type="button"
+              className={styles.close}
+              onClick={closePanel}
+              aria-label={common.mapClose}
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+            {selected.title && (
+              <Title as="h3" className={styles.panelTitle}>
+                {selected.title}
+              </Title>
+            )}
+            {selected.text && <RichText value={selected.text} className={styles.panelText} />}
+            {selected.link?.href && (
+              <Pill
+                href={selected.link.href}
+                className={styles.panelPill}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {selected.link.label || common.moreLink}
+              </Pill>
+            )}
+          </div>
+        )}
+      </div>
       {/* Accessible / no-JS fallback list */}
       <ul className="sr-only">
         {points.map((p) => (

@@ -4,7 +4,7 @@ import { GeopointMapInput } from '../components/GeopointMapInput';
 
 /**
  * A point on the Generátor hodnôt map.
- * Popover content: title, image, text block, link. Position via geopoint.
+ * Popover content: title, text block, link (shown as a pill). Position via geopoint.
  */
 export const mapPoint = defineType({
   name: 'mapPoint',
@@ -29,12 +29,6 @@ export const mapPoint = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'Obrázok',
-      type: 'image',
-      options: { hotspot: true },
-    }),
-    defineField({
       name: 'text',
       title: 'Text',
       type: 'richTextBasic',
@@ -46,9 +40,9 @@ export const mapPoint = defineType({
     }),
   ],
   preview: {
-    select: { title: 'title', media: 'image' },
-    prepare({ title, media }) {
-      return { title: title || 'Bod na mape', subtitle: 'Bod na mape', media };
+    select: { title: 'title' },
+    prepare({ title }) {
+      return { title: title || 'Bod na mape', subtitle: 'Bod na mape' };
     },
   },
 });

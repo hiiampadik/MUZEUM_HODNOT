@@ -130,6 +130,15 @@ export const exhibition = defineType({
       of: [defineArrayMember({ type: 'galleryImage' })],
     }),
     defineField({
+      name: 'summary',
+      title: 'Zhrnutie',
+      type: 'text',
+      rows: 3,
+      group: 'content',
+      description:
+        'Krátke zhrnutie výstavy — používa sa v zozname výstav na domovskej stránke.',
+    }),
+    defineField({
       name: 'abstract',
       title: 'Abstrakt',
       type: 'richTextBasic',

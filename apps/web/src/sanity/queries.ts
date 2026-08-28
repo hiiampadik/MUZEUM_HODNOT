@@ -92,7 +92,8 @@ export const EXHIBITIONS_QUERY = defineQuery(/* groq */ `
     startDate,
     endDate,
     canOpenDetail,
-    "excerpt": pt::text(abstract),
+    summary,
+    roles[]{ _key, role, people },
     ${coverFields}
   }
 `);

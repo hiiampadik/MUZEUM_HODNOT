@@ -325,6 +325,7 @@ export type Exhibition = {
       _key: string;
     } & GalleryImage
   >;
+  summary?: string;
   abstract?: RichTextBasic;
   materials?: Array<
     {
@@ -679,7 +680,7 @@ export type HOME_TILE_COVERS_QUERYResult = {
   } | null;
 };
 // Variable: EXHIBITIONS_QUERY
-// Query: *[_type == "exhibition"] | order(endDate desc){    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    "excerpt": pt::text(abstract),    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
+// Query: *[_type == "exhibition"] | order(endDate desc){    _id,    title,    "slug": slug.current,    place,    openingDate,    startDate,    endDate,    canOpenDetail,    summary,    roles[]{ _key, role, people },    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
 export type EXHIBITIONS_QUERYResult = Array<{
   _id: string;
   title: string | null;
@@ -689,7 +690,12 @@ export type EXHIBITIONS_QUERYResult = Array<{
   startDate: string | null;
   endDate: string | null;
   canOpenDetail: boolean | null;
-  excerpt: string;
+  summary: string | null;
+  roles: Array<{
+    _key: string;
+    role: string | null;
+    people: string | null;
+  }> | null;
   cover: {
     asset: {
       _id: string;
@@ -1458,7 +1464,7 @@ declare module '@sanity/client' {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
     '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    introTitle,\n    introImage{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
     '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "experientialEducation": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
-    '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    "excerpt": pt::text(abstract),\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
+    '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    summary,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': EXHIBITION_SITEMAP_QUERYResult;
     '\n  *[_type == "exhibition" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    foreignLanguage,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    gallery[]{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer },\n    abstract,\n    materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n },\n    links[]{ _key, label, emoji, href },\n    contributors[]{ _key, role, people },\n    "metaDescription": pt::text(abstract)\n  }\n': EXHIBITION_QUERYResult;

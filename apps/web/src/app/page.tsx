@@ -199,6 +199,7 @@ export default async function HomePage() {
 
 function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
   const year = exhibition.startDate?.slice(0, 4);
+  const blurb = exhibition.summary;
   return (
     <div className={styles.upcomingRow} style={{ '--accent': accent } as CSSProperties}>
       <div>
@@ -207,23 +208,46 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
           {exhibition.title}
         </Title>
       </div>
-      {exhibition.excerpt && (
-        <Text className={styles.rowExcerpt}>{exhibition.excerpt}</Text>
+      {blurb && (
+        <Text className={styles.rowExcerpt}>{blurb}</Text>
       )}
     </div>
   );
 }
 
 function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
-  const { title, slug, startDate, endDate, canOpenDetail, cover, excerpt } = exhibition;
+  const { title, slug, startDate, endDate, canOpenDetail, cover, summary, roles } = exhibition;
+  const roleList = roles ?? [];
   const body = (
     <>
       <div className={styles.pastBody}>
-        <Label as="p">{formatDateRange(startDate, endDate)}</Label>
-        <Title as="h3" underline>
-          {title}
-        </Title>
-        {excerpt && <Text className={styles.rowExcerpt}>{excerpt}</Text>}
+        <div className={styles.pastSection}>
+          <Label as="p">{formatDateRange(startDate, endDate)}</Label>
+          <Title as="h3" underline>
+            {title}
+          </Title>
+        </div>
+        {roleList.length > 0 && (
+          <>
+            <hr className={styles.pastDivider} />
+            <dl className={styles.pastRoles}>
+              {roleList.map((r) => (
+                <div key={r._key} className={styles.pastRole}>
+                  <dt className={styles.pastRoleLabel}>{r.role}</dt>
+                  <dd className={styles.pastRolePeople}>{r.people}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
+        {summary && (
+          <>
+            <hr className={styles.pastDivider} />
+            <div className={styles.pastSection}>
+              <Text className={styles.rowExcerpt}>{summary}</Text>
+            </div>
+          </>
+        )}
       </div>
       {cover?.asset?._id && (
         <div className={styles.pastMedia}>

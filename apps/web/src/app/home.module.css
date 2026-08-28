@@ -89,14 +89,15 @@
   overflow: hidden;
 }
 
-/* Top-aligned with padding; the image keeps its aspect ratio and bleeds down
-   past the container's bottom edge, where `overflow: hidden` clips it. */
+/* Full-width, top-aligned with a top padding; the image keeps its aspect ratio
+   and bleeds down past the container's bottom edge, where `overflow: hidden`
+   clips it. */
 .bubbleAside :global(img) {
   position: absolute;
   top: var(--space-md);
-  left: var(--space-md);
-  right: var(--space-md);
-  width: auto;
+  left: 0;
+  right: 0;
+  width: 100%;
   height: auto;
   max-width: none;
 
@@ -168,7 +169,66 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  padding: var(--space-md);
+  padding-block: var(--space-md);
+}
+
+/* Horizontally-padded content band; dividers span the full card width. */
+.pastSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-inline: var(--space-md);
+}
+
+.pastDivider {
+  width: 100%;
+  height: 0;
+  margin: 0;
+  border: none;
+  border-top: 2px solid var(--color-bg);
+}
+
+/* Roles: label column + people name(s). */
+.pastRoles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding-inline: var(--space-md);
+}
+
+.pastRole {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: baseline;
+}
+
+.pastRoleLabel {
+  flex: 0 0 9.375rem; /* 150px label column */
+  font-family: var(--font-mono);
+  font-size: var(--font-size-label);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-label);
+}
+
+.pastRolePeople {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  line-height: var(--line-height-body);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 400px) {
+  .pastRole {
+    flex-direction: column;
+    gap: 0;
+  }
+  .pastRoleLabel {
+    flex-basis: auto;
+  }
 }
 
 .pastMedia {

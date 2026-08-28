@@ -1,0 +1,15 @@
+# Netlify config — CLIENT PREVIEW ONLY.
+# Production hosting is GitHub Pages; this just serves the same static export
+# for the client to review. Netlify auto-enables @netlify/plugin-nextjs; with
+# `output: 'export'` the plugin detects a fully static site and simply serves
+# the exported files (no serverless runtime), so we let it manage publish.
+
+[build]
+  command = "pnpm --filter web build"
+
+[build.environment]
+  # NEXT_PUBLIC_* vars are public by design (embedded in the client bundle),
+  # so exclude them from Netlify's secrets scanner. The value "production"
+  # also appears throughout the repo, tripping false positives.
+  # SANITY_API_READ_TOKEN is intentionally NOT listed — keep it scanned.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SANITY_DATASET,NEXT_PUBLIC_SANITY_PROJECT_ID"

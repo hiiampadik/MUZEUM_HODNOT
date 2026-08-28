@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Pill } from '../Pill/Pill';
+import { Link } from '../Link/Link';
 import { Container } from '../Container/Container';
 import { routes } from '@/lib/routes';
 import styles from './Nav.module.css';
@@ -18,15 +19,29 @@ const items = [
 
 export function Nav({ donateLink }: NavProps) {
   const pathname = usePathname();
+  const offHome = pathname !== routes.home;
 
   return (
     <nav className={styles.nav} aria-label="Hlavná navigácia">
+      {offHome && (
+        <Link href={routes.home} className={styles.home} aria-label="Domov">
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 10.5 12 3l9 7.5" />
+            <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
+          </svg>
+        </Link>
+      )}
+
       <Container>
         <div className={styles.inner}>
-          <Pill href={routes.home} size="lg" emoji="✨">
-            Múzeum hodnôt
-          </Pill>
-
           {items.map((item) => (
             <Pill
               key={item.href}

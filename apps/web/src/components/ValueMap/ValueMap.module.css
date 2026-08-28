@@ -6,6 +6,7 @@
   width: 100%;
   height: min(70vh, 600px);
   border-radius: var(--radius-lg);
+  border: 2px solid var(--color-surface);
   overflow: hidden;
   background: var(--color-surface-muted);
 }

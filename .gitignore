@@ -13,6 +13,9 @@ apps/studio/dist/
 apps/studio/schema.json
 .sanity/
 
+# maplibre worker — copied from node_modules by copy-maplibre-worker (pre/dev/build)
+apps/web/public/maplibre/
+
 # production
 build/
 dist/

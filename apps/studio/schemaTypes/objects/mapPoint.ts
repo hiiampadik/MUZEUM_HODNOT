@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { PinIcon } from '@sanity/icons';
+import { GeopointMapInput } from '../components/GeopointMapInput';
 
 /**
  * A point on the Generátor hodnôt map.
@@ -21,6 +22,10 @@ export const mapPoint = defineType({
       name: 'location',
       title: 'Poloha',
       type: 'geopoint',
+      description:
+        'Klikni do mapy alebo zadaj desatinné stupne (WGS84). Napr. Bratislava: Latitude 48.1486, ' +
+        'Longitude 17.1077. Nadmorskú výšku (Altitude) nechaj prázdnu — mapa ju nepoužíva.',
+      components: { input: GeopointMapInput },
       validation: (rule) => rule.required(),
     }),
     defineField({

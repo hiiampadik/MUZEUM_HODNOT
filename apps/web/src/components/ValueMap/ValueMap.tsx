@@ -50,11 +50,18 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
     if (valid.length === 0) return;
 
     let map: import('maplibre-gl').Map | undefined;
+    let resizeObserver: ResizeObserver | undefined;
     let cancelled = false;
 
     (async () => {
       const maplibre = await import('maplibre-gl');
       if (cancelled || !container) return;
+
+      // Self-hosted worker: webpack can't emit maplibre's worker chunk (it builds
+      // the worker URL as a variable, not the literal `new Worker(new URL(...))`
+      // pattern), so the default URL 404s and vector tiles never parse. The worker
+      // + its shared chunk are copied to public/maplibre/ by copy-maplibre-worker.
+      maplibre.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs');
 
       const features = valid.map((p) => ({
         type: 'Feature' as const,
@@ -79,26 +86,45 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
 
       map = new maplibre.Map({
         container,
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: 'raster',
-              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-              tileSize: 256,
-              attribution: '© OpenStreetMap',
-            },
-          },
-          layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
-        },
+        // OpenFreeMap "positron" — free vector basemap (incl. commercial use),
+        // no API key. Light, minimal style that suits the page palette.
+        // OSM data © OpenStreetMap; attribution is carried by the style.
+        style: 'https://tiles.openfreemap.org/styles/positron',
         bounds,
         fitBoundsOptions: { padding: 64, maxZoom: 12 },
       });
 
       map.addControl(new maplibre.NavigationControl({ showCompass: false }), 'top-right');
+      map.on('error', (e) => console.error('[ValueMap]', e.error?.message ?? e));
+
+      // The map is created inside an async IIFE (after `await import`), so the
+      // container's layout can settle after construction. With a vector style a
+      // stale size leaves the map blank (no tiles requested) until a resize.
+      // A ResizeObserver keeps the map's size in sync and nudges the first paint.
+      resizeObserver = new ResizeObserver(() => map?.resize());
+      resizeObserver.observe(container);
 
       map.on('load', () => {
         if (!map) return;
+
+        // Recolour the positron basemap to a light monochrome scheme that sits
+        // under the page: land areas graded up from white, water darker than the
+        // page background so the accent points stay the heroes. `--color-*` here
+        // mirror the page palette (page bg #ececf0).
+        const basemap: Record<string, string> = {
+          background: '#f4f5f7', // slightly lighter than the page
+          park: '#ffffff', // fields / parks — lightest, pure white
+          landuse_residential: '#f8f9fb', // cities
+          building: '#f4f5f8',
+          landcover_wood: '#eef1f4', // forests — darkest of the land fills, still near-white
+          water: '#b6bfca', // clearly darker than the page background
+        };
+        for (const [id, color] of Object.entries(basemap)) {
+          if (!map.getLayer(id)) continue;
+          const prop = id === 'background' ? 'background-color' : 'fill-color';
+          map.setPaintProperty(id, prop, color);
+        }
+
         map.addSource('points', {
           type: 'geojson',
           data: { type: 'FeatureCollection', features },
@@ -117,7 +143,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           paint: {
             'circle-color': accent,
             'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 30, 30],
-            'circle-stroke-width': 3,
+            'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
           },
         });
@@ -137,7 +163,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           paint: {
             'circle-color': accent,
             'circle-radius': 9,
-            'circle-stroke-width': 3,
+            'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
           },
         });
@@ -184,6 +210,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
 
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       map?.remove();
     };
   }, [points]);

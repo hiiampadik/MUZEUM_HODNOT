@@ -47,7 +47,7 @@ html {
 }
 
 body {
-  min-height: 100dvh;
+  min-height: 100svh;
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
@@ -109,12 +109,14 @@ select {
 /* Homepage: on load, bottom-align the hero tiles to the viewport, leaving a
    --space-md gap below them. Below the padding sit the title (one line box =
    line-height × font-size) and the tiles (margin-top --space-3xl, min-height
-   60vh − --space-md). Solving bottom-of-tiles = 100vh − --space-md gives
-   40vh − title − --space-3xl. Never shrink below --space-3xl (short screens). */
+   60svh − --space-md). Solving bottom-of-tiles = 100svh − --space-md gives
+   40svh − title − --space-3xl. Never shrink below --space-3xl (short screens).
+   svh (small viewport) keeps this stable when the mobile browser bar shows/hides,
+   so the hero never jumps — matches body min-height and .tile min-height. */
 .page-main--home {
   padding-top: max(
     var(--space-3xl),
-    calc(40vh - var(--space-3xl) - var(--line-height-heading) * var(--font-size-title))
+    calc(40svh - var(--space-3xl) - var(--line-height-heading) * var(--font-size-title))
   );
 }
 

@@ -4,7 +4,7 @@
 }
 
 .heroCover {
-  height: min(70vh, 760px);
+  height: min(70svh, 760px);
 }
 
 .siteTitle {
@@ -22,7 +22,7 @@
 }
 
 .tilesOverlap {
-  margin-top: min(-32vh, -260px);
+  margin-top: min(-32svh, -260px);
 }
 
 .tiles {
@@ -37,7 +37,7 @@
     grid-template-columns: 1fr;
   }
   .tilesOverlap {
-    margin-top: min(-24vh, -160px);
+    margin-top: min(-24svh, -160px);
   }
 }
 
@@ -50,7 +50,7 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   overflow: clip;
-  min-height: calc(60vh - var(--space-md));
+  min-height: calc(60svh - var(--space-md));
 }
 
 .tileHead {

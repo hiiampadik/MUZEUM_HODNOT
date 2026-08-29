@@ -17,6 +17,7 @@
 
 /* Keep the pills clickable while the transparent bar ignores pointer events. */
 .inner > *,
+.mobileMenu > *,
 .brand {
   pointer-events: auto;
 }
@@ -28,7 +29,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.05em 32px 0.13em;
+  min-height: 38px;
+  padding: 0.05em 30px 0.13em;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-fg);
@@ -146,4 +148,89 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2xs);
+}
+
+/* ---- Mobile menu ---- */
+/* The single Menu trigger that replaces the pill row on phones. Hidden on
+   desktop; the media query below swaps the two. */
+.mobileMenu {
+  display: none;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .inner {
+    display: none;
+  }
+  .mobileMenu {
+    display: flex;
+  }
+}
+
+/* Full-screen overlay: blurred, translucent backdrop with the links stacked in
+   a column centered both axes. Sits above everything, including the nav. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  animation: overlayFadeIn 0.2s ease both;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+}
+
+.overlayLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Close cross — matches the map popover's close button. */
+.close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-fg);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.close:hover {
+  background: var(--color-bg);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
 }

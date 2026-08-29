@@ -214,7 +214,7 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
   const blurb = exhibition.summary;
   return (
     <div className={styles.upcomingRow} style={{ '--accent': accent } as CSSProperties}>
-      <div>
+      <div className={styles.upcomingRowTop}>
         {year && <Label as="p">{year}</Label>}
         {place && <Label as="p">{place}</Label>}
         <Title as="h3">

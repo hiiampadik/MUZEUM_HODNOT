@@ -72,7 +72,7 @@
 
 .gallery::after {
   content: '';
-  flex: 0 0 var(--container-padding);
+  flex: 0 0 calc(var(--container-padding) - var(--space-2xs));
   align-self: stretch;
 }
 

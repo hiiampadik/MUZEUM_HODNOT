@@ -41,6 +41,31 @@ const SCROLL_THRESHOLD = 48;
 export function Nav({ donateLink }: NavProps) {
   const pathname = usePathname();
 
+  // Mobile: the pill row collapses into a single Menu button that opens a
+  // full-screen overlay with the links stacked in a centered column.
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close the overlay on route change (a link was followed).
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // While the overlay is open: lock scrolling on the page below and allow Esc
+  // to close it.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [menuOpen]);
+
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
     let lastY = window.scrollY;
@@ -112,6 +137,7 @@ export function Nav({ donateLink }: NavProps) {
         </Link>
 
         <Container>
+          {/* Desktop: full pill row. Hidden on phones (see .inner media query). */}
           <div className={styles.inner}>
             {items.map((item) => (
               <Pill
@@ -132,10 +158,66 @@ export function Nav({ donateLink }: NavProps) {
               </Pill>
             )}
           </div>
+
+          {/* Phones: single Menu button that opens the overlay below. */}
+          <div className={styles.mobileMenu}>
+            <Pill
+              variant="surface"
+              size="lg"
+              emoji="📦"
+              onClick={() => setMenuOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={menuOpen}
+              aria-label={nav.menuOpenAriaLabel}
+            >
+              {nav.menu}
+            </Pill>
+          </div>
         </Container>
-
-
       </div>
+
+      {menuOpen && (
+        <div
+          className={styles.overlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label={nav.menu}
+          onClick={(e) => {
+            // Click on the backdrop (not the links column) closes the overlay.
+            if (e.target === e.currentTarget) setMenuOpen(false);
+          }}
+        >
+          <button
+            type="button"
+            className={styles.close}
+            onClick={() => setMenuOpen(false)}
+            aria-label={nav.menuClose}
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+
+          <div className={styles.overlayLinks}>
+            {items.map((item) => (
+              <Pill
+                key={item.href}
+                href={item.href}
+                variant="surface"
+                size="lg"
+                emoji={item.emoji}
+                aria-current={pathname === item.href ? 'page' : undefined}
+              >
+                {item.label}
+              </Pill>
+            ))}
+
+            {donateLink?.href && (
+              <Pill href={donateLink.href} variant="surface" size="lg" emoji="💝">
+                {donateLink.label || nav.donateFallback}
+              </Pill>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

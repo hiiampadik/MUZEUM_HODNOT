@@ -36,6 +36,10 @@ export const nav = {
   experientialEducation: 'Zážitkové vzdelávanie',
   /** Fallback label for the donate pill when the CMS label is missing. */
   donateFallback: 'Darovať',
+  /** Mobile menu trigger + overlay controls. */
+  menu: 'Menu',
+  menuOpenAriaLabel: 'Otvoriť menu',
+  menuClose: 'Zavrieť menu',
 } as const;
 
 /** Footer column headings. */

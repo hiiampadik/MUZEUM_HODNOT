@@ -124,6 +124,25 @@ select {
   height: auto;
 }
 
+/* On wide screens the image keeps its natural aspect ratio. As the viewport
+   narrows, width:100% would shrink the image's height and open a gap below the
+   fixed content padding-top. Floor the height so the cover stays big and let it
+   crop left/right instead (object-fit:cover) rather than getting shorter. */
+.cover-bg-top img,
+.cover-bg-bottom img {
+  min-height: clamp(320px, 55vh, 600px);
+  object-fit: cover;
+}
+
+/* On smaller devices keep the cover roughly 1.5× taller so it stays a bold
+   full-bleed band (it just crops more on the sides). */
+@media (max-width: 768px) {
+  .cover-bg-top img,
+  .cover-bg-bottom img {
+    min-height: clamp(480px, 82vh, 900px);
+  }
+}
+
 /* Visually hidden but accessible to screen readers */
 .sr-only {
   position: absolute;

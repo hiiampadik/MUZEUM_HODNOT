@@ -119,10 +119,10 @@ export default async function HomePage() {
             {tiles.map((tile) => (
               <article
                 key={tile.key}
-                className={styles.tile}
+                className={`${styles.tile} ${hover.group}`}
                 style={{ '--accent': tile.accent } as CSSProperties}
               >
-                <div className={`${styles.tileHead} ${hover.group}`}>
+                <div className={styles.tileHead}>
                   <Label>{tile.eyebrow}</Label>
                   <Title as="h2">
                     <Link href={tile.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>

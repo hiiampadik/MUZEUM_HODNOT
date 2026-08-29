@@ -36,7 +36,7 @@ const brandSegments: BrandSegment[] = nav.brandName
 
 // Only flip the collapsed state after a meaningful move in one direction, so a
 // one-pixel scroll (or jitter) never triggers the animation.
-const SCROLL_THRESHOLD = 48;
+const SCROLL_THRESHOLD = 200;
 
 export function Nav({ donateLink }: NavProps) {
   const pathname = usePathname();
@@ -164,7 +164,7 @@ export function Nav({ donateLink }: NavProps) {
             <Pill
               variant="surface"
               size="lg"
-              emoji="📦"
+              emoji="🍽️"
               onClick={() => setMenuOpen(true)}
               aria-haspopup="dialog"
               aria-expanded={menuOpen}

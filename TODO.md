@@ -62,7 +62,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] Mapa (MapLibre, vestavěný clustering, zoom na cluster, popover)
 - [x] Rozbalovací bublina na homepage (clamp ~15 řádků + fade + „Čítať viac")
 - [ ] Produkce: nahradit OSM raster dlaždice keyed providerem (MapTiler) — před Blokem 8
-- [ ] Doplnit body mapy v CMS (zatím prázdné)
+- [x] Doplnit body mapy v CMS (zatím prázdné)
 
 ## Blok 7 — A11Y, SEO, výkon
 - [x] Metadata (metadataBase, per-page OG z coveru), `sitemap.xml`, `robots.txt`,
@@ -76,7 +76,7 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [ ] GitHub Actions `deploy.yml` (push + `repository_dispatch`)
 - [ ] `CNAME`, Cloudflare DNS + proxy
 - [ ] Sanity webhook → `repository_dispatch`
-- [ ] Studio deploy na `*.sanity.studio`
+- [x] Studio deploy na `*.sanity.studio`
 
 ---
 

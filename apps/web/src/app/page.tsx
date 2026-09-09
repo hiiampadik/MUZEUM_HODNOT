@@ -14,7 +14,7 @@ import { IntroBubble } from '@/components/IntroBubble/IntroBubble';
 import { Link } from '@/components/Link/Link';
 import {Title, Label, Text, Underline, Heading} from '@/components/Typography/Typography';
 import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
-import { routes, accents, accentPalette } from '@/lib/routes';
+import { routes, accents } from '@/lib/routes';
 import { formatDateRange } from '@/lib/format';
 import {site, home as homeStrings, pages} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
@@ -22,7 +22,7 @@ import styles from './home.module.css';
 
 type Tile = {
   key: string;
-  eyebrow: string;
+  eyebrow: ReactNode;
   title: ReactNode;
   cta: string;
   emoji: string;
@@ -76,7 +76,13 @@ export default async function HomePage() {
   }
   tiles.push({
     key: 'valueGenerator',
-    eyebrow: homeStrings.forSchools,
+    eyebrow: (
+      <>
+        {homeStrings.forSchoolsLead}
+        <br />
+        {homeStrings.forSchoolsSuffix}
+      </>
+    ),
     title: (
       <>
         <Underline>{homeStrings.valueGeneratorLead}</Underline>
@@ -91,10 +97,16 @@ export default async function HomePage() {
   });
   tiles.push({
     key: 'experientialEducation',
-    eyebrow: homeStrings.forTeachers,
+    eyebrow: (
+      <>
+        {homeStrings.forTeachersLead}
+        <br />
+        {homeStrings.forTeachersSuffix}
+      </>
+    ),
     title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
     cta: homeStrings.open,
-    emoji: '👻',
+    emoji: '📚',
     accent: accents.experientialEducation,
     href: routes.experientialEducation,
     image: tileCovers?.experientialEducation,
@@ -175,12 +187,17 @@ export default async function HomePage() {
       {/* Upcoming exhibitions */}
       {upcoming.length > 0 && (
         <Container as="section" className={styles.section}>
-          <Title as="h2" underline className={styles.sectionTitle}>
+          <Title
+            as="h2"
+            underline
+            className={styles.sectionTitle}
+            style={{ '--accent': accents.exhibition } as CSSProperties}
+          >
             {homeStrings.upcoming}
           </Title>
           <div className={styles.upcomingList}>
-            {upcoming.map((ex, i) => (
-              <UpcomingRow key={ex._id} exhibition={ex} accent={accentPalette[i % accentPalette.length]} />
+            {upcoming.map((ex) => (
+              <UpcomingRow key={ex._id} exhibition={ex} accent={accents.exhibition} />
             ))}
           </div>
         </Container>
@@ -190,12 +207,17 @@ export default async function HomePage() {
       {past.length > 0 && (
         <Container as="section" className={styles.section}>
           <div id="vystavy" />
-          <Title as="h2" underline className={styles.sectionTitle}>
+          <Title
+            as="h2"
+            underline
+            className={styles.sectionTitle}
+            style={{ '--accent': accents.exhibition } as CSSProperties}
+          >
             {homeStrings.past}
           </Title>
           <div className={styles.pastList}>
-            {past.map((ex, i) => (
-              <PastCard key={ex._id} exhibition={ex} accent={accentPalette[i % accentPalette.length]} />
+            {past.map((ex) => (
+              <PastCard key={ex._id} exhibition={ex} accent={accents.exhibition} />
             ))}
           </div>
         </Container>

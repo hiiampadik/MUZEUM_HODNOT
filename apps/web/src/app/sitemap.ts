@@ -22,6 +22,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       priority: 0.7,
     },
+    {
+      url: new URL(routes.aboutExperientialEducation, siteUrl).toString(),
+      lastModified: now,
+      priority: 0.6,
+    },
   ];
 
   let exhibitionEntries: MetadataRoute.Sitemap = [];

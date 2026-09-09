@@ -14,9 +14,10 @@ type NavProps = {
 };
 
 const items = [
-  { href: routes.contact, label: nav.contact, emoji: '🤹' },
+  { href: routes.aboutExperientialEducation, label: nav.aboutExperientialEducation, emoji: '👻' },
   { href: routes.valueGenerator, label: nav.valueGenerator, emoji: '🔮' },
-  { href: routes.experientialEducation, label: nav.experientialEducation, emoji: '👻' },
+  { href: routes.experientialEducation, label: nav.experientialEducation, emoji: '📚' },
+  { href: routes.contact, label: nav.contact, emoji: '🤹' },
 ];
 
 // The brand pill collapses to its initials on scroll down and expands on scroll

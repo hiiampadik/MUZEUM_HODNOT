@@ -27,6 +27,7 @@ import { exhibition } from './documents/exhibition';
 import { contactPage } from './documents/contactPage';
 import { experientialEducation } from './documents/experientialEducation';
 import { valueGenerator } from './documents/valueGenerator';
+import { aboutExperientialEducation } from './documents/aboutExperientialEducation';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
@@ -36,6 +37,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   contactPage,
   experientialEducation,
   valueGenerator,
+  aboutExperientialEducation,
 
   // Page-builder blocks
   pageBuilder,
@@ -65,4 +67,5 @@ export const SINGLETONS = [
   'contactPage',
   'experientialEducation',
   'valueGenerator',
+  'aboutExperientialEducation',
 ];

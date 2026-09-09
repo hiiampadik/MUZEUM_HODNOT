@@ -1,12 +1,12 @@
 import { defineType, defineField } from 'sanity';
-import { RocketIcon } from '@sanity/icons';
+import { InfoOutlineIcon } from '@sanity/icons';
 
-/** Metodické materiály (singleton, doc id `experientialEducation`): cover + page builder. */
-export const experientialEducation = defineType({
-  name: 'experientialEducation',
-  title: 'Metodické materiály',
+/** O zážitkovom vzdelávaní (singleton): cover + page builder. */
+export const aboutExperientialEducation = defineType({
+  name: 'aboutExperientialEducation',
+  title: 'O zážitkovom vzdelávaní',
   type: 'document',
-  icon: RocketIcon,
+  icon: InfoOutlineIcon,
   fields: [
     defineField({
       name: 'cover',
@@ -37,7 +37,7 @@ export const experientialEducation = defineType({
   ],
   preview: {
     prepare() {
-      return { title: 'Metodické materiály' };
+      return { title: 'O zážitkovom vzdelávaní' };
     },
   },
 });

@@ -4,6 +4,7 @@ export const routes = {
   home: '/',
   contact: '/kontakt',
   experientialEducation: '/zazitkove-vzdelavanie',
+  aboutExperientialEducation: '/o-zazitkovom-vzdelavani',
   valueGenerator: '/generator-hodnot',
   exhibition: (slug: string) => `/vystava/${slug}`,
 } as const;
@@ -17,7 +18,8 @@ export const accents = {
   home: '#5594b4', // blue — project intro bubble
   exhibition: '#66a755', // green — exhibitions
   contact: '#a77d3f', // gold
-  experientialEducation: '#a77d3f', // gold — "Zážitkové vzdelávanie"
+  experientialEducation: '#fe81ee', // pink — "Metodické materiály"
+  aboutExperientialEducation: '#ffb6ed', // pink — "O zážitkovom vzdelávaní"
   valueGenerator: '#c575e0', // purple — "Generátor hodnôt"
 } as const;
 

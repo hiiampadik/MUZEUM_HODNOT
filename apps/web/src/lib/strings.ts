@@ -33,7 +33,8 @@ export const nav = {
   brandName: 'Múzeum Hodnôt',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
-  experientialEducation: 'Zážitkové vzdelávanie',
+  experientialEducation: 'Metodické materiály',
+  aboutExperientialEducation: 'O zážitkovom vzdelávaní',
   /** Fallback label for the donate pill when the CMS label is missing. */
   donateFallback: 'Darovať',
   /** Mobile menu trigger + overlay controls. */
@@ -55,15 +56,18 @@ export const footer = {
 export const home = {
   currentExhibitions: 'Aktuálne výstavy',
   showMore: 'Zobraziť viac',
-  forSchools: 'Pre školy',
+  /** Hero-tile eyebrow, split so a line break can go between the two parts. */
+  forSchoolsLead: 'Zážitkové vzdelávanie',
+  forSchoolsSuffix: 'pre školy',
   /**
    * Value-generator tile title. Only the lead is underlined; the suffix stays
    * plain (see the hero tiles on the homepage).
    */
   valueGeneratorLead: 'Generátor hodnôt',
-  valueGeneratorSuffix: ' do škôl',
-  forTeachers: 'Pre učiteľov',
-  experientialEducationTitle: 'Zážitkové vzdelávanie',
+  valueGeneratorSuffix: ' do škôl',
+  forTeachersLead: 'Zážitkové vzdelávanie',
+  forTeachersSuffix: 'pre učiteľov',
+  experientialEducationTitle: 'Metodické materiály',
   open: 'Otvoriť',
   upcoming: 'Chystané výstavy',
   past: 'Uplynulé',
@@ -79,7 +83,8 @@ export const home = {
 export const pages = {
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt do škôl',
-  experientialEducation: 'Zážitkové vzdelávanie',
+  experientialEducation: 'Metodické materiály',
+  aboutExperientialEducation: 'O zážitkovom vzdelávaní',
 } as const;
 
 /** Contact page field labels. */

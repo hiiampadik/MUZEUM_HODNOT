@@ -6,6 +6,7 @@ import {
   RocketIcon,
   EarthGlobeIcon,
   CalendarIcon,
+  InfoOutlineIcon,
 } from '@sanity/icons';
 import { SINGLETONS } from './schemaTypes';
 
@@ -28,7 +29,7 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType('contactPage').documentId('contactPage')),
 
       S.listItem()
-        .title('Zážitkové vzdelávanie')
+        .title('Metodické materiály')
         .icon(RocketIcon)
         .child(
           S.document()
@@ -43,6 +44,15 @@ export const structure: StructureResolver = (S) =>
           S.document()
             .schemaType('valueGenerator')
             .documentId('valueGenerator'),
+        ),
+
+      S.listItem()
+        .title('O zážitkovom vzdelávaní')
+        .icon(InfoOutlineIcon)
+        .child(
+          S.document()
+            .schemaType('aboutExperientialEducation')
+            .documentId('aboutExperientialEducation'),
         ),
 
       S.divider(),

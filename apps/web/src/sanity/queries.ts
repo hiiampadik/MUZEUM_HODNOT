@@ -163,6 +163,16 @@ export const EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+/* --- About experiential education --------------------------------------- */
+
+export const ABOUT_EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
+  *[_id == "aboutExperientialEducation"][0]{
+    ${coverFields},
+    ${edgeCoverFields},
+    ${pageBuilderFields}
+  }
+`);
+
 /* --- Value generator --------------------------------------------------- */
 
 export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `

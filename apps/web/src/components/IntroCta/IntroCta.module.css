@@ -1,0 +1,18 @@
+.cta {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-lg);
+  z-index: 20;
+  transform: translate(-50%, calc(100% + var(--space-lg)));
+  opacity: 0;
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}

@@ -11,6 +11,7 @@ import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { SanityImage } from '@/components/SanityImage/SanityImage';
 import { Button } from '@/components/Button/Button';
 import { IntroBubble } from '@/components/IntroBubble/IntroBubble';
+import { IntroCta } from '@/components/IntroCta/IntroCta';
 import { Link } from '@/components/Link/Link';
 import {Title, Label, Text, Underline, Heading} from '@/components/Typography/Typography';
 import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
@@ -165,7 +166,11 @@ export default async function HomePage() {
       {/* Project intro bubble */}
       {home?.intro && (
         <Container>
-          <div className={styles.bubble} style={{ '--accent': accents.home } as CSSProperties}>
+          <div
+            id="o-muzeu"
+            className={styles.bubble}
+            style={{ '--accent': accents.home } as CSSProperties}
+          >
             <div className={styles.bubbleBody}>
               <Title as="h2">
                 <Underline>{homeStrings.introTitleLead}</Underline>
@@ -181,6 +186,8 @@ export default async function HomePage() {
           </div>
         </Container>
       )}
+
+      {home?.intro && <IntroCta targetId="o-muzeu" />}
 
       <div className={styles.spacer} />
 

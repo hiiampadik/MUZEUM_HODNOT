@@ -15,7 +15,7 @@ export const routes = {
  * underline + button color).
  */
 export const accents = {
-  home: '#5594b4', // blue — project intro bubble
+  home: '#3657ff', // blue — project intro bubble
   exhibition: '#66a755', // green — exhibitions
   contact: '#a77d3f', // gold
   experientialEducation: '#fe81ee', // pink — "Metodické materiály"
@@ -26,7 +26,7 @@ export const accents = {
 /** Accent palette for cycling per-item colors (e.g. exhibition cards). */
 export const accentPalette = [
   '#66a755',
-  '#5594b4',
+  '#3657ff',
   '#c575e0',
   '#a77d3f',
   '#ffb6ed',

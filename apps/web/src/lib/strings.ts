@@ -77,6 +77,8 @@ export const home = {
    */
   introTitleLead: 'Múzeum Hodnôt',
   introTitleSuffix: ' – obrazová správa o Slovensku',
+  /** Fixed bottom pill that scrolls to the intro bubble section. */
+  introCta: 'Viac o Múzeu Hodnôt',
 } as const;
 
 /** Page metadata titles + <h1>/heading copy. */

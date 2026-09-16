@@ -38,6 +38,15 @@
 .text {
   position: relative;
   overflow: hidden;
+  /* Animates between the two heights measured in IntroBubble.tsx; the content
+     below the bubble slides along because the block stays in normal flow. */
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text {
+    transition: none;
+  }
 }
 
 /* Collapsed: show ~5 lines, fade the last lines into the background. */

@@ -25,7 +25,7 @@
   gap: var(--space-md);
   flex: 1 1 auto;
   margin-top: var(--space-4xl);
-  max-height: 600px;
+  max-height: 500px;
 }
 
 @media (max-width: 900px) {
@@ -61,8 +61,25 @@
 .tileHead {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   padding-inline: var(--space-md);
+}
+
+/* One destination inside a tile: title + its button, carrying its own --accent.
+   The exhibitions tile stacks one per currently running exhibition. Positioned
+   so the title link's overlay (below) resolves against the entry. */
+.tileEntry {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+/* Single-destination tiles keep the card-wide hit area, so their entry must not
+   become the overlay's containing block — .tile stays that. */
+.tileStretch .tileEntry {
+  position: static;
 }
 
 .tileTitleLink {
@@ -70,8 +87,12 @@
   text-decoration: none;
 }
 
-/* Stretched hit area covering the whole tile. */
-.tileTitleLink::after {
+/* Stretched hit area on the title link. It spans the whole entry — title,
+   button and the empty space around them — so clicking or hovering anywhere in
+   the block works and the hover state never drops out in the gaps. On
+   single-destination tiles (.tileStretch) the entry is not positioned, so the
+   same overlay spans the whole card instead. */
+.tileEntry .tileTitleLink::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -88,7 +109,8 @@
 }
 
 @media (hover: hover) {
-  .tile:has(.tileTitleLink:hover) .tileButton {
+  /* Scoped to the entry so hovering one title only dims that entry's button. */
+  .tileEntry:has(.tileTitleLink:hover) .tileButton {
     filter: brightness(0.94);
   }
   .tile:has(.tileTitleLink:hover) .tileMedia :global(img) {

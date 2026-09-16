@@ -14,21 +14,29 @@ import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {Link} from '@/components/Link/Link';
 import {Label, Text, Title, Underline} from '@/components/Typography/Typography';
 import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
-import {accents, routes} from '@/lib/routes';
+import {accentPalette, accents, routes} from '@/lib/routes';
 import {formatDateRange} from '@/lib/format';
 import {home as homeStrings, site} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
 import styles from './home.module.css';
 
-type Tile = {
+/** One clickable line inside a hero tile: accented title + its own button. */
+type TileEntry = {
   key: string;
-  eyebrow: ReactNode;
   title: ReactNode;
   cta: string;
   emoji: string;
   accent: string;
   href: string;
+};
+
+type Tile = {
+  key: string;
+  eyebrow: ReactNode;
+  entries: TileEntry[];
   image?: SanityImageValue;
+  /** Single-destination tiles stay one big hit area; multi-entry ones don't. */
+  stretch?: boolean;
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -56,22 +64,29 @@ export default async function HomePage() {
 
   const { active, upcoming, past } = groupExhibitions(exhibitions);
 
-  // Fixed hero tiles. The first (current exhibitions) only appears when some exist.
-  const activeExhibition = active[0];
+  // Fixed hero tiles. The first lists every currently running exhibition, one
+  // under another, and only appears when there is at least one. Each gets its
+  // own accent from the cycling palette; the cover comes from the first one.
   const tiles: Tile[] = [];
-  if (activeExhibition) {
+  if (active.length > 0) {
     tiles.push({
       key: 'exhibitions',
       eyebrow: homeStrings.currentExhibitions,
-      title: <Underline>{activeExhibition.title ?? homeStrings.currentExhibitions}</Underline>,
-      cta: homeStrings.showMore,
-      emoji: '👀',
-      accent: accents.exhibition,
-      href:
-        activeExhibition.canOpenDetail && activeExhibition.slug
-          ? routes.exhibition(activeExhibition.slug)
-          : '#vystavy',
-      image: activeExhibition.cover,
+      entries: active.map((exhibition, i) => ({
+        key: exhibition._id,
+        title: <Underline>{exhibition.title ?? homeStrings.currentExhibitions}</Underline>,
+        cta: homeStrings.showMore,
+        emoji: '👀',
+        accent: accentPalette[i % accentPalette.length],
+        href:
+          exhibition.canOpenDetail && exhibition.slug
+            ? routes.exhibition(exhibition.slug)
+            : '#vystavy',
+      })),
+      image: active[0].cover,
+      // With a single exhibition there is nothing to disambiguate, so the tile
+      // behaves like the other two: the whole card is one hit area.
+      stretch: active.length === 1,
     });
   }
   tiles.push({
@@ -83,17 +98,23 @@ export default async function HomePage() {
         {homeStrings.forSchoolsSuffix}
       </>
     ),
-    title: (
-      <>
-        <Underline>{homeStrings.valueGeneratorLead}</Underline>
-        {homeStrings.valueGeneratorSuffix}
-      </>
-    ),
-    cta: homeStrings.open,
-    emoji: '🔮',
-    accent: accents.valueGenerator,
-    href: routes.valueGenerator,
+    entries: [
+      {
+        key: 'valueGenerator',
+        title: (
+          <>
+            <Underline>{homeStrings.valueGeneratorLead}</Underline>
+            {homeStrings.valueGeneratorSuffix}
+          </>
+        ),
+        cta: homeStrings.open,
+        emoji: '🔮',
+        accent: accents.valueGenerator,
+        href: routes.valueGenerator,
+      },
+    ],
     image: tileCovers?.valueGenerator,
+    stretch: true,
   });
   tiles.push({
     key: 'experientialEducation',
@@ -104,12 +125,18 @@ export default async function HomePage() {
         {homeStrings.forTeachersSuffix}
       </>
     ),
-    title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
-    cta: homeStrings.open,
-    emoji: '📚',
-    accent: accents.experientialEducation,
-    href: routes.experientialEducation,
+    entries: [
+      {
+        key: 'experientialEducation',
+        title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
+        cta: homeStrings.open,
+        emoji: '📚',
+        accent: accents.experientialEducation,
+        href: routes.experientialEducation,
+      },
+    ],
     image: tileCovers?.experientialEducation,
+    stretch: true,
   });
 
   return (
@@ -148,19 +175,29 @@ export default async function HomePage() {
               {tiles.map((tile) => (
                 <article
                   key={tile.key}
-                  className={`${styles.tile} ${hover.group}`}
-                  style={{ '--accent': tile.accent } as CSSProperties}
+                  className={`${styles.tile} ${tile.stretch ? styles.tileStretch : ''}`}
                 >
                   <div className={styles.tileHead}>
                     <Label>{tile.eyebrow}</Label>
-                    <Title as="h2">
-                      <Link href={tile.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>
-                        {tile.title}
-                      </Link>
-                    </Title>
-                    <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
-                      {tile.cta}
-                    </Button>
+                    {tile.entries.map((entry) => (
+                      <div
+                        key={entry.key}
+                        className={`${styles.tileEntry} ${hover.group}`}
+                        style={{ '--accent': entry.accent } as CSSProperties}
+                      >
+                        <Title as="h2">
+                          <Link
+                            href={entry.href}
+                            className={`${styles.tileTitleLink} ${hover.groupTrigger}`}
+                          >
+                            {entry.title}
+                          </Link>
+                        </Title>
+                        <Button href={entry.href} className={styles.tileButton} emoji={entry.emoji}>
+                          {entry.cta}
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                   {tile.image?.asset?._id && (
                     <div className={styles.tileMedia}>

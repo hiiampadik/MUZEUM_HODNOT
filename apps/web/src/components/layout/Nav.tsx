@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Pill } from '../Pill/Pill';
 import { Link } from '../Link/Link';
@@ -14,7 +14,7 @@ type NavProps = {
 };
 
 const items = [
-  { href: routes.aboutExperientialEducation, label: nav.aboutExperientialEducation, emoji: '👻' },
+  { href: routes.aboutPlatform, label: nav.aboutPlatform, emoji: '👻' },
   { href: routes.valueGenerator, label: nav.valueGenerator, emoji: '🔮' },
   { href: routes.experientialEducation, label: nav.experientialEducation, emoji: '📚' },
   { href: routes.contact, label: nav.contact, emoji: '🤹' },
@@ -41,6 +41,23 @@ const SCROLL_THRESHOLD = 200;
 
 export function Nav({ donateLink }: NavProps) {
   const pathname = usePathname();
+
+  // Publish the nav's own height as --nav-height so pages can start their
+  // content right below it (the homepage hero does). The nav's block padding
+  // is part of that height, so `padding-top: var(--nav-height)` leaves exactly
+  // the same gap below the pills as the nav keeps above them.
+  const navRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const publish = () => {
+      document.documentElement.style.setProperty('--nav-height', `${el.offsetHeight}px`);
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Mobile: the pill row collapses into a single Menu button that opens a
   // full-screen overlay with the links stacked in a centered column.
@@ -92,7 +109,7 @@ export function Nav({ donateLink }: NavProps) {
   }, []);
 
   return (
-    <nav className={styles.nav} aria-label={nav.ariaLabel}>
+    <nav ref={navRef} className={styles.nav} aria-label={nav.ariaLabel}>
       {/* Scroll-reveal home icon — replaced by the always-visible brand pill below.
       const offHome = pathname !== routes.home;
       // On the homepage the home button is hidden at the top and revealed once the

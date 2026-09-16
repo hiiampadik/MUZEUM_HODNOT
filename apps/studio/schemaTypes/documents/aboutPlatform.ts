@@ -1,10 +1,10 @@
 import { defineType, defineField } from 'sanity';
 import { InfoOutlineIcon } from '@sanity/icons';
 
-/** O zážitkovom vzdelávaní (singleton): cover + page builder. */
-export const aboutExperientialEducation = defineType({
-  name: 'aboutExperientialEducation',
-  title: 'O zážitkovom vzdelávaní',
+/** O platforme (singleton): cover + page builder. */
+export const aboutPlatform = defineType({
+  name: 'aboutPlatform',
+  title: 'O platforme',
   type: 'document',
   icon: InfoOutlineIcon,
   fields: [
@@ -37,7 +37,7 @@ export const aboutExperientialEducation = defineType({
   ],
   preview: {
     prepare() {
-      return { title: 'O zážitkovom vzdelávaní' };
+      return { title: 'O platforme' };
     },
   },
 });

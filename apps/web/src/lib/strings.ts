@@ -34,7 +34,7 @@ export const nav = {
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
   experientialEducation: 'Metodické materiály',
-  aboutExperientialEducation: 'O zážitkovom vzdelávaní',
+  aboutPlatform: 'O platforme',
   /** Fallback label for the donate pill when the CMS label is missing. */
   donateFallback: 'Darovať',
   /** Mobile menu trigger + overlay controls. */
@@ -75,10 +75,7 @@ export const home = {
    * Project-intro heading (moved out of the CMS). Only the lead is underlined;
    * note the intentional capital H, matching the footer's brand heading.
    */
-  introTitleLead: 'Múzeum Hodnôt',
-  introTitleSuffix: ' – obrazová správa o Slovensku',
   /** Fixed bottom pill that scrolls to the intro bubble section. */
-  introCta: 'O platforme Múzeu Hodnôt',
 } as const;
 
 /** Page metadata titles + <h1>/heading copy. */
@@ -86,7 +83,7 @@ export const pages = {
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt do škôl',
   experientialEducation: 'Metodické materiály',
-  aboutExperientialEducation: 'O zážitkovom vzdelávaní',
+  aboutPlatform: 'O platforme',
 } as const;
 
 /** Contact page field labels. */

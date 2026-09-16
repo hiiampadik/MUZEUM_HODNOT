@@ -47,12 +47,12 @@ export const structure: StructureResolver = (S) =>
         ),
 
       S.listItem()
-        .title('O zážitkovom vzdelávaní')
+        .title('O platforme')
         .icon(InfoOutlineIcon)
         .child(
           S.document()
-            .schemaType('aboutExperientialEducation')
-            .documentId('aboutExperientialEducation'),
+            .schemaType('aboutPlatform')
+            .documentId('aboutPlatform'),
         ),
 
       S.divider(),

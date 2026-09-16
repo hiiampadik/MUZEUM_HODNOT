@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useId } from 'react';
 import { RichText } from '../RichText/RichText';
-import { Button } from '../Button/Button';
 import { common } from '@/lib/strings';
 import styles from './IntroBubble.module.css';
 
@@ -41,15 +40,16 @@ export function IntroBubble({ value }: IntroBubbleProps) {
         <RichText value={value} />
       </div>
       {overflows && (
-        <Button
-          variant="primary"
-          emoji={open ? '⬆️' : '⬇️'}
+        <button
+          type="button"
+          className={styles.toggle}
           aria-expanded={open}
           aria-controls={regionId}
           onClick={() => setOpen((v) => !v)}
         >
+          <span aria-hidden="true">{open ? '↑' : '↓'}</span>
           {open ? common.collapse : common.readMore}
-        </Button>
+        </button>
       )}
     </div>
   );

@@ -106,18 +106,11 @@ select {
   padding-bottom: 50vw;
 }
 
-/* Homepage: on load, bottom-align the hero tiles to the viewport, leaving a
-   --space-md gap below them. Below the padding sit the title (one line box =
-   line-height × font-size) and the tiles (margin-top --space-3xl, min-height
-   60svh − --space-md). Solving bottom-of-tiles = 100svh − --space-md gives
-   40svh − title − --space-3xl. Never shrink below --space-3xl (short screens).
-   svh (small viewport) keeps this stable when the mobile browser bar shows/hides,
-   so the hero never jumps — matches body min-height and .tile min-height. */
+/* Homepage: the hero (.hero in home.module.css) owns the first viewport and
+   carries its own top padding (--nav-height) so the intro bubble starts right
+   below the nav, so the shared cover clearance does not apply here. */
 .page-main--home {
-  padding-top: max(
-    var(--space-3xl),
-    calc(40svh - var(--space-3xl) - var(--line-height-heading) * var(--font-size-title))
-  );
+  padding-top: 0;
 }
 
 /* Cover height follows the full-bleed image (original aspect ratio). */

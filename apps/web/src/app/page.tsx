@@ -1,23 +1,22 @@
-import type { CSSProperties, ReactNode } from 'react';
-import type { Metadata } from 'next';
-import { client } from '@/sanity/lib/client';
-import { HOME_QUERY, HOME_TILE_COVERS_QUERY, EXHIBITIONS_QUERY } from '@/sanity/queries';
-import { ogImageUrl } from '@/sanity/lib/og';
-import type { SanityImageValue } from '@/components/SanityImage/SanityImage';
-import { siteUrl } from '@/sanity/env';
-import { pageMetadata } from '@/lib/metadata';
-import { Container } from '@/components/Container/Container';
-import { CoverImage } from '@/components/CoverImage/CoverImage';
-import { SanityImage } from '@/components/SanityImage/SanityImage';
-import { Button } from '@/components/Button/Button';
-import { IntroBubble } from '@/components/IntroBubble/IntroBubble';
-import { IntroCta } from '@/components/IntroCta/IntroCta';
-import { Link } from '@/components/Link/Link';
-import {Title, Label, Text, Underline, Heading} from '@/components/Typography/Typography';
-import { groupExhibitions, type ExhibitionCard } from '@/lib/exhibitions';
-import { routes, accents } from '@/lib/routes';
-import { formatDateRange } from '@/lib/format';
-import {site, home as homeStrings, pages} from '@/lib/strings';
+import type {CSSProperties, ReactNode} from 'react';
+import type {Metadata} from 'next';
+import {client} from '@/sanity/lib/client';
+import {EXHIBITIONS_QUERY, HOME_QUERY, HOME_TILE_COVERS_QUERY} from '@/sanity/queries';
+import {ogImageUrl} from '@/sanity/lib/og';
+import type {SanityImageValue} from '@/components/SanityImage/SanityImage';
+import {SanityImage} from '@/components/SanityImage/SanityImage';
+import {siteUrl} from '@/sanity/env';
+import {pageMetadata} from '@/lib/metadata';
+import {Container} from '@/components/Container/Container';
+import {CoverImage} from '@/components/CoverImage/CoverImage';
+import {Button} from '@/components/Button/Button';
+import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
+import {Link} from '@/components/Link/Link';
+import {Label, Text, Title, Underline} from '@/components/Typography/Typography';
+import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
+import {accents, routes} from '@/lib/routes';
+import {formatDateRange} from '@/lib/format';
+import {home as homeStrings, site} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
 import styles from './home.module.css';
 
@@ -124,70 +123,60 @@ export default async function HomePage() {
         <CoverImage value={home.topCover} placement="top" priority background className="cover-bg-top" />
       )}
 
-      {/* Hero tiles */}
-      {tiles.length > 0 && (
-        <Container>
-          <h1 className={'sr-only'}>{site.name}</h1>
-          <div className={styles.tiles}>
-            {tiles.map((tile) => (
-              <article
-                key={tile.key}
-                className={`${styles.tile} ${hover.group}`}
-                style={{ '--accent': tile.accent } as CSSProperties}
-              >
-                <div className={styles.tileHead}>
-                  <Label>{tile.eyebrow}</Label>
-                  <Title as="h2">
-                    <Link href={tile.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>
-                      {tile.title}
-                    </Link>
-                  </Title>
-                  <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
-                    {tile.cta}
-                  </Button>
-                </div>
-                {tile.image?.asset?._id && (
-                  <div className={styles.tileMedia}>
-                    <SanityImage
-                      value={tile.image}
-                      width={700}
-                      sizes="(max-width: 900px) 100vw, 400px"
-                    />
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-        </Container>
-      )}
+      <h1 className={'sr-only'}>{site.name}</h1>
 
-      <div className={styles.spacer} />
-
-      {/* Project intro bubble */}
-      {home?.intro && (
-        <Container>
-          <div
-            id="o-muzeu"
-            className={styles.bubble}
-            style={{ '--accent': accents.home } as CSSProperties}
-          >
-            <div className={styles.bubbleBody}>
-              <Title as="h2">
-                <Underline>{homeStrings.introTitleLead}</Underline>
-                {homeStrings.introTitleSuffix}
-              </Title>
-              <IntroBubble value={home?.intro} />
-            </div>
-            {home?.introImage?.asset?._id && (
-              <div className={styles.bubbleAside}>
-                <SanityImage value={home.introImage} width={800} sizes="(max-width: 768px) 100vw, 600px" />
+      <div className={styles.hero}>
+        {/* Project intro bubble */}
+        {home?.intro && (
+          <Container width="narrow">
+            <div
+              id="o-muzeu"
+              className={styles.bubble}
+              style={{ '--accent': accents.home } as CSSProperties}
+            >
+              <div className={styles.bubbleBody}>
+                <IntroBubble value={home?.intro} />
               </div>
-            )}
-          </div>
-        </Container>
-      )}
+            </div>
+          </Container>
+        )}
 
-      {home?.intro && <IntroCta targetId="o-muzeu" />}
+        {/* Hero tiles */}
+        {tiles.length > 0 && (
+          <Container className={styles.tilesWrap}>
+            <div className={styles.tiles}>
+              {tiles.map((tile) => (
+                <article
+                  key={tile.key}
+                  className={`${styles.tile} ${hover.group}`}
+                  style={{ '--accent': tile.accent } as CSSProperties}
+                >
+                  <div className={styles.tileHead}>
+                    <Label>{tile.eyebrow}</Label>
+                    <Title as="h2">
+                      <Link href={tile.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>
+                        {tile.title}
+                      </Link>
+                    </Title>
+                    <Button href={tile.href} className={styles.tileButton} emoji={tile.emoji}>
+                      {tile.cta}
+                    </Button>
+                  </div>
+                  {tile.image?.asset?._id && (
+                    <div className={styles.tileMedia}>
+                      <SanityImage
+                        value={tile.image}
+                        width={700}
+                        sizes="(max-width: 900px) 100vw, 400px"
+                      />
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </Container>
+        )}
+      </div>
 
       <div className={styles.spacer} />
 

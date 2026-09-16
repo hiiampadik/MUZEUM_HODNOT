@@ -35,18 +35,11 @@ export const homePage = defineType({
         'Obrázok pri spodku stránky (nad pätičkou), roztiahnutý cez celú šírku. Originálna veľkosť.',
     }),
     defineField({
-      name: 'introImage',
-      title: 'Popis projektu — obrázok',
-      type: 'image',
-      options: { hotspot: true },
-      description: 'Dekoratívny obrázok vedľa textu.',
-    }),
-    defineField({
       name: 'intro',
       title: 'Popis projektu',
       type: 'richTextBasic',
       description:
-        'Na webe sa zobrazí prvých ~15 riadkov, zvyšok sa postupne stratí a rozbalí tlačidlom.',
+        'Na webe sa zobrazí prvých ~5 riadkov, zvyšok sa postupne stratí a rozbalí tlačidlom.',
     }),
   ],
   preview: {

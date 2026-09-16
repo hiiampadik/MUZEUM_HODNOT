@@ -64,7 +64,6 @@ export const HOME_QUERY = defineQuery(/* groq */ `
   *[_id == "homePage"][0]{
     ${coverFields},
     ${edgeCoverFields},
-    introImage{ ${imageFields} },
     intro,
     "metaDescription": pt::text(intro)
   }
@@ -163,10 +162,10 @@ export const EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
   }
 `);
 
-/* --- About experiential education --------------------------------------- */
+/* --- About the platform ------------------------------------------------- */
 
-export const ABOUT_EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
-  *[_id == "aboutExperientialEducation"][0]{
+export const ABOUT_PLATFORM_QUERY = defineQuery(/* groq */ `
+  *[_id == "aboutPlatform"][0]{
     ${coverFields},
     ${edgeCoverFields},
     ${pageBuilderFields}

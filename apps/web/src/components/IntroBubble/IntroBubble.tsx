@@ -21,8 +21,12 @@ type IntroBubbleProps = {
  * open the cap is dropped to `none`, so reflows (resize, late fonts) are never
  * clipped by a stale pixel value.
  */
+// TODO: re-enable the expand/collapse toggle — temporarily hidden, section
+// always renders expanded.
+const SHOW_TOGGLE = false;
+
 export function IntroBubble({ value }: IntroBubbleProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!SHOW_TOGGLE);
   const [overflows, setOverflows] = useState(false);
   const [maxHeight, setMaxHeight] = useState<string | undefined>(undefined);
   const textRef = useRef<HTMLDivElement>(null);
@@ -117,7 +121,7 @@ export function IntroBubble({ value }: IntroBubbleProps) {
       >
         <RichText value={value} />
       </div>
-      {overflows && (
+      {SHOW_TOGGLE && overflows && (
         <button
           type="button"
           className={styles.toggle}

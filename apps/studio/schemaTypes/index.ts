@@ -9,6 +9,7 @@ import { materialFile } from './objects/materialFile';
 import { roleWithPeople } from './objects/roleWithPeople';
 import { socialLink } from './objects/socialLink';
 import { galleryImage } from './objects/galleryImage';
+import { partnerLogo } from './objects/partnerLogo';
 import { person } from './objects/person';
 import { mapPoint } from './objects/mapPoint';
 
@@ -56,6 +57,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   roleWithPeople,
   socialLink,
   galleryImage,
+  partnerLogo,
   person,
   mapPoint,
 ];

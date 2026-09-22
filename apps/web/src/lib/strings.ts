@@ -48,7 +48,8 @@ export const footer = {
   contact: 'Kontakt',
   /** Administrative-info column heading (organisation name; intentional capital H). */
   administrative: 'Múzeum Hodnôt',
-  partners: 'Partneri projektu',
+  partners: 'Partneri projektu Múzeum hodnôt',
+  valuesPartners: 'Partneri projektu Generátor hodnôt',
   social: 'Sledujte nás',
 } as const;
 

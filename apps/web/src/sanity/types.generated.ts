@@ -39,6 +39,22 @@ export type Person = {
   };
 };
 
+export type PartnerLogo = {
+  _type: 'partnerLogo';
+  asset?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+  };
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  name?: string;
+  url?: string;
+  alt?: string;
+};
+
 export type GalleryImage = {
   _type: 'galleryImage';
   asset?: {
@@ -58,7 +74,18 @@ export type SocialLink = {
   _type: 'socialLink';
   name?: string;
   url?: string;
-  icon?: string;
+  icon?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
 };
 
 export type RoleWithPeople = {
@@ -375,6 +402,17 @@ export type SiteSettings = {
     } & SocialLink
   >;
   partners?: RichTextBasic;
+  partnerLogos?: Array<
+    {
+      _key: string;
+    } & PartnerLogo
+  >;
+  valuesPartnersText?: RichTextBasic;
+  valuesPartnerLogos?: Array<
+    {
+      _key: string;
+    } & PartnerLogo
+  >;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -469,6 +507,7 @@ export type SanityImageAsset = {
 export type AllSanitySchemaTypes =
   | MapPoint
   | Person
+  | PartnerLogo
   | GalleryImage
   | SocialLink
   | RoleWithPeople
@@ -504,12 +543,15 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../web/src/sanity/queries.ts
 // Variable: SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{    donateLink,    socialLinks[]{ _key, name, url, icon },    partners  }
+// Query: *[_id == "siteSettings"][0]{    donateLink,    socialLinks[]{ _key, name, url, icon{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop } },    partners,    partnerLogos[]{   _key,    asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop,  name,  url },    valuesPartnersText,    valuesPartnerLogos[]{   _key,    asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop,  name,  url }  }
 export type SETTINGS_QUERYResult =
   | {
       donateLink: null;
       socialLinks: null;
       partners: null;
+      partnerLogos: null;
+      valuesPartnersText: null;
+      valuesPartnerLogos: null;
     }
   | {
       donateLink: NamedLink | null;
@@ -517,9 +559,54 @@ export type SETTINGS_QUERYResult =
         _key: string;
         name: string | null;
         url: string | null;
-        icon: string | null;
+        icon: {
+          asset: {
+            _id: string;
+            url: string | null;
+            metadata: {
+              lqip: string | null;
+              dimensions: SanityImageDimensions | null;
+            } | null;
+          } | null;
+          alt: null;
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+        } | null;
       }> | null;
       partners: RichTextBasic | null;
+      partnerLogos: Array<{
+        _key: string;
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+        name: string | null;
+        url: string | null;
+      }> | null;
+      valuesPartnersText: RichTextBasic | null;
+      valuesPartnerLogos: Array<{
+        _key: string;
+        asset: {
+          _id: string;
+          url: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: SanityImageDimensions | null;
+          } | null;
+        } | null;
+        alt: string | null;
+        hotspot: SanityImageHotspot | null;
+        crop: SanityImageCrop | null;
+        name: string | null;
+        url: string | null;
+      }> | null;
     }
   | null;
 // Variable: HOME_QUERY
@@ -1602,7 +1689,7 @@ export type VALUE_GENERATOR_QUERYResult =
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon },\n    partners\n  }\n': SETTINGS_QUERYResult;
+    '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n } },\n    partners,\n    partnerLogos[]{ \n  _key,\n  \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n,\n  name,\n  url\n },\n    valuesPartnersText,\n    valuesPartnerLogos[]{ \n  _key,\n  \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n,\n  name,\n  url\n }\n  }\n': SETTINGS_QUERYResult;
     '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
     '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "experientialEducation": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    summary,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;

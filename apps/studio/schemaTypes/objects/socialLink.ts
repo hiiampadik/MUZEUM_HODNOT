@@ -1,10 +1,7 @@
 import { defineType, defineField } from 'sanity';
 import { EarthGlobeIcon } from '@sanity/icons';
 
-/**
- * A social network link in the footer: SVG icon, name, URL.
- * The icon is stored as raw SVG markup so it can inherit color via currentColor.
- */
+/** A social network link in the footer: icon image, name, URL. */
 export const socialLink = defineType({
   name: 'socialLink',
   title: 'Sociálna sieť',
@@ -26,15 +23,12 @@ export const socialLink = defineType({
     }),
     defineField({
       name: 'icon',
-      title: 'Ikona (SVG)',
-      type: 'text',
-      rows: 4,
-      description:
-        'Vložte SVG kód ikony. Odporúčame ikonu bez pevnej farby (fill="currentColor").',
+      title: 'Ikona',
+      type: 'image',
       validation: (rule) => rule.required(),
     }),
   ],
   preview: {
-    select: { title: 'name', subtitle: 'url' },
+    select: { title: 'name', subtitle: 'url', media: 'icon' },
   },
 });

@@ -50,11 +50,21 @@ const pageBuilderFields = /* groq */ `
 
 /* --- Site settings ----------------------------------------------------- */
 
+const partnerLogoFields = /* groq */ `
+  _key,
+  ${imageFields},
+  name,
+  url
+`;
+
 export const SETTINGS_QUERY = defineQuery(/* groq */ `
   *[_id == "siteSettings"][0]{
     donateLink,
-    socialLinks[]{ _key, name, url, icon },
-    partners
+    socialLinks[]{ _key, name, url, icon{ ${imageFields} } },
+    partners,
+    partnerLogos[]{ ${partnerLogoFields} },
+    valuesPartnersText,
+    valuesPartnerLogos[]{ ${partnerLogoFields} }
   }
 `);
 

@@ -3,17 +3,39 @@
   inset-inline: 0;
   top: 0;
   z-index: 20;
-  padding-block: var(--space-md);
   pointer-events: none;
+  /* Transform is driven 1:1 off scroll position in Nav.tsx (see the
+     scrollOffset effect) — no transition here, or the nav would visibly lag
+     behind the actual scroll instead of tracking it exactly. */
+  will-change: transform;
 }
 
-/* Centered column: brand pill stacked above the nav pill row. */
+/* Centered column: brand pill stacked above the nav pill row. Carries the
+   padding the nav bar itself used to have, so the intro bubble above it (on
+   the homepage) can sit flush against the top and sides of the viewport. */
 .column {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-2xs);
+  padding-block: var(--space-md);
 }
+
+/* Homepage-only: the project intro, promoted into the nav as its top edge —
+   full-bleed, square corners, stuck to the ceiling. Scrolls up together with
+   the pill row below (see the nav's transform) until it clears the viewport. */
+.bubbleBar {
+  background: var(--color-surface);
+  pointer-events: auto;
+  max-width: var(--width-narrow);
+  margin: 0 auto;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.bubbleInner {
+  padding-block: var(--space-sm);
+}
+
 
 /* Keep the pills clickable while the transparent bar ignores pointer events. */
 .inner > *,

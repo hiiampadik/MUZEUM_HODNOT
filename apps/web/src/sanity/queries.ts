@@ -79,6 +79,11 @@ export const HOME_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// Just the intro text, used by the nav (rendered as its top bubble on the homepage).
+export const HOME_INTRO_QUERY = defineQuery(/* groq */ `
+  *[_id == "homePage"][0]{ intro }
+`);
+
 // Covers for the fixed hero tiles (value generator + experiential education).
 export const HOME_TILE_COVERS_QUERY = defineQuery(/* groq */ `
   {

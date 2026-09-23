@@ -5,12 +5,15 @@ import { usePathname } from 'next/navigation';
 import { Pill } from '../Pill/Pill';
 import { Link } from '../Link/Link';
 import { Container } from '../Container/Container';
+import { IntroBubble } from '../IntroBubble/IntroBubble';
 import { routes } from '@/lib/routes';
 import { nav } from '@/lib/strings';
 import styles from './Nav.module.css';
 
 type NavProps = {
   donateLink?: { label?: string | null; href?: string | null } | null;
+  /** Homepage project intro — rendered as the nav's own top bubble there. */
+  homeIntro?: readonly unknown[] | null;
 };
 
 const items = [
@@ -39,8 +42,9 @@ const brandSegments: BrandSegment[] = nav.brandName
 // one-pixel scroll (or jitter) never triggers the animation.
 const SCROLL_THRESHOLD = 200;
 
-export function Nav({ donateLink }: NavProps) {
+export function Nav({ donateLink, homeIntro }: NavProps) {
   const pathname = usePathname();
+  const showBubble = pathname === routes.home && !!homeIntro?.length;
 
   // Publish the nav's own height as --nav-height so pages can start their
   // content right below it (the homepage hero does). The nav's block padding
@@ -57,7 +61,52 @@ export function Nav({ donateLink }: NavProps) {
     const ro = new ResizeObserver(publish);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [showBubble]);
+
+  // The intro bubble sits above the pill row, as the nav's own top edge. On
+  // scroll the whole nav slides up with the page — but only until the bubble
+  // has fully scrolled past the top of the viewport, at which point the pill
+  // row locks in place like a normal fixed nav.
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const [bubbleHeight, setBubbleHeight] = useState(0);
+  useLayoutEffect(() => {
+    const el = bubbleRef.current;
+    if (!el) {
+      setBubbleHeight(0);
+      return;
+    }
+    const publish = () => setBubbleHeight(el.offsetHeight);
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [showBubble]);
+
+  // Applied straight to the DOM (not via React state) and read fresh inside a
+  // rAF tick, so the nav tracks the scroll position exactly on every frame
+  // instead of lagging a render (or a CSS transition) behind it.
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    if (bubbleHeight === 0) {
+      el.style.transform = '';
+      return;
+    }
+    let rafId = 0;
+    const applyOffset = () => {
+      rafId = 0;
+      el.style.transform = `translateY(-${Math.min(window.scrollY, bubbleHeight)}px)`;
+    };
+    const onScroll = () => {
+      if (!rafId) rafId = requestAnimationFrame(applyOffset);
+    };
+    applyOffset();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [bubbleHeight]);
 
   // Mobile: the pill row collapses into a single Menu button that opens a
   // full-screen overlay with the links stacked in a centered column.
@@ -109,7 +158,18 @@ export function Nav({ donateLink }: NavProps) {
   }, []);
 
   return (
-    <nav ref={navRef} className={styles.nav} aria-label={nav.ariaLabel}>
+    <>
+      <nav ref={navRef} className={styles.nav} aria-label={nav.ariaLabel}>
+      {showBubble && (
+        <div id="o-muzeu" ref={bubbleRef} className={styles.bubbleBar}>
+          <Container>
+            <div className={styles.bubbleInner}>
+              <IntroBubble value={homeIntro} />
+            </div>
+          </Container>
+        </div>
+      )}
+
       {/* Scroll-reveal home icon — replaced by the always-visible brand pill below.
       const offHome = pathname !== routes.home;
       // On the homepage the home button is hidden at the top and revealed once the
@@ -193,7 +253,12 @@ export function Nav({ donateLink }: NavProps) {
           </div>
         </Container>
       </div>
+      </nav>
 
+      {/* Rendered as a sibling of <nav>, not inside it: the nav's scroll
+          transform (see the scrollOffset effect above) makes it a containing
+          block for `position: fixed` descendants, which would shrink this
+          overlay down to the nav's own box instead of the full viewport. */}
       {menuOpen && (
         <div
           className={styles.overlay}
@@ -236,6 +301,6 @@ export function Nav({ donateLink }: NavProps) {
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }

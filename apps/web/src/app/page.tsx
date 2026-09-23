@@ -10,7 +10,6 @@ import {pageMetadata} from '@/lib/metadata';
 import {Container} from '@/components/Container/Container';
 import {CoverImage} from '@/components/CoverImage/CoverImage';
 import {Button} from '@/components/Button/Button';
-import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {Link} from '@/components/Link/Link';
 import {Label, Text, Title, Underline} from '@/components/Typography/Typography';
 import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
@@ -153,21 +152,6 @@ export default async function HomePage() {
       <h1 className={'sr-only'}>{site.name}</h1>
 
       <div className={styles.hero}>
-        {/* Project intro bubble */}
-        {home?.intro && (
-          <Container width="narrow">
-            <div
-              id="o-muzeu"
-              className={styles.bubble}
-              style={{ '--accent': accents.home } as CSSProperties}
-            >
-              <div className={styles.bubbleBody}>
-                <IntroBubble value={home?.intro} />
-              </div>
-            </div>
-          </Container>
-        )}
-
         {/* Hero tiles */}
         {tiles.length > 0 && (
           <Container className={styles.tilesWrap}>

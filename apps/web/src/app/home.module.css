@@ -141,21 +141,6 @@
   }
 }
 
-/* ---- Intro bubble ---- */
-.bubble {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  overflow: clip;
-  scroll-margin-top: 140px; /* clears the fixed nav when scrolled into view */
-}
-
-.bubbleBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-md);
-}
-
 /* ---- Exhibition sections ---- */
 .section {
   margin-block: var(--space-2xl);

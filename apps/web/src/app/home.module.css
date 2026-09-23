@@ -9,6 +9,18 @@
   min-height: 100svh;
   padding-top: var(--nav-height, 8.5rem);
   padding-bottom: var(--container-padding);
+  /* --nav-height only exists once Nav.tsx has measured the real nav height on
+     the client — on this static export the prerendered HTML paints first with
+     no inline style at all, so it'd briefly use the 8.5rem guess above and
+     then jump to the real value once hydration measures it. Stay hidden until
+     Nav.tsx marks the root as measured (see the --nav-height effect there) so
+     that jump is never visible — the hero appears once, already in its final
+     position. */
+  visibility: hidden;
+}
+
+:global(.nav-measured) .hero {
+  visibility: visible;
 }
 
 /* The tiles' Container: a flex child that hands its remaining height to the grid. */

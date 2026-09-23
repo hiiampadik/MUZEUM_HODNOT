@@ -45,10 +45,26 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
   }, []);
 
   // The intro bubble sits above the pill row, as the nav's own top edge — but
-  // only on the homepage. It stays mounted across routes (the layout persists
-  // between client-side navigations) and is always laid out at its natural
-  // full height; what hides it off the homepage is the same translateY the
-  // scroll effect below already uses, not a height clip — see that effect.
+  // only on the homepage. Once shown, it stays mounted across routes (the
+  // layout persists between client-side navigations) so navigating away from
+  // the homepage can animate it sliding out — hiding is the same translateY
+  // the scroll effect below already uses, not a height clip, so its rounded
+  // corners are never squeezed.
+  //
+  // It must NOT be mounted on a hard load that lands directly on a non-home
+  // route, though: this is a static export, so that route's prerendered HTML
+  // has no JS-driven transform yet, and nothing in CSS hides the bubble by
+  // default — it would flash visible until the layout effect below snaps it
+  // away after hydration. `hasBeenHome` starts at the initial isHome value
+  // (false on such a hard load, so the bubble never renders at all — no
+  // flash, no layout shift) and latches true the first time isHome is,
+  // covering the animate-away case for the rest of this mount's lifetime.
+  const [hasBeenHome, setHasBeenHome] = useState(isHome);
+  useEffect(() => {
+    if (isHome) setHasBeenHome(true);
+  }, [isHome]);
+  const showBubble = hasIntro && hasBeenHome;
+
   const bubbleRef = useRef<HTMLDivElement>(null);
   const [bubbleHeight, setBubbleHeight] = useState(0);
   useLayoutEffect(() => {
@@ -62,7 +78,7 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
     const ro = new ResizeObserver(publish);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [hasIntro]);
+  }, [showBubble]);
 
   // Publish the nav's resting height as --nav-height so pages can start their
   // content right below it (the homepage hero does). Built from the column's
@@ -76,6 +92,13 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
       '--nav-height',
       `${columnHeight + (isHome ? bubbleHeight : 0)}px`
     );
+    // Lets the homepage hero (home.module.css) stay hidden until this first
+    // real measurement lands, instead of briefly showing a hardcoded guess
+    // and then jumping — see that file's .hero rule. columnHeight is 0 only
+    // before the very first measurement, never again afterwards.
+    if (columnHeight > 0) {
+      document.documentElement.classList.add('nav-measured');
+    }
   }, [columnHeight, isHome, bubbleHeight]);
 
   // The whole nav (bubble + pill row) slides up on translateY, exactly like a
@@ -88,18 +111,27 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
   // after the first paint, so a hard page load never animates, only an
   // actual client-side navigation does.
   const didMountRef = useRef(false);
+  // The transition should only ever play for an actual isHome flip (a
+  // client-side navigation to/from the homepage) — not for a bubbleHeight
+  // remeasure (e.g. the async ResizeObserver reading the real height after
+  // an initial 0) that happens to land on a later render of this effect.
+  // Without tracking isHome separately, landing straight on a non-home page
+  // would animate the bubble hiding itself, even though it was never shown.
+  const isHomeRef = useRef(isHome);
   useLayoutEffect(() => {
     const el = navRef.current;
-    if (!el || !hasIntro) return;
+    if (!el || !showBubble) return;
 
     const scrollTarget = () => Math.min(window.scrollY, bubbleHeight);
     const routeTarget = isHome ? scrollTarget() : bubbleHeight;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (didMountRef.current && !reduceMotion) {
+    const routeChanged = didMountRef.current && isHomeRef.current !== isHome;
+    if (routeChanged && !reduceMotion) {
       el.style.transition = 'transform 0.4s ease';
     }
     didMountRef.current = true;
+    isHomeRef.current = isHome;
     el.style.transform = `translateY(-${routeTarget}px)`;
 
     const clearTransition = (e: TransitionEvent) => {
@@ -125,7 +157,7 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
       el.removeEventListener('transitionend', clearTransition);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isHome, bubbleHeight, hasIntro]);
+  }, [isHome, bubbleHeight, showBubble]);
 
   // Mobile: the pill row collapses into a single Menu button that opens a
   // full-screen overlay with the links stacked in a centered column.
@@ -155,7 +187,7 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
   return (
     <>
       <nav ref={navRef} className={styles.nav} aria-label={nav.ariaLabel}>
-      {hasIntro && (
+      {showBubble && (
         <div
           id="o-muzeu"
           ref={bubbleRef}

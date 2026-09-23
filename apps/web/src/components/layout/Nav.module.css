@@ -4,9 +4,9 @@
   top: 0;
   z-index: 20;
   pointer-events: none;
-  /* Transform is driven 1:1 off scroll position in Nav.tsx (see the
-     scrollOffset effect) — no transition here, or the nav would visibly lag
-     behind the actual scroll instead of tracking it exactly. */
+  /* No transition here: it's toggled on the element directly in Nav.tsx, only
+     for the route-driven jump between "home" and "off home" — scroll tracking
+     itself is applied with no transition so it stays perfectly instant. */
   will-change: transform;
 }
 
@@ -21,9 +21,12 @@
   padding-block: var(--space-md);
 }
 
-/* Homepage-only: the project intro, promoted into the nav as its top edge —
-   full-bleed, square corners, stuck to the ceiling. Scrolls up together with
-   the pill row below (see the nav's transform) until it clears the viewport. */
+/* Homepage-only: the project intro, promoted into the nav as its top edge.
+   Always laid out at its natural full height — never mounted/unmounted or
+   height-clipped. What hides it off the homepage is the nav's own translateY
+   (see Nav.tsx), the same transform the scroll effect uses: it's tucked away
+   above the viewport, not cut off, so its rounded corners are never squeezed
+   by an animating box height. */
 .bubbleBar {
   background: var(--color-surface);
   pointer-events: auto;
@@ -73,40 +76,6 @@
 .brand:focus-visible {
   outline: 2px solid var(--accent, var(--color-fg));
   outline-offset: 2px;
-}
-
-/* Split brand text: first letters stay, the rest collapses to initials. */
-.brandInner {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* Collapsible run of glyphs. The 1fr → 0fr grid track animates width smoothly
-   (with the child clipped via overflow), and opacity fades the text out. */
-.brandRest {
-  display: inline-grid;
-  grid-template-columns: 1fr;
-  vertical-align: baseline;
-  transition:
-    grid-template-columns 0.35s ease,
-    opacity 0.25s ease;
-}
-
-.brandRest > span {
-  min-width: 0;
-  overflow: hidden;
-  white-space: pre;
-}
-
-.collapsed .brandRest {
-  grid-template-columns: 0fr;
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .brandRest {
-    transition: none;
-  }
 }
 
 /* Round, icon-only home button — replaced by the .brand pill above.

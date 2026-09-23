@@ -31,6 +31,9 @@
 @media (max-width: 900px) {
   .tiles {
     grid-template-columns: 1fr;
+    /* Stacked tiles need more height than fits in one viewport; letting the
+       grid grow past the desktop cap avoids clipping into the sections below. */
+    max-height: none;
   }
 }
 

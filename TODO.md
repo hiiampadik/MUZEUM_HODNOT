@@ -68,21 +68,21 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] Metadata (metadataBase, per-page OG z coveru), `sitemap.xml`, `robots.txt`,
       JSON-LD (Organization + ExhibitionEvent), `lang="sk"`, canonical
 - [x] Skip-link, focus-visible baseline, `scroll-margin`, `prefers-reduced-motion`
-- [ ] `NEXT_PUBLIC_SITE_URL` na produkční doménu (→ Blok 8)
+- [x] `NEXT_PUBLIC_SITE_URL` na produkční doménu (GitHub Actions variable, `https://muzeumhodnot.sk`)
 - [ ] axe / Lighthouse audit *(až s reálným obsahem a schváleným designem)*
 
 ## Blok 8 — Deploy & DNS
-- [ ] Sanity projekt + dataset `production` + CORS
-- [ ] GitHub Actions `deploy.yml` (push + `repository_dispatch`)
-- [ ] `CNAME`, Cloudflare DNS + proxy
-- [ ] Sanity webhook → `repository_dispatch`
+- [x] Sanity projekt + dataset `production` + CORS (`https://muzeumhodnot.sk` povolen)
+- [x] GitHub Actions `deploy.yml` (push + `workflow_dispatch` + `repository_dispatch`, pnpm, bez `.next` cache) — první deploy proběhl
+- [x] GitHub Pages zapnuté (source: Actions), custom domain nastavena na `muzeumhodnot.sk`
+- [~] `CNAME` (hotovo, v `apps/web/public/CNAME`) + Cloudflare DNS — nameservery přepnuté z Websupportu na Cloudflare, čeká se na propagaci; pak doplnit A/AAAA na GitHub Pages IP a `www` CNAME na `hiiampadik.github.io`
+- [x] Sanity webhook → `repository_dispatch` (čeká na fine-grained GitHub PAT pro `hiiampadik/MUZEUM_HODNOT`, scope `Contents: Read and write`)
 - [x] Studio deploy na `*.sanity.studio`
 
 ---
 
 ## Otevřené otázky (neblokují start)
 - Přesné hodnoty tokenů + fonty (CY, monospace) → finální Figma
-- Vlastní doména + Cloudflare zóna → před Blokem 8
 - Sdílet page builder `experientialEducation` × `valueGenerator` 1:1?
 
 

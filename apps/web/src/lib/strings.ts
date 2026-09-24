@@ -33,7 +33,7 @@ export const nav = {
   brandName: 'Múzeum Hodnôt',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
-  experientialEducation: 'Metodické materiály',
+  methodicalMaterials: 'Metodické materiály',
   aboutPlatform: 'O platforme',
   /** Fallback label for the donate pill when the CMS label is missing. */
   donateFallback: 'Darovať',
@@ -67,7 +67,7 @@ export const home = {
   valueGeneratorLead: 'Generátor hodnôt',
   forTeachersLead: 'Zážitkové vzdelávanie',
   forTeachersSuffix: 'pre učiteľov',
-  experientialEducationTitle: 'Metodické materiály',
+  methodicalMaterialsTitle: 'Metodické materiály',
   upcoming: 'Pripravované výstavy',
   past: 'Minulé výstavy',
   /**
@@ -81,7 +81,7 @@ export const home = {
 export const pages = {
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
-  experientialEducation: 'Metodické materiály',
+  methodicalMaterials: 'Metodické materiály',
   aboutPlatform: 'O platforme',
 } as const;
 

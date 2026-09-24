@@ -113,7 +113,7 @@ export default async function HomePage() {
     stretch: true,
   });
   tiles.push({
-    key: 'experientialEducation',
+    key: 'methodicalMaterials',
     eyebrow: (
       <>
         {homeStrings.forTeachersLead}
@@ -123,15 +123,15 @@ export default async function HomePage() {
     ),
     entries: [
       {
-        key: 'experientialEducation',
-        title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
+        key: 'methodicalMaterials',
+        title: <Underline>{homeStrings.methodicalMaterialsTitle}</Underline>,
         cta: homeStrings.showMore,
         emoji: '📚',
-        accent: accents.experientialEducation,
-        href: routes.experientialEducation,
+        accent: accents.methodicalMaterials,
+        href: routes.methodicalMaterials,
       },
     ],
-    image: tileCovers?.experientialEducation,
+    image: tileCovers?.methodicalMaterials,
     stretch: true,
   });
 

@@ -84,11 +84,11 @@ export const HOME_INTRO_QUERY = defineQuery(/* groq */ `
   *[_id == "homePage"][0]{ intro }
 `);
 
-// Covers for the fixed hero tiles (value generator + experiential education).
+// Covers for the fixed hero tiles (value generator + methodical materials).
 export const HOME_TILE_COVERS_QUERY = defineQuery(/* groq */ `
   {
     "valueGenerator": *[_id == "valueGenerator"][0].cover{ ${imageFields} },
-    "experientialEducation": *[_id == "experientialEducation"][0].cover{ ${imageFields} }
+    "methodicalMaterials": *[_id == "experientialEducation"][0].cover{ ${imageFields} }
   }
 `);
 
@@ -167,9 +167,9 @@ export const CONTACT_QUERY = defineQuery(/* groq */ `
   }
 `);
 
-/* --- Experiential education -------------------------------------------- */
+/* --- Methodical materials ------------------------------------------------ */
 
-export const EXPERIENTIAL_EDUCATION_QUERY = defineQuery(/* groq */ `
+export const METHODICAL_MATERIALS_QUERY = defineQuery(/* groq */ `
   *[_id == "experientialEducation"][0]{
     ${coverFields},
     ${edgeCoverFields},

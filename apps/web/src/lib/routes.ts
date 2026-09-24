@@ -3,7 +3,7 @@
 export const routes = {
   home: '/',
   contact: '/kontakt',
-  experientialEducation: '/zazitkove-vzdelavanie',
+  methodicalMaterials: '/metodicke-materialy',
   aboutPlatform: '/o-platforme',
   valueGenerator: '/generator-hodnot',
   exhibition: (slug: string) => `/vystava/${slug}`,
@@ -18,8 +18,8 @@ export const accents = {
   home: '#3657ff', // blue — project intro bubble
   exhibition: '#66a755', // green — exhibitions
   contact: '#a77d3f', // gold
-  experientialEducation: '#fe81ee', // pink — "Metodické materiály"
-  aboutPlatform: '#ffb6ed', // pink — "O platforme"
+  methodicalMaterials: '#fe81ee', // pink — "Metodické materiály"
+  aboutPlatform: '#fe81ee', // pink — "O platforme"
   valueGenerator: '#c575e0', // purple — "Generátor hodnôt"
 } as const;
 

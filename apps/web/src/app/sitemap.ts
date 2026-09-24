@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: new URL(routes.home, siteUrl).toString(), lastModified: now, priority: 1 },
     { url: new URL(routes.contact, siteUrl).toString(), lastModified: now, priority: 0.7 },
     {
-      url: new URL(routes.experientialEducation, siteUrl).toString(),
+      url: new URL(routes.methodicalMaterials, siteUrl).toString(),
       lastModified: now,
       priority: 0.7,
     },

@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
-import { EXPERIENTIAL_EDUCATION_QUERY } from '@/sanity/queries';
+import { METHODICAL_MATERIALS_QUERY } from '@/sanity/queries';
 import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
@@ -13,25 +13,25 @@ import { ogImageUrl } from '@/sanity/lib/og';
 import builder from '@/components/pagebuilder/builderPage.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
+  const page = await client.fetch(METHODICAL_MATERIALS_QUERY);
   return pageMetadata({
-    title: pages.experientialEducation,
+    title: pages.methodicalMaterials,
     image: ogImageUrl(page?.cover),
-    path: routes.experientialEducation,
+    path: routes.methodicalMaterials,
   });
 }
 
-export default async function ExperientialEducationPage() {
-  const page = await client.fetch(EXPERIENTIAL_EDUCATION_QUERY);
+export default async function MethodicalMaterialsPage() {
+  const page = await client.fetch(METHODICAL_MATERIALS_QUERY);
 
   return (
-    <main className="page-main" style={{ '--accent': accents.experientialEducation } as CSSProperties}>
+    <main className="page-main" style={{ '--accent': accents.methodicalMaterials } as CSSProperties}>
       {page?.topCover && (
         <CoverImage value={page.topCover} placement="top" priority background className="cover-bg-top" />
       )}
 
       <Container width="narrow">
-        <Heading className={builder.title}>{pages.experientialEducation}</Heading>
+        <Heading className={builder.titleLeft}>{pages.methodicalMaterials}</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 

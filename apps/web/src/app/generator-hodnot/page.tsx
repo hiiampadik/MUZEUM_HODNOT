@@ -33,7 +33,7 @@ export default async function ValueGeneratorPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.title}>{pages.valueGenerator}</Heading>
+        <Heading className={builder.titleLeft}>{pages.valueGenerator}</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 

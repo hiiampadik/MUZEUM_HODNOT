@@ -7,6 +7,17 @@
 
 .block {
   width: 100%;
+
+  strong {
+    font-weight: 650;
+  }
+}
+
+/* Links inside page-builder text are always gray, regardless of section accent. */
+.block :global(a) {
+  text-decoration-color: var(--color-fg);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.1em;
 }
 
 .heading {

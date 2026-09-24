@@ -3,3 +3,10 @@
   margin: 0 auto var(--space-2xl);
   width: 90%;
 }
+
+
+.titleLeft {
+  text-align: left;
+  margin: 0 auto var(--space-md);
+  width: 100%;
+}

@@ -31,7 +31,7 @@ export default async function AboutPlatformPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.title}>{pages.aboutPlatform}</Heading>
+        <Heading className={builder.titleLeft}>{pages.aboutPlatform}</Heading>
         <PageBuilder content={page?.content} />
       </Container>
 

@@ -15,12 +15,12 @@ export const routes = {
  * underline + button color).
  */
 export const accents = {
-  home: '#3657ff', // blue — project intro bubble
-  exhibition: '#66a755', // green — exhibitions
-  contact: '#a77d3f', // gold
-  methodicalMaterials: '#fe81ee', // pink — "Metodické materiály"
-  aboutPlatform: '#c1be66', // pink — "O platforme"
-  valueGenerator: '#c575e0', // purple — "Generátor hodnôt"
+  home: '#3657ff',
+  exhibition: '#66a755',
+  contact: '#d89327',
+  aboutPlatform: '#d89327',
+  methodicalMaterials: '#ff67ee',
+  valueGenerator: '#db62ff',
 } as const;
 
 /** Accent palette for cycling per-item colors (e.g. exhibition cards). */
@@ -28,7 +28,5 @@ export const accentPalette = [
   '#66a755',
   '#3657ff',
   '#c575e0',
-  '#a77d3f',
-  '#c1be66',
-  '#399135',
+  '#d89327',
 ] as const;

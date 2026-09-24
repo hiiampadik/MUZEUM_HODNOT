@@ -98,12 +98,6 @@
   object-fit: cover;
 }
 
-.credit {
-  margin-top: var(--space-3xs);
-  color: var(--color-muted);
-  font-size: var(--font-size-label);
-}
-
 /* ---- Abstract ---- */
 .abstract {
   margin-block: var(--space-xl);
@@ -153,9 +147,4 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3xs);
-}
-
-.footerCover {
-  height: min(46vh, 520px);
-  margin-top: var(--space-2xl);
 }

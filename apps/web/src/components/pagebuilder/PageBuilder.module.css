@@ -13,13 +13,6 @@
   }
 }
 
-/* Links inside page-builder text are always gray, regardless of section accent. */
-.block :global(a) {
-  text-decoration-color: var(--color-fg);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.1em;
-}
-
 .heading {
   width: 100%;
   text-align: left;
@@ -72,13 +65,6 @@
   padding: var(--space-md);
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  width: 100%;
-}
-
-.cardStack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
   width: 100%;
 }
 

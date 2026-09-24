@@ -14,7 +14,7 @@
   --space-xl: 3rem; /* 48px */
   --space-2xl: 4rem; /* 64px — section gap */
   --space-3xl: 6rem; /* 96px */
-  --space-4xl: 10rem;
+  --space-4xl: 12rem;
 
   /* Layout widths */
   --width-narrow: 600px;
@@ -33,20 +33,15 @@
   --color-surface-muted: #f8f8fa; /* subtle panels */
   --color-fg: #000000;
   --color-on-accent: #ffffff; /* text on an accent fill */
-  --color-muted: #6b6b6b;
+  --color-muted: #787878;
+  --color-muted-underline: #989898;
   --color-border: #ececf0;
   --color-border-strong: #d2d2d2; /* dashed dividers */
 
   /* Accent palette (underline + button color per section) */
-  --accent-green: #66a755;
-  --accent-green-dark: #399135;
-  --accent-purple: #c575e0;
-  --accent-purple-light: #d392ff;
-  --accent-gold: #a77d3f;
-  --accent-blue: #479dcc;
-  --accent-blue-light: #18b3ff;
-  --accent-pink: #ffb6ed;
-  --accent-olive: #c1be66;
+
+  --accent-blue: #3f5bea;
+  --accent-blue-light: #7c90ff;
 
   /* Active section accent — overridden per section via inline --accent */
   --accent: var(--accent-blue);
@@ -60,7 +55,7 @@
   --font-size-heading: clamp(2.5rem, 5vw, 3rem); /* → 64px, page hero title */
   --font-size-title: clamp(1.625rem, 4vw, 2rem); /* → 34px */
   --font-size-subtitle: 1.25rem; /* 20px — page-builder h3 */
-  --font-size-body: 0.9375rem; /* 15px */
+  --font-size-body: 15px;
   --font-size-label: 0.875rem; /* 14px */
 
   --line-height-heading: 1.15;

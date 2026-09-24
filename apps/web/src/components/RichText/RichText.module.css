@@ -17,14 +17,20 @@
 }
 
 .root a {
+  color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: var(--color-fg);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.1em;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.25px;
+  text-underline-offset: 0.05em;
+  @media (hover: hover) {
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
-.root u {
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.12em;
-}
+/*.root u {*/
+/*  text-decoration-color: var(--accent);*/
+/*  text-decoration-thickness: 2px;*/
+/*  text-underline-offset: 0.12em;*/
+/*}*/

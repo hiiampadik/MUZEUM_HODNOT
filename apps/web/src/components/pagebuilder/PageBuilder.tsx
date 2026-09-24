@@ -1,9 +1,7 @@
-import type { CSSProperties } from 'react';
 import { RichText } from '../RichText/RichText';
 import { SanityImage, type SanityImageValue } from '../SanityImage/SanityImage';
 import { Title } from '../Typography/Typography';
 import { Pill } from '../Pill/Pill';
-import { accentPalette } from '@/lib/routes';
 import { common } from '@/lib/strings';
 import styles from './PageBuilder.module.css';
 
@@ -39,9 +37,7 @@ function MaterialPills({ items }: { items: readonly MaterialItem[] }) {
   );
 }
 
-function renderBlock(block: Block, index: number) {
-  const accent = accentPalette[index % accentPalette.length];
-
+function renderBlock(block: Block) {
   switch (block._type) {
     case 'textBlock':
       return (
@@ -59,8 +55,6 @@ function renderBlock(block: Block, index: number) {
           // section titles (h2) carry the accent underline.
           underline={!isSub}
           className={`${styles.heading} ${isSub ? styles.heading3 : ''}`}
-          // Vary the underline accent per heading, matching the design.
-          style={{ '--accent': accent } as CSSProperties}
         >
           {block.text}
         </Title>
@@ -83,7 +77,7 @@ function renderBlock(block: Block, index: number) {
       const inner = Array.isArray(block.content) ? (block.content as Block[]) : [];
       return (
         <div key={block._key} className={styles.card}>
-          {inner.map((b, i) => renderBlock(b, i))}
+          {inner.map((b) => renderBlock(b))}
         </div>
       );
     }
@@ -95,5 +89,5 @@ function renderBlock(block: Block, index: number) {
 
 export function PageBuilder({ content }: { content?: readonly Block[] | null }) {
   if (!content || content.length === 0) return null;
-  return <div className={styles.builder}>{content.map((b, i) => renderBlock(b, i))}</div>;
+  return <div className={styles.builder}>{content.map((b) => renderBlock(b))}</div>;
 }

@@ -4,58 +4,10 @@
   display: block;
 }
 
-/* Expand/collapse toggle: no button chrome — just the monospaced label in the
-   foreground color, a leading arrow, and a rule separating it from the text. */
-.toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  margin-top: var(--space-xs);
-  padding: 0;
-  border: none;
-  border-bottom: 1px solid var(--color-fg);
-  background: none;
-  color: var(--color-fg);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-label);
-  font-weight: 500;
-  letter-spacing: var(--letter-spacing-label);
-  line-height: 1.2;
-  text-align: left;
-  cursor: pointer;
-  @media (hover: hover) {
-    &:hover {
-      border-bottom-color: white;
-    }
-  }
-}
-
-.toggle:focus-visible {
-  outline: 2px solid var(--accent, var(--color-fg));
-  outline-offset: 2px;
-}
-
 .text {
-  position: relative;
-  /* No overflow here (only while .clamped): an `overflow` other than visible
-     makes the box a fragmentation boundary, which would stop the bubble's
-     multi-column layout (Nav.module.css .bubbleInner) from splitting the
-     text across columns. */
-  /* Animates between the two heights measured in IntroBubble.tsx; the content
-     below the bubble slides along because the block stays in normal flow. */
-  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .text {
-    transition: none;
-  }
-}
-
-/* Collapsed: show ~5 lines, fade the last lines into the background. */
-.clamped {
-  max-height: calc(4 * 1.4em);
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: var(--line-height-body);
 }

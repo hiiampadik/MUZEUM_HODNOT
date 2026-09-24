@@ -95,9 +95,6 @@ export const contact = {
 export const common = {
   /** Fallback title for a downloadable file with no title. */
   fileFallback: 'Súbor',
-  /** IntroBubble expand/collapse toggle. */
-  readMore: 'Čítať viac',
-  collapse: 'Zbaliť',
   /** Fallback label for a map-popup link. */
   moreLink: 'Viac',
   /** ValueMap container aria-label. */

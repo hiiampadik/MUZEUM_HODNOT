@@ -1,5 +1,5 @@
 .root > * + * {
-  margin-top: var(--space-sm);
+  margin-top: var(--space-xs);
 }
 
 .root ul {

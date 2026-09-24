@@ -123,16 +123,32 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
     if (!el || !showBubble) return;
 
     const scrollTarget = () => Math.min(window.scrollY, bubbleHeight);
-    const routeTarget = isHome ? scrollTarget() : bubbleHeight;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const routeChanged = didMountRef.current && isHomeRef.current !== isHome;
-    if (routeChanged && !reduceMotion) {
-      el.style.transition = 'transform 0.4s ease';
-    }
     didMountRef.current = true;
     isHomeRef.current = isHome;
-    el.style.transform = `translateY(-${routeTarget}px)`;
+
+    const applyTransform = (target: number, animate: boolean) => {
+      if (animate && !reduceMotion) {
+        el.style.transition = 'transform 0.4s ease';
+      }
+      el.style.transform = `translateY(-${target}px)`;
+    };
+
+    if (routeChanged && isHome) {
+      // Just navigated to home from elsewhere: this is a client-side (SPA)
+      // navigation, so the browser never resets window.scrollY on its own —
+      // it's still whatever it was on the previous page. Reading it here
+      // would (if it was already past the bubble's height) make the target
+      // identical to the "off home" position, so the reveal never visibly
+      // animates. Pin the viewport to the top ourselves and animate straight
+      // to the fully revealed position instead.
+      window.scrollTo(0, 0);
+      applyTransform(0, true);
+    } else {
+      applyTransform(isHome ? scrollTarget() : bubbleHeight, routeChanged);
+    }
 
     const clearTransition = (e: TransitionEvent) => {
       if (e.target === el && e.propertyName === 'transform') el.style.transition = '';
@@ -229,7 +245,22 @@ export function Nav({ donateLink, homeIntro }: NavProps) {
       */}
 
       <div ref={columnRef} className={styles.column}>
-        <Link href={routes.home} className={styles.brand} aria-label={nav.homeAriaLabel}>
+        <Link
+          href={routes.home}
+          className={styles.brand}
+          aria-label={nav.homeAriaLabel}
+          onClick={(e) => {
+            // Already home: Next.js no-ops a Link to the current URL (no
+            // navigation event fires), so nothing would otherwise scroll the
+            // bubble back into view. Do it ourselves — a smooth scroll to top,
+            // which the scroll-tracking effect above already follows 1:1, so
+            // the nav reveals in step with it.
+            if (!isHome) return;
+            e.preventDefault();
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+          }}
+        >
           <span aria-hidden="true">{nav.brandName}</span>
         </Link>
 

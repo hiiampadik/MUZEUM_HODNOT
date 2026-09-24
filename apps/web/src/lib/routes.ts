@@ -19,7 +19,7 @@ export const accents = {
   exhibition: '#66a755', // green — exhibitions
   contact: '#a77d3f', // gold
   methodicalMaterials: '#fe81ee', // pink — "Metodické materiály"
-  aboutPlatform: '#fe81ee', // pink — "O platforme"
+  aboutPlatform: '#c1be66', // pink — "O platforme"
   valueGenerator: '#c575e0', // purple — "Generátor hodnôt"
 } as const;
 
@@ -29,7 +29,6 @@ export const accentPalette = [
   '#3657ff',
   '#c575e0',
   '#a77d3f',
-  '#ffb6ed',
   '#c1be66',
   '#399135',
 ] as const;

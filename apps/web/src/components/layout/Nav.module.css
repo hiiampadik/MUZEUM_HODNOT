@@ -33,6 +33,7 @@
   max-width: var(--width-narrow);
   margin: 0 auto;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
 }
 
 .bubbleInner {
@@ -45,6 +46,7 @@
 .mobileMenu > *,
 .brand {
   pointer-events: auto;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
 }
 
 /* Brand pill — always-visible link home, above the nav row. White surface with
@@ -59,18 +61,11 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-fg);
-  border: 1px solid var(--color-bg);
   font-family: var(--font-display);
   font-size: var(--font-size-title);
   line-height: 1;
   text-decoration: none;
   transition: filter 0.15s ease;
-}
-
-@media (hover: hover) {
-  .brand:hover {
-    filter: brightness(0.94);
-  }
 }
 
 .brand:focus-visible {

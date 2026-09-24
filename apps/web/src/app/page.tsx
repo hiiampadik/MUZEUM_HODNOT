@@ -181,7 +181,10 @@ export default async function HomePage() {
                     ))}
                   </div>
                   {tile.image?.asset?._id && (
-                    <div className={styles.tileMedia}>
+                    <div
+                      className={styles.tileMedia}
+                      style={{ '--accent': tile.entries[0]?.accent } as CSSProperties}
+                    >
                       <SanityImage
                         value={tile.image}
                         width={700}

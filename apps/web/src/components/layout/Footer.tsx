@@ -133,27 +133,36 @@ export function Footer({ settings, contact }: FooterProps) {
                 <RichText value={contact.administrativeInfo} />
               </div>
             )}
+
+            <p>
+              {footer.creditLead}{' '}
+              <Link href={footer.creditUrl}>{footer.creditName}</Link>
+            </p>
           </div>
 
           {/* Partners — Múzeum hodnôt */}
           {hasMuseumPartners && (
             <div className={styles.column}>
-              <Title as="h2" className={styles.heading}>
-                {footer.partners}
-              </Title>
-              <RichText value={settings?.partners} />
-              <PartnerLogos logos={museumPartnerLogos} />
+              <div>
+                <Title as="h2" className={styles.heading}>
+                  {footer.partners}
+                </Title>
+                <RichText value={settings?.partners} />
+                <PartnerLogos logos={museumPartnerLogos} />
+              </div>
             </div>
           )}
 
           {/* Partners — Generátor hodnôt */}
           {hasValuesPartners && (
             <div className={styles.column}>
-              <Title as="h2" className={styles.heading}>
-                {footer.valuesPartners}
-              </Title>
-              <RichText value={settings?.valuesPartnersText} />
-              <PartnerLogos logos={valuesPartnerLogos} />
+              <div>
+                <Title as="h2" className={styles.heading}>
+                  {footer.valuesPartners}
+                </Title>
+                <RichText value={settings?.valuesPartnersText} />
+                <PartnerLogos logos={valuesPartnerLogos} />
+              </div>
             </div>
           )}
         </div>

@@ -51,6 +51,10 @@ export const footer = {
   partners: 'Partneri projektu Múzeum hodnôt',
   valuesPartners: 'Partneri projektu Generátor hodnôt',
   social: 'Sledujte nás',
+  /** Credit line; the name links out to the designer/developer's site. */
+  creditLead: 'Design & vývoj webu:',
+  creditName: 'Bronislav Musil',
+  creditUrl: 'https://bronislavmusil.com/',
 } as const;
 
 /** Homepage copy. */

@@ -154,50 +154,46 @@ export default async function ExhibitionPage({
       <Container width="narrow">
         {abstract && <RichText value={abstract} className={styles.abstract} />}
 
-        {((materials && materials.length > 0) || (links && links.length > 0)) && (
-          <div className={styles.attachments}>
-            {materials && materials.length > 0 && (
-              <div>
-                <Title as="h2" className={styles.attachTitle}>
-                  {t.materials}
-                </Title>
-                <div className={styles.pills}>
-                  {materials.map((m) =>
-                    m.url ? (
-                      <Pill
-                        key={m._key}
-                        href={m.url}
-                        download
-                        color="#272727"
-                        emoji={m.emoji || '📁'}
-                      >
-                        {m.title || t.fileFallback}
-                      </Pill>
-                    ) : null,
-                  )}
-                </div>
-              </div>
-            )}
+        {materials && materials.length > 0 && (
+          <div className={styles.attach}>
+            <Title as="h2" className={styles.attachTitle}>
+              {t.materials}
+            </Title>
+            <div className={styles.pills}>
+              {materials.map((m) =>
+                m.url ? (
+                  <Pill
+                    key={m._key}
+                    href={m.url}
+                    download
+                    color="#272727"
+                    emoji={m.emoji || '📁'}
+                  >
+                    {m.title || t.fileFallback}
+                  </Pill>
+                ) : null,
+              )}
+            </div>
+          </div>
+        )}
 
-            {links && links.length > 0 && (
-              <div>
-                <Title as="h2" className={styles.attachTitle}>
-                  {t.links}
-                </Title>
-                <div className={styles.pills}>
-                  {links.map((link, i) => (
-                    <Pill
-                      key={link._key}
-                      href={link.href ?? '#'}
-                      color={accentPalette[i % accentPalette.length]}
-                      emoji={link.emoji || '↗'}
-                    >
-                      {link.label}
-                    </Pill>
-                  ))}
-                </div>
-              </div>
-            )}
+        {links && links.length > 0 && (
+          <div className={styles.links}>
+            <Title as="h2" className={styles.attachTitle}>
+              {t.links}
+            </Title>
+            <div className={styles.pills}>
+              {links.map((link, i) => (
+                <Pill
+                  key={link._key}
+                  href={link.href ?? '#'}
+                  color={accentPalette[i % accentPalette.length]}
+                  emoji={link.emoji || '↗'}
+                >
+                  {link.label}
+                </Pill>
+              ))}
+            </div>
           </div>
         )}
 

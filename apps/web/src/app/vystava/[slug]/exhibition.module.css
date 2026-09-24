@@ -103,19 +103,6 @@
   margin-block: var(--space-xl);
 }
 
-/* ---- Materials + links ---- */
-.attachments {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-lg);
-  margin-block: var(--space-2xl);
-}
-
-@media (max-width: 560px) {
-  .attachments {
-    grid-template-columns: 1fr;
-  }
-}
 
 .attachTitle {
   margin-bottom: var(--space-md);
@@ -129,7 +116,7 @@
 }
 
 /* ---- Credits ---- */
-.credits {
+.credits, .attach, .links {
   margin-block: var(--space-2xl);
 }
 

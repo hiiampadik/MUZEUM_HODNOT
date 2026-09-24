@@ -29,6 +29,10 @@
   }
 }
 
+.root strong {
+  font-weight: 650;
+}
+
 /*.root u {*/
 /*  text-decoration-color: var(--accent);*/
 /*  text-decoration-thickness: 2px;*/

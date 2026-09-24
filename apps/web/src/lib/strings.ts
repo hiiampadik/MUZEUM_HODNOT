@@ -56,7 +56,7 @@ export const footer = {
 /** Homepage copy. */
 export const home = {
   currentExhibitions: 'Aktuálne výstavy',
-  showMore: 'Zobraziť viac',
+  showMore: 'Zistiť viac',
   /** Hero-tile eyebrow, split so a line break can go between the two parts. */
   forSchoolsLead: 'Zážitkové vzdelávanie',
   forSchoolsSuffix: 'pre školy',
@@ -65,13 +65,11 @@ export const home = {
    * plain (see the hero tiles on the homepage).
    */
   valueGeneratorLead: 'Generátor hodnôt',
-  valueGeneratorSuffix: ' do škôl',
   forTeachersLead: 'Zážitkové vzdelávanie',
   forTeachersSuffix: 'pre učiteľov',
   experientialEducationTitle: 'Metodické materiály',
-  open: 'Otvoriť',
-  upcoming: 'Chystané výstavy',
-  past: 'Uplynulé',
+  upcoming: 'Pripravované výstavy',
+  past: 'Minulé výstavy',
   /**
    * Project-intro heading (moved out of the CMS). Only the lead is underlined;
    * note the intentional capital H, matching the footer's brand heading.
@@ -82,7 +80,7 @@ export const home = {
 /** Page metadata titles + <h1>/heading copy. */
 export const pages = {
   contact: 'Kontakt',
-  valueGenerator: 'Generátor hodnôt do škôl',
+  valueGenerator: 'Generátor hodnôt',
   experientialEducation: 'Metodické materiály',
   aboutPlatform: 'O platforme',
 } as const;

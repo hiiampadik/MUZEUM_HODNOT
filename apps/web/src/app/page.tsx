@@ -101,12 +101,9 @@ export default async function HomePage() {
       {
         key: 'valueGenerator',
         title: (
-          <>
-            <Underline>{homeStrings.valueGeneratorLead}</Underline>
-            {homeStrings.valueGeneratorSuffix}
-          </>
+          <Underline>{homeStrings.valueGeneratorLead}</Underline>
         ),
-        cta: homeStrings.open,
+        cta: homeStrings.showMore,
         emoji: '🔮',
         accent: accents.valueGenerator,
         href: routes.valueGenerator,
@@ -128,7 +125,7 @@ export default async function HomePage() {
       {
         key: 'experientialEducation',
         title: <Underline>{homeStrings.experientialEducationTitle}</Underline>,
-        cta: homeStrings.open,
+        cta: homeStrings.showMore,
         emoji: '📚',
         accent: accents.experientialEducation,
         href: routes.experientialEducation,

@@ -4,15 +4,9 @@
   top: 0;
   z-index: 20;
   pointer-events: none;
-  /* No transition here: it's toggled on the element directly in Nav.tsx, only
-     for the route-driven jump between "home" and "off home" — scroll tracking
-     itself is applied with no transition so it stays perfectly instant. */
-  will-change: transform;
 }
 
-/* Centered column: brand pill stacked above the nav pill row. Carries the
-   padding the nav bar itself used to have, so the intro bubble above it (on
-   the homepage) can sit flush against the top and sides of the viewport. */
+/* Centered column: brand pill stacked above the nav pill row. */
 .column {
   display: flex;
   flex-direction: column;
@@ -20,26 +14,6 @@
   gap: var(--space-2xs);
   padding-block: var(--space-md);
 }
-
-/* Homepage-only: the project intro, promoted into the nav as its top edge.
-   Always laid out at its natural full height — never mounted/unmounted or
-   height-clipped. What hides it off the homepage is the nav's own translateY
-   (see Nav.tsx), the same transform the scroll effect uses: it's tucked away
-   above the viewport, not cut off, so its rounded corners are never squeezed
-   by an animating box height. */
-.bubbleBar {
-  background: var(--color-surface);
-  pointer-events: auto;
-  max-width: var(--width-narrow);
-  margin: 0 auto;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
-}
-
-.bubbleInner {
-  padding-block: var(--space-sm);
-}
-
 
 /* Keep the pills clickable while the transparent bar ignores pointer events. */
 .inner > *,

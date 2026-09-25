@@ -1,14 +1,16 @@
-/* ---- Hero: intro bubble + tiles, sized to one viewport ---- */
+/* ---- Hero: intro card + tiles, sized to one viewport ---- */
 /* On load the hero fills exactly one viewport: it starts right below the nav
    (--nav-height includes the nav's block padding, so the gap under the pills
-   matches the gap above them) and the tiles stretch down to leave the same
-   padding at the bottom as the containers keep horizontally. */
+   matches the gap above them) and the tiles stretch down to the bottom,
+   leaving exactly one grid gap of space there. */
 .hero {
   display: flex;
   flex-direction: column;
   min-height: 100svh;
   padding-top: var(--nav-height, 8.5rem);
-  padding-bottom: var(--container-padding);
+  /* Same as the grid's gap, so the strip left below the tiles matches the gap
+     between them. */
+  padding-bottom: var(--space-md);
   /* --nav-height only exists once Nav.tsx has measured the real nav height on
      the client — on this static export the prerendered HTML paints first with
      no inline style at all, so it'd briefly use the 8.5rem guess above and
@@ -23,6 +25,15 @@
   visibility: visible;
 }
 
+/* Side by side, the tiles must never push past the fold: cap the hero at the
+   viewport so the grid shrinks below its 500px instead of overflowing. Not on
+   phones, where the tiles are stacked and deliberately taller than one screen. */
+@media (min-width: 901px) {
+  .hero {
+    max-height: 100svh;
+  }
+}
+
 /* The tiles' Container: a flex child that hands its remaining height to the grid. */
 .tilesWrap {
   display: flex;
@@ -35,17 +46,55 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-md);
+  /* 500px tall, shrinking if the viewport cannot fit that much. The auto top
+     margin eats whatever height is left over, pinning the tiles to the bottom
+     of the hero — one grid gap above the edge of the viewport. */
+  flex: 0 1 500px;
+  min-height: 0;
+  margin-top: auto;
+  /* A definite row, so the tiles fill exactly that height instead of the grid
+     growing past it to fit its content. */
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* First grid column: the intro card stacked above the first tile. The tile
+   takes whatever height the intro leaves, so the column ends flush with its
+   neighbours. */
+.tilesColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.tilesColumn .tile {
   flex: 1 1 auto;
-  margin-top: var(--space-4xl);
-  max-height: 500px;
+  min-height: 0;
+}
+
+/* The project intro, as the first card of the hero grid. */
+.introCard {
+  flex: 0 0 auto;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
 }
 
 @media (max-width: 900px) {
   .tiles {
     grid-template-columns: 1fr;
     /* Stacked tiles need more height than fits in one viewport; letting the
-       grid grow past the desktop cap avoids clipping into the sections below. */
-    max-height: none;
+       grid grow past the desktop height avoids clipping into the sections
+       below. */
+    flex: 0 0 auto;
+    grid-template-rows: none;
+    /* Stacked, the first card starts halfway down the viewport — the hero's
+       own padding-top already covers the nav, so subtract it. */
+    margin-top: calc(50svh - var(--nav-height, 8.5rem));
+  }
+  .tilesColumn .tile {
+    min-height: calc(60svh - var(--space-md));
   }
 }
 
@@ -64,7 +113,6 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   overflow: clip;
-  min-height: 20rem;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
 }
 

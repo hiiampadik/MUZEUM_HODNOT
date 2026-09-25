@@ -3,7 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { client } from '@/sanity/lib/client';
-import { SETTINGS_QUERY, CONTACT_QUERY, HOME_INTRO_QUERY } from '@/sanity/queries';
+import { SETTINGS_QUERY, CONTACT_QUERY } from '@/sanity/queries';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { siteUrl } from '@/sanity/env';
@@ -35,10 +35,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [settings, contact, home] = await Promise.all([
+  const [settings, contact] = await Promise.all([
     client.fetch(SETTINGS_QUERY),
     client.fetch(CONTACT_QUERY),
-    client.fetch(HOME_INTRO_QUERY),
   ]);
 
   return (
@@ -47,7 +46,7 @@ export default async function RootLayout({
         <a href="#main" className="skip-link">
           {site.skipToContent}
         </a>
-        <Nav donateLink={settings?.donateLink} homeIntro={home?.intro} />
+        <Nav donateLink={settings?.donateLink} />
         <div id="main" tabIndex={-1}>
           {children}
         </div>

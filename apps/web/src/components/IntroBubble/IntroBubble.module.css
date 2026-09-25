@@ -1,11 +1,8 @@
-/* Block (not flex): lets the bubble's multi-column layout (Nav.module.css
-   .bubbleInner) fragment the text content across columns. */
 .root {
   display: block;
 }
 
 .text {
-  text-align: center;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;

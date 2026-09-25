@@ -716,16 +716,6 @@ export type HOME_QUERYResult =
       metaDescription: string;
     }
   | null;
-// Variable: HOME_INTRO_QUERY
-// Query: *[_id == "homePage"][0]{ intro }
-export type HOME_INTRO_QUERYResult =
-  | {
-      intro: null;
-    }
-  | {
-      intro: RichTextBasic | null;
-    }
-  | null;
 // Variable: HOME_TILE_COVERS_QUERY
 // Query: {    "valueGenerator": *[_id == "valueGenerator"][0].cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },    "methodicalMaterials": *[_id == "experientialEducation"][0].cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }  }
 export type HOME_TILE_COVERS_QUERYResult = {
@@ -1711,7 +1701,6 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_id == "siteSettings"][0]{\n    donateLink,\n    socialLinks[]{ _key, name, url, icon{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n } },\n    partners,\n    partnerLogos[]{ \n  _key,\n  \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n,\n  name,\n  url\n },\n    valuesPartnersText,\n    valuesPartnerLogos[]{ \n  _key,\n  \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n,\n  name,\n  url\n }\n  }\n': SETTINGS_QUERYResult;
     '\n  *[_id == "homePage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    intro,\n    "metaDescription": pt::text(intro)\n  }\n': HOME_QUERYResult;
-    '\n  *[_id == "homePage"][0]{ intro }\n': HOME_INTRO_QUERYResult;
     '\n  {\n    "valueGenerator": *[_id == "valueGenerator"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    "methodicalMaterials": *[_id == "experientialEducation"][0].cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': HOME_TILE_COVERS_QUERYResult;
     '\n  *[_type == "exhibition"] | order(endDate desc){\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    summary,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n  }\n': EXHIBITIONS_QUERYResult;
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current\n  }\n': EXHIBITION_SLUGS_QUERYResult;

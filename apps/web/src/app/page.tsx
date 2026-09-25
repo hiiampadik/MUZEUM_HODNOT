@@ -8,6 +8,7 @@ import {SanityImage} from '@/components/SanityImage/SanityImage';
 import {siteUrl} from '@/sanity/env';
 import {pageMetadata} from '@/lib/metadata';
 import {Container} from '@/components/Container/Container';
+import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {CoverImage} from '@/components/CoverImage/CoverImage';
 import {Button} from '@/components/Button/Button';
 import {Link} from '@/components/Link/Link';
@@ -149,50 +150,21 @@ export default async function HomePage() {
       <h1 className={'sr-only'}>{site.name}</h1>
 
       <div className={styles.hero}>
-        {/* Hero tiles */}
+        {/* Hero tiles. The first column stacks the project intro above the
+            first tile; the remaining tiles take a column each. */}
         {tiles.length > 0 && (
           <Container className={styles.tilesWrap}>
             <div className={styles.tiles}>
-              {tiles.map((tile) => (
-                <article
-                  key={tile.key}
-                  className={`${styles.tile} ${tile.stretch ? styles.tileStretch : ''}`}
-                >
-                  <div className={styles.tileHead}>
-                    <Label>{tile.eyebrow}</Label>
-                    {tile.entries.map((entry) => (
-                      <div
-                        key={entry.key}
-                        className={`${styles.tileEntry} ${hover.group}`}
-                        style={{ '--accent': entry.accent } as CSSProperties}
-                      >
-                        <Title as="h2">
-                          <Link
-                            href={entry.href}
-                            className={`${styles.tileTitleLink} ${hover.groupTrigger}`}
-                          >
-                            {entry.title}
-                          </Link>
-                        </Title>
-                        <Button href={entry.href} className={styles.tileButton} emoji={entry.emoji}>
-                          {entry.cta}
-                        </Button>
-                      </div>
-                    ))}
+              <div className={styles.tilesColumn}>
+                {home?.intro && (
+                  <div className={styles.introCard}>
+                    <IntroBubble value={home.intro} />
                   </div>
-                  {tile.image?.asset?._id && (
-                    <div
-                      className={styles.tileMedia}
-                      style={{ '--accent': tile.entries[0]?.accent } as CSSProperties}
-                    >
-                      <SanityImage
-                        value={tile.image}
-                        width={700}
-                        sizes="(max-width: 900px) 100vw, 400px"
-                      />
-                    </div>
-                  )}
-                </article>
+                )}
+                <HeroTile tile={tiles[0]} />
+              </div>
+              {tiles.slice(1).map((tile) => (
+                <HeroTile key={tile.key} tile={tile} />
               ))}
             </div>
           </Container>
@@ -244,6 +216,41 @@ export default async function HomePage() {
         <CoverImage value={home.bottomCover} placement="bottom" background className="cover-bg-bottom" />
       )}
     </main>
+  );
+}
+
+/** One hero tile: eyebrow label, one or more linked entries, and its cover. */
+function HeroTile({ tile }: { tile: Tile }) {
+  return (
+    <article className={`${styles.tile} ${tile.stretch ? styles.tileStretch : ''}`}>
+      <div className={styles.tileHead}>
+        <Label>{tile.eyebrow}</Label>
+        {tile.entries.map((entry) => (
+          <div
+            key={entry.key}
+            className={`${styles.tileEntry} ${hover.group}`}
+            style={{ '--accent': entry.accent } as CSSProperties}
+          >
+            <Title as="h2">
+              <Link href={entry.href} className={`${styles.tileTitleLink} ${hover.groupTrigger}`}>
+                {entry.title}
+              </Link>
+            </Title>
+            <Button href={entry.href} className={styles.tileButton} emoji={entry.emoji}>
+              {entry.cta}
+            </Button>
+          </div>
+        ))}
+      </div>
+      {tile.image?.asset?._id && (
+        <div
+          className={styles.tileMedia}
+          style={{ '--accent': tile.entries[0]?.accent } as CSSProperties}
+        >
+          <SanityImage value={tile.image} width={700} sizes="(max-width: 900px) 100vw, 400px" />
+        </div>
+      )}
+    </article>
   );
 }
 

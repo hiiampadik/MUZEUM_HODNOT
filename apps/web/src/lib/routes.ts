@@ -15,7 +15,8 @@ export const routes = {
  * underline + button color).
  */
 export const accents = {
-  home: '#3657ff',
+  // home: '#3657ff',
+  home: '#d89327',
   exhibition: '#66a755',
   contact: '#d89327',
   aboutPlatform: '#d89327',

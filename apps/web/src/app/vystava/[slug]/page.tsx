@@ -10,7 +10,7 @@ import { DragScrollbar } from '@/components/DragScrollbar/DragScrollbar';
 import { RichText } from '@/components/RichText/RichText';
 import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
-import { accents, routes, accentPalette } from '@/lib/routes';
+import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
 import { ogImageUrl } from '@/sanity/lib/og';
 import { formatDate, formatDateRange } from '@/lib/format';
@@ -183,11 +183,11 @@ export default async function ExhibitionPage({
               {t.links}
             </Title>
             <div className={styles.pills}>
-              {links.map((link, i) => (
+              {links.map((link) => (
                 <Pill
                   key={link._key}
                   href={link.href ?? '#'}
-                  color={accentPalette[i % accentPalette.length]}
+                  color="var(--accent)"
                   emoji={link.emoji || '↗'}
                 >
                   {link.label}

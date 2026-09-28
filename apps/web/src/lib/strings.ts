@@ -14,11 +14,11 @@
 /** Site-wide brand + metadata. */
 export const site = {
   /** Brand / organisation name. */
-  name: 'Múzeum Hodnôt',
+  name: 'Múzeum hodnôt',
   /** Per-page <title> template; `%s` is the page title. */
-  titleTemplate: '%s — Múzeum Hodnôt',
+  titleTemplate: '%s — Múzeum hodnôt',
   /** Site-wide meta description. */
-  description: 'Múzeum Hodnôt — výstavy a vzdelávacie podklady pre školy.',
+  description: 'Múzeum hodnôt — výstavy a vzdelávacie podklady pre školy.',
   /** Skip-to-content accessibility link. */
   skipToContent: 'Preskočiť na obsah',
 } as const;
@@ -30,7 +30,7 @@ export const nav = {
   /** Home logo abbreviation. */
   brandAbbr: 'MH',
   /** Full brand name (nav brand pill; uppercased via CSS). */
-  brandName: 'Múzeum Hodnôt',
+  brandName: 'Múzeum hodnôt',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
   methodicalMaterials: 'Metodické materiály',
@@ -47,10 +47,10 @@ export const nav = {
 export const footer = {
   contact: 'Kontakt',
   /** Administrative-info column heading (organisation name; intentional capital H). */
-  administrative: 'Múzeum Hodnôt',
+  administrative: 'Múzeum hodnôt',
   partners: 'Partneri projektu Múzeum hodnôt',
   valuesPartners: 'Partneri projektu Generátor hodnôt',
-  social: 'Sledujte nás',
+  social: 'Sledujte nás!',
   /** Credit line; the name links out to the designer/developer's site. */
   creditLead: 'Design & vývoj webu:',
   creditName: 'Bronislav Musil',

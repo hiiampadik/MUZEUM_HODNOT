@@ -20,8 +20,8 @@
   color: var(--accent);
   text-decoration: underline;
   text-decoration-color: var(--accent);
-  text-decoration-thickness: 1.25px;
-  text-underline-offset: 0.05em;
+  text-decoration-thickness: 1.2px !important;
+  text-underline-offset: 0.08em;
   @media (hover: hover) {
     &:hover {
       text-decoration: none;

@@ -7,4 +7,13 @@
   font-size: 14px;
   font-weight: 500;
   line-height: var(--line-height-body);
+  strong {
+    font-weight: 500;
+    /*background: var(--accent);*/
+    color: black;
+    a {
+      color: var(--accent);
+    }
+
+  }
 }

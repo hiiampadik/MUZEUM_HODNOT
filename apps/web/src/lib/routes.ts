@@ -16,18 +16,12 @@ export const routes = {
  */
 export const accents = {
   // home: '#3657ff',
-  home: '#d89327',
-  exhibition: '#66a755',
-  contact: '#d89327',
-  aboutPlatform: '#d89327',
-  methodicalMaterials: '#ff67ee',
-  valueGenerator: '#db62ff',
+  home: '#ea6f47',
+  exhibition: '#3C7D5D',
+  // contact: '#D2EC57',
+  contact: '#ea6f47',
+  aboutPlatform: '#ea6f47',
+  methodicalMaterials: '#ec78b3',
+  valueGenerator: '#A964D9',
 } as const;
 
-/** Accent palette for cycling per-item colors (e.g. exhibition cards). */
-export const accentPalette = [
-  '#66a755',
-  '#3657ff',
-  '#c575e0',
-  '#d89327',
-] as const;

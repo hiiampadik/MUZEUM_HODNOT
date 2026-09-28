@@ -14,7 +14,7 @@ import {Button} from '@/components/Button/Button';
 import {Link} from '@/components/Link/Link';
 import {Label, Text, Title, Underline} from '@/components/Typography/Typography';
 import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
-import {accentPalette, accents, routes} from '@/lib/routes';
+import {accents, routes} from '@/lib/routes';
 import {formatDateRange} from '@/lib/format';
 import {home as homeStrings, site} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
@@ -65,19 +65,19 @@ export default async function HomePage() {
   const { active, upcoming, past } = groupExhibitions(exhibitions);
 
   // Fixed hero tiles. The first lists every currently running exhibition, one
-  // under another, and only appears when there is at least one. Each gets its
-  // own accent from the cycling palette; the cover comes from the first one.
+  // under another, and only appears when there is at least one. They share the
+  // exhibition accent; the cover comes from the first one.
   const tiles: Tile[] = [];
   if (active.length > 0) {
     tiles.push({
       key: 'exhibitions',
       eyebrow: homeStrings.currentExhibitions,
-      entries: active.map((exhibition, i) => ({
+      entries: active.map((exhibition) => ({
         key: exhibition._id,
         title: <Underline>{exhibition.title ?? homeStrings.currentExhibitions}</Underline>,
         cta: homeStrings.showMore,
         emoji: '👀',
-        accent: accentPalette[i % accentPalette.length],
+        accent: accents.exhibition,
         href:
           exhibition.canOpenDetail && exhibition.slug
             ? routes.exhibition(exhibition.slug)

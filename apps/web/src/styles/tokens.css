@@ -60,9 +60,11 @@
   --font-size-label: 0.875rem; /* 14px */
 
   --line-height-heading: 1.15;
-  --line-height-body: 1.4;
+  --line-height-body: 1.35;
   --letter-spacing-label: -0.02em; /* ≈ -0.28px @ 14px */
   --letter-spacing-value: 0.02em; /* uppercase meta/name values */
+
+  --text-bg: linear-gradient(transparent 2%, rgb(230 225 223 / 0.7) 2%, rgb(235 230 228 / 0.7) 98%, transparent 98%);
 }
 
 /* Breakpoints (reference): --bp-sm 480 · --bp-md 768 · --bp-lg 1024 · --bp-xl 1200 */

@@ -20,7 +20,7 @@
 .mobileMenu > *,
 .brand {
   pointer-events: auto;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.07);
+  border: 1.5px solid var(--color-bg);
 }
 
 /* Brand pill — always-visible link home, above the nav row. White surface with

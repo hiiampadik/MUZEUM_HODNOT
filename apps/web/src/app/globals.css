@@ -42,7 +42,7 @@ html {
 
 /* Text selection highlight. */
 ::selection {
-  background: var(--accent-blue-light);
+  background: var(--accent-text-selection);
   color: var(--color-fg);
 }
 
@@ -66,7 +66,9 @@ video {
 }
 
 a {
-  color: inherit;
+  color: var(--accent-link);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-link);
   @media (hover: hover) {
     &:hover {
       text-decoration: none;
@@ -104,6 +106,20 @@ select {
   /* Reserve enough space at the bottom that the whole bottom cover band
      (its dithered image) is visible below the content, with a gap above it. */
   padding-bottom: 50vw;
+}
+
+/* Paint the page background INSIDE the shell's stacking context. The colour on
+   <body> propagates to the canvas, which is excluded from the blending backdrop,
+   so `mix-blend-mode` on content (e.g. the highlight on <strong> in RichText)
+   would have nothing to blend against outside of white surfaces. This layer sits
+   below the covers (z-index -1) and gives every blend a real backdrop. */
+.page-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--color-bg);
+  pointer-events: none;
 }
 
 /* Homepage: the hero (.hero in home.module.css) owns the first viewport and

@@ -1,3 +1,4 @@
+import { Children, type ReactNode } from 'react';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 import { Link } from '../Link/Link';
@@ -17,12 +18,48 @@ function toInternalHref(href: string): string {
   }
 }
 
+/**
+ * Splits leading/trailing whitespace off a mark's children so decorations such as
+ * the `strong` highlight background don't extend past the visible text.
+ */
+function trimEdges(children: ReactNode): [string, ReactNode[], string] {
+  const nodes = Children.toArray(children);
+  let lead = '';
+  let trail = '';
+  if (typeof nodes[0] === 'string') {
+    const match = nodes[0].match(/^\s+/);
+    if (match) {
+      lead = match[0];
+      nodes[0] = nodes[0].slice(lead.length);
+    }
+  }
+  const last = nodes.length - 1;
+  if (last >= 0 && typeof nodes[last] === 'string') {
+    const match = (nodes[last] as string).match(/\s+$/);
+    if (match) {
+      trail = match[0];
+      nodes[last] = (nodes[last] as string).slice(0, -trail.length);
+    }
+  }
+  return [lead, nodes.filter((node) => node !== ''), trail];
+}
+
 const components: PortableTextComponents = {
   marks: {
     link: ({ children, value }) => (
       <Link href={toInternalHref((value as { href: string })?.href ?? '#')}>{children}</Link>
     ),
     underline: ({ children }) => <u>{children}</u>,
+    strong: ({ children }) => {
+      const [lead, inner, trail] = trimEdges(children);
+      return (
+        <>
+          {lead}
+          <strong>{inner}</strong>
+          {trail}
+        </>
+      );
+    },
   },
 };
 

@@ -46,6 +46,7 @@ function PartnerLogos({ logos }: { logos: PartnerLogo[] }) {
               height={LOGO_HEIGHT}
               className={styles.logo}
               alt={logo.alt ?? logo.name ?? ''}
+              noPlaceholder
             />
           </span>
         );
@@ -77,24 +78,26 @@ export function Footer({ settings, contact }: FooterProps) {
   return (
     <footer className={styles.footer}>
       <Container>
-        <div className={styles.grid}>
+        <div className={styles.footerInner}>
           {/* Contact, social links + administrative info — sourced from the Contact page */}
-          <div className={styles.column}>
+          <div className={styles.row}>
             <div>
               <Title as="h2" className={styles.heading}>
                 {footer.contact}
               </Title>
-              {contact?.phone && (
-                <p>
-                  <Link href={`tel:${contact.phone}`}>{contact.phone}</Link>
-                </p>
-              )}
-              {contact?.email && (
-                <p>
-                  <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
-                </p>
-              )}
-              <RichText value={contact?.address} />
+              <div>
+                {contact?.phone && (
+                  <p>
+                    <Link href={`tel:${contact.phone}`}>{contact.phone}</Link>
+                  </p>
+                )}
+                {contact?.email && (
+                  <p>
+                    <Link href={`mailto:${contact.email}`}>{contact.email}</Link>
+                  </p>
+                )}
+                <RichText value={contact?.address} />
+              </div>
             </div>
 
             {social.length > 0 && (
@@ -117,6 +120,7 @@ export function Footer({ settings, contact }: FooterProps) {
                           width={24}
                           height={24}
                           alt=""
+                          noPlaceholder
                         />
                       </a>
                     </li>
@@ -134,37 +138,38 @@ export function Footer({ settings, contact }: FooterProps) {
               </div>
             )}
 
-            <p>
-              {footer.creditLead}{' '}
-              <Link href={footer.creditUrl}>{footer.creditName}</Link>
-            </p>
           </div>
 
-          {/* Partners — Múzeum hodnôt */}
-          {hasMuseumPartners && (
-            <div className={styles.column}>
-              <div>
-                <Title as="h2" className={styles.heading}>
-                  {footer.partners}
-                </Title>
-                <RichText value={settings?.partners} />
-                <PartnerLogos logos={museumPartnerLogos} />
-              </div>
-            </div>
-          )}
-
-          {/* Partners — Generátor hodnôt */}
-          {hasValuesPartners && (
-            <div className={styles.column}>
-              <div>
+          <div className={styles.row}>
+            {/* Partners — Generátor hodnôt */}
+            {hasValuesPartners && (
+              <div className={styles.columnPartners}>
                 <Title as="h2" className={styles.heading}>
                   {footer.valuesPartners}
                 </Title>
                 <RichText value={settings?.valuesPartnersText} />
                 <PartnerLogos logos={valuesPartnerLogos} />
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Partners — Múzeum hodnôt */}
+            {hasMuseumPartners && (
+              <div className={styles.columnPartners}>
+                  <Title as="h2" className={styles.heading}>
+                    {footer.partners}
+                  </Title>
+                  <RichText value={settings?.partners} />
+                  <PartnerLogos logos={museumPartnerLogos} />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <p>
+              {footer.creditLead}{' '}
+              <Link href={footer.creditUrl}>{footer.creditName}</Link>
+            </p>
+          </div>
         </div>
       </Container>
     </footer>

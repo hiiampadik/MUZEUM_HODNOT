@@ -11,11 +11,7 @@
     font-family: var(--font-mono);
     font-size: var(--font-size-label);
     font-weight: 500;
-    /*background: var(--accent);*/
+    background: unset;
     color: black;
-    a {
-      color: var(--accent);
-    }
-
   }
 }

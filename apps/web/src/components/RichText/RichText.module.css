@@ -17,9 +17,9 @@
 }
 
 .root a {
-  color: var(--accent);
+  color: var(--accent-link);
   text-decoration: underline;
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent-link);
   text-decoration-thickness: 1.2px !important;
   text-underline-offset: 0.08em;
   @media (hover: hover) {
@@ -30,11 +30,9 @@
 }
 
 .root strong {
-  font-weight: 650;
+  /*font-weight: 650;*/
+  font-weight: 500;
+  background: var(--accent-strong);
+  border-radius: 4px;
+  mix-blend-mode: multiply;
 }
-
-/*.root u {*/
-/*  text-decoration-color: var(--accent);*/
-/*  text-decoration-thickness: 2px;*/
-/*  text-underline-offset: 0.12em;*/
-/*}*/

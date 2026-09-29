@@ -26,6 +26,12 @@ type SanityImageProps = {
   className?: string;
   /** Override the alt text from the CMS (e.g. decorative → ""). */
   alt?: string;
+  /**
+   * Skip the LQIP blur placeholder. Next renders it as a `background-size: cover`
+   * layer on the `<img>`, which flashes a grey block on small images that are
+   * sized with `object-fit: contain` (footer logos, social icons).
+   */
+  noPlaceholder?: boolean;
 };
 
 /**
@@ -40,6 +46,7 @@ export function SanityImage({
   priority,
   className,
   alt,
+  noPlaceholder,
 }: SanityImageProps) {
   const assetId = value?.asset?._id;
   if (!value || !assetId) return null;
@@ -56,7 +63,7 @@ export function SanityImage({
     crop: value.crop ?? undefined,
   }).url();
 
-  const lqip = value.asset?.metadata?.lqip ?? undefined;
+  const lqip = noPlaceholder ? undefined : value.asset?.metadata?.lqip ?? undefined;
 
   return (
     <Image

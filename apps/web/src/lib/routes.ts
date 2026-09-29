@@ -17,11 +17,11 @@ export const routes = {
 export const accents = {
   // home: '#3657ff',
   home: '#ea6f47',
-  exhibition: '#3C7D5D',
+  exhibition: '#3b976a',
   // contact: '#D2EC57',
-  contact: '#ea6f47',
-  aboutPlatform: '#ea6f47',
-  methodicalMaterials: '#ec78b3',
+  contact: '#ff8359',
+  aboutPlatform: '#ff8359',
+  methodicalMaterials: '#ff93cc',
   valueGenerator: '#A964D9',
 } as const;
 

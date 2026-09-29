@@ -41,11 +41,13 @@
   /* Accent palette (underline + button color per section) */
 
   /*--accent-blue: #3f5bea;*/
-  --accent-blue: #3f5bea;
-  --accent-blue-light: #7c90ff;
+  --accent-strong: #edece4;
+  /*--accent-strong: #f9ffcc;*/
+  --accent-link: #1d54fa;
+  --accent-text-selection: #7c90ff;
 
   /* Active section accent — overridden per section via inline --accent */
-  --accent: var(--accent-blue);
+  --accent: var(--accent-link);
 
   /* Typography */
   --font-cy: 'cy'; /* Adobe Fonts (Typekit hcm5cdz), loaded in globals.css */
@@ -53,11 +55,12 @@
   --font-body: var(--font-geist-sans), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --font-size-heading: clamp(2.5rem, 5vw, 3rem); /* → 64px, page hero title */
-  --font-size-title: clamp(1.625rem, 4vw, 2rem); /* → 34px */
+  --font-size-heading: clamp(2.5rem, 5vw, 2.7rem); /* → 64px, page hero title */
+  --font-size-title: clamp(1.625rem, 4vw, 1.8rem); /* → 34px */
   --font-size-subtitle: 1.25rem; /* 20px — page-builder h3 */
-  --font-size-body: 15px;
+  --font-size-body: 0.9375rem; /* 15px */
   --font-size-label: 0.875rem; /* 14px */
+  --font-size-label-tiny: 0.8125rem; /* 13px */
 
   --line-height-heading: 1.15;
   --line-height-body: 1.35;

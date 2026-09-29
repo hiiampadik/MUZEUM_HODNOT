@@ -12,17 +12,24 @@ function isExternal(href: string): boolean {
 
 /**
  * Smart link: internal hrefs use next/link, external ones get safe rel/target.
+ * External links open in a new tab unless `target` says otherwise.
  */
-export function Link({ href, children, ...rest }: LinkProps) {
+export function Link({ href, children, target, ...rest }: LinkProps) {
   if (isExternal(href)) {
+    const resolvedTarget = target ?? '_blank';
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
+      <a
+        href={href}
+        target={resolvedTarget}
+        rel={resolvedTarget === '_blank' ? 'noopener noreferrer' : undefined}
+        {...rest}
+      >
         {children}
       </a>
     );
   }
   return (
-    <NextLink href={href} {...rest}>
+    <NextLink href={href} target={target} {...rest}>
       {children}
     </NextLink>
   );

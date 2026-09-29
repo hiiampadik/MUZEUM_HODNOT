@@ -137,7 +137,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     gallery[]{ _key, ${imageFields}, photographer },
     abstract,
     materials[]{ ${materialFields} },
-    links[]{ _key, label, emoji, href },
+    links[]{ _key, label, emoji, href, newTab },
     exhibitingAuthors,
     contributors[]{ _key, role, people },
     "metaDescription": pt::text(abstract)

@@ -10,7 +10,11 @@ import { nav } from '@/lib/strings';
 import styles from './Nav.module.css';
 
 type NavProps = {
-  donateLink?: { label?: string | null; href?: string | null } | null;
+  donateLink?: {
+    label?: string | null;
+    href?: string | null;
+    newTab?: boolean | null;
+  } | null;
 };
 
 const items = [
@@ -93,7 +97,13 @@ export function Nav({ donateLink }: NavProps) {
               ))}
 
               {donateLink?.href && (
-                <Pill href={donateLink.href} variant="surface" size="lg" emoji="💝">
+                <Pill
+                  href={donateLink.href}
+                  target={donateLink.newTab === false ? '_self' : undefined}
+                  variant="surface"
+                  size="lg"
+                  emoji="💝"
+                >
                   {donateLink.label || nav.donateFallback}
                 </Pill>
               )}
@@ -154,7 +164,13 @@ export function Nav({ donateLink }: NavProps) {
             ))}
 
             {donateLink?.href && (
-              <Pill href={donateLink.href} variant="surface" size="lg" emoji="💝">
+              <Pill
+                href={donateLink.href}
+                target={donateLink.newTab === false ? '_self' : undefined}
+                variant="surface"
+                size="lg"
+                emoji="💝"
+              >
                 {donateLink.label || nav.donateFallback}
               </Pill>
             )}

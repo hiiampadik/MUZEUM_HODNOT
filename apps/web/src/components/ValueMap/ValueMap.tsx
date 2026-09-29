@@ -13,7 +13,11 @@ export type MapPointData = {
   title: string | null;
   location?: { lat?: number | null; lng?: number | null } | null;
   text?: readonly unknown[] | null;
-  link?: { label?: string | null; href?: string | null } | null;
+  link?: {
+    label?: string | null;
+    href?: string | null;
+    newTab?: boolean | null;
+  } | null;
 };
 
 /**
@@ -263,8 +267,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
               <Pill
                 href={selected.link.href}
                 className={styles.panelPill}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={selected.link.newTab === false ? '_self' : undefined}
               >
                 {selected.link.label || common.moreLink}
               </Pill>

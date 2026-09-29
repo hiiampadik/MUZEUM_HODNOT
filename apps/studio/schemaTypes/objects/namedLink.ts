@@ -30,6 +30,13 @@ export const namedLink = defineType({
       validation: (rule) =>
         rule.required().uri({ scheme: ['http', 'https', 'mailto', 'tel'] }),
     }),
+    defineField({
+      name: 'newTab',
+      title: 'Otvoriť v novom okne',
+      type: 'boolean',
+      description: 'Ak je vypnuté, odkaz sa otvorí v tom istom okne.',
+      initialValue: true,
+    }),
   ],
   preview: {
     select: { title: 'label', subtitle: 'href', emoji: 'emoji' },

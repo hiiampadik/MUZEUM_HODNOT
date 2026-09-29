@@ -188,7 +188,7 @@ export default async function ExhibitionPage({
                 <Pill
                   key={link._key}
                   href={link.href ?? '#'}
-                  target={link.newTab ? '_self' : '_blank'}
+                  target={link.newTab ? '_blank' : '_self'}
                   color="var(--accent)"
                   emoji={link.emoji || '↗'}
                 >

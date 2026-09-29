@@ -1,9 +1,42 @@
+/* The builder itself spans the page — each block carries its own layout width,
+   so a gallery or a page-wide image can escape the reading column. */
 .builder {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-md);
+  width: 100%;
 }
+
+/* ---- Width slots (one per top-level block) ---------------------------- */
+
+/* Reading width — mirrors Container width="narrow". */
+.narrow {
+  width: 100%;
+  max-width: calc(var(--width-narrow) + 2 * var(--container-padding));
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* Full page width, page gutter kept. */
+.pageWide {
+  width: 100%;
+  padding-inline: var(--container-padding);
+}
+
+/* Full bleed — the block owns its insets (the gallery strip). */
+.fullBleed {
+  width: 100%;
+}
+
+/* Keep the material pills optically centred, as they were inside the
+   narrow container before the blocks got their own width slots. */
+.pillsSlot {
+  display: flex;
+  justify-content: center;
+}
+
+/* ---- Blocks ----------------------------------------------------------- */
 
 .block {
   width: 100%;
@@ -23,16 +56,17 @@
   font-size: var(--font-size-subtitle);
 }
 
-.builder > .heading3 + *,
-.builder > .card + .card,
-.builder > .block + .block {
+/* Spacing between consecutive blocks of the same kind (and after a
+   sub-heading). Keyed off the data attributes on the width slots. */
+.builder > [data-sub] + *,
+.builder > [data-block='tileBlock'] + [data-block='tileBlock'],
+.builder > [data-block='textBlock'] + [data-block='textBlock'] {
   margin-top: calc(var(--space-xs) - var(--space-md));
 }
 
-.builder > .heading {
-  margin: var(--space-2xs) 0 0;
+.builder > [data-block='headingBlock'] {
+  margin-top: var(--space-2xs);
 }
-
 
 /* Decorative image: centered, gets a frontend effect (dither in Blok 6). */
 .decorative {
@@ -51,6 +85,17 @@
   image-rendering: crisp-edges;
   image-rendering: pixelated;
   mix-blend-mode: multiply;
+}
+
+/* Sized images (text / page width): plain photo filling its slot. */
+.imageWide {
+  width: 100%;
+}
+
+.imageWide :global(img) {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
 }
 
 /* Materials / tile card */

@@ -12,6 +12,7 @@ export const pageBuilder = defineType({
     defineArrayMember({ type: 'textBlock' }),
     defineArrayMember({ type: 'headingBlock' }),
     defineArrayMember({ type: 'decorativeImage' }),
+    defineArrayMember({ type: 'galleryBlock' }),
     defineArrayMember({ type: 'tileBlock' }),
     defineArrayMember({ type: 'materialsBlock' }),
   ],

@@ -34,8 +34,10 @@ export default async function ValueGeneratorPage() {
 
       <Container width="narrow">
         <Heading className={builder.titleLeft}>{pages.valueGenerator}</Heading>
-        <PageBuilder content={page?.content} />
       </Container>
+
+      {/* Full width: the builder constrains each block to its own layout width. */}
+      <PageBuilder content={page?.content} />
 
       {points.length > 0 && (
         <Container>

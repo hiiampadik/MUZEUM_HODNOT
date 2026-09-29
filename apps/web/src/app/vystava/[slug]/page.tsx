@@ -5,8 +5,7 @@ import { client } from '@/sanity/lib/client';
 import { EXHIBITION_QUERY, EXHIBITION_SLUGS_QUERY } from '@/sanity/queries';
 import { Container } from '@/components/Container/Container';
 import { CoverImage } from '@/components/CoverImage/CoverImage';
-import { SanityImage } from '@/components/SanityImage/SanityImage';
-import { DragScrollbar } from '@/components/DragScrollbar/DragScrollbar';
+import { Gallery } from '@/components/Gallery/Gallery';
 import { RichText } from '@/components/RichText/RichText';
 import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
@@ -140,15 +139,7 @@ export default async function ExhibitionPage({
 
       {gallery && gallery.length > 0 && (
         <Container width="full" className={styles.noPadding}>
-          <DragScrollbar className={styles.galleryBlock}>
-            <ul className={styles.gallery}>
-              {gallery.map((photo) => (
-                <li key={photo._key} className={styles.photo}>
-                  <SanityImage value={photo} width={1000} sizes="80vw" />
-                </li>
-              ))}
-            </ul>
-          </DragScrollbar>
+          <Gallery images={gallery} />
         </Container>
       )}
 

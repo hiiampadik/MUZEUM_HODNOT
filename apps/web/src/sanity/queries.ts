@@ -17,6 +17,8 @@ const edgeCoverFields = /* groq */ `
   bottomCover{ ${imageFields} }
 `;
 
+const galleryFields = /* groq */ `_key, ${imageFields}, photographer`;
+
 const materialFields = /* groq */ `
   _key,
   title,
@@ -33,7 +35,8 @@ const pageBuilderFields = /* groq */ `
     _type,
     _type == "textBlock" => { content },
     _type == "headingBlock" => { text, level },
-    _type == "decorativeImage" => { image{ ${imageFields} }, alt },
+    _type == "decorativeImage" => { image{ ${imageFields} }, alt, size },
+    _type == "galleryBlock" => { images[]{ ${galleryFields} } },
     _type == "materialsBlock" => { materials[]{ ${materialFields} } },
     _type == "tileBlock" => {
       content[]{
@@ -41,7 +44,7 @@ const pageBuilderFields = /* groq */ `
         _type,
         _type == "textBlock" => { content },
         _type == "headingBlock" => { text, level },
-        _type == "decorativeImage" => { image{ ${imageFields} }, alt },
+        _type == "decorativeImage" => { image{ ${imageFields} }, alt, size },
         _type == "materialsBlock" => { materials[]{ ${materialFields} } },
       }
     },
@@ -134,7 +137,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     roles[]{ _key, role, people },
     ${coverFields},
     ${edgeCoverFields},
-    gallery[]{ _key, ${imageFields}, photographer },
+    gallery[]{ ${galleryFields} },
     abstract,
     materials[]{ ${materialFields} },
     links[]{ _key, label, emoji, href, newTab },

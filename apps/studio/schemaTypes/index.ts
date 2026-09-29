@@ -17,6 +17,7 @@ import { mapPoint } from './objects/mapPoint';
 import { textBlock } from './blocks/textBlock';
 import { headingBlock } from './blocks/headingBlock';
 import { decorativeImage } from './blocks/decorativeImage';
+import { galleryBlock } from './blocks/galleryBlock';
 import { materialsBlock } from './blocks/materialsBlock';
 import { tileBlock } from './blocks/tileBlock';
 import { pageBuilder } from './blocks/pageBuilder';
@@ -45,6 +46,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   textBlock,
   headingBlock,
   decorativeImage,
+  galleryBlock,
   tileBlock,
   materialsBlock,
 

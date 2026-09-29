@@ -50,53 +50,9 @@
   letter-spacing: var(--letter-spacing-value);
 }
 
-/* ---- Gallery ---- */
+/* ---- Gallery ---- (strip itself lives in components/Gallery) */
 .noPadding {
   padding: 0;
-}
-
-.galleryBlock {
-  margin-block: var(--space-2xl);
-}
-
-.gallery {
-  display: flex;
-  gap: var(--space-2xs);
-  list-style: none;
-  margin: 0;
-  /* Left inset via start padding (reliably counted). The trailing gap can't be a
-     child margin or padding-inline-end — browsers drop both from a scroll
-     container's overflow width — so it's a real spacer flex item (::after). */
-  padding: 0;
-  padding-left: var(--container-padding);
-}
-
-.gallery::after {
-  content: '';
-  flex: 0 0 calc(var(--container-padding) - var(--space-2xs));
-  align-self: stretch;
-}
-
-.photo {
-  flex: 0 0 auto;
-  width: min(80%, 707px);
-  height: clamp(240px, 45vw, 472px);
-  position: relative;
-  overflow: hidden;
-}
-
-.photo:first-child {
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-}
-
-.photo:last-child {
-  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-}
-
-.photo :global(img) {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* ---- Abstract ---- */

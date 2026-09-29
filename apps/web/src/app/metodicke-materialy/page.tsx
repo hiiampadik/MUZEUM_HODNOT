@@ -32,8 +32,10 @@ export default async function MethodicalMaterialsPage() {
 
       <Container width="narrow">
         <Heading className={builder.titleLeft}>{pages.methodicalMaterials}</Heading>
-        <PageBuilder content={page?.content} />
       </Container>
+
+      {/* Full width: the builder constrains each block to its own layout width. */}
+      <PageBuilder content={page?.content} />
 
       {page?.bottomCover && (
         <CoverImage value={page.bottomCover} placement="bottom" background className="cover-bg-bottom" />

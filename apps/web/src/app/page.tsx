@@ -64,31 +64,40 @@ export default async function HomePage() {
 
   const { active, upcoming, past } = groupExhibitions(exhibitions);
 
-  // Fixed hero tiles. The first lists every currently running exhibition, one
-  // under another, and only appears when there is at least one. They share the
-  // exhibition accent; the cover comes from the first one.
+  // The exhibitions tile lists every currently running exhibition, one under
+  // another, and only exists when there is at least one. They share the
+  // exhibition accent; the cover comes from the first one. It sits in the first
+  // column, under the intro; when there is none, the intro takes that column on
+  // its own and shows the homepage cover at its bottom instead.
+  const exhibitionTile: Tile | null =
+    active.length > 0
+      ? {
+          key: 'exhibitions',
+          eyebrow: homeStrings.currentExhibitions,
+          entries: active.map((exhibition) => ({
+            key: exhibition._id,
+            title: <Underline>{exhibition.title ?? homeStrings.currentExhibitions}</Underline>,
+            cta: homeStrings.showMore,
+            emoji: '👀',
+            accent: accents.exhibition,
+            href:
+              exhibition.canOpenDetail && exhibition.slug
+                ? routes.exhibition(exhibition.slug)
+                : '#vystavy',
+          })),
+          // Several exhibitions stack their own titles and buttons, so the
+          // tile drops the cover: one exhibition's image would mislabel the
+          // others, and the entries need the height anyway.
+          image: active.length === 1 ? active[0].cover : undefined,
+          // With a single exhibition there is nothing to disambiguate, so the
+          // tile behaves like the other two: the whole card is one hit area.
+          stretch: active.length === 1,
+        }
+      : null;
+
+  // The other two tiles are fixed: Generátor hodnôt always takes the second
+  // column, Metodické materiály the third.
   const tiles: Tile[] = [];
-  if (active.length > 0) {
-    tiles.push({
-      key: 'exhibitions',
-      eyebrow: homeStrings.currentExhibitions,
-      entries: active.map((exhibition) => ({
-        key: exhibition._id,
-        title: <Underline>{exhibition.title ?? homeStrings.currentExhibitions}</Underline>,
-        cta: homeStrings.showMore,
-        emoji: '👀',
-        accent: accents.exhibition,
-        href:
-          exhibition.canOpenDetail && exhibition.slug
-            ? routes.exhibition(exhibition.slug)
-            : '#vystavy',
-      })),
-      image: active[0].cover,
-      // With a single exhibition there is nothing to disambiguate, so the tile
-      // behaves like the other two: the whole card is one hit area.
-      stretch: active.length === 1,
-    });
-  }
   tiles.push({
     key: 'valueGenerator',
     eyebrow: (
@@ -151,24 +160,38 @@ export default async function HomePage() {
 
       <div className={styles.hero}>
         {/* Hero tiles. The first column stacks the project intro above the
-            first tile; the remaining tiles take a column each. */}
-        {tiles.length > 0 && (
-          <Container className={styles.tilesWrap}>
-            <div className={styles.tiles}>
-              <div className={styles.tilesColumn}>
-                {home?.intro && (
-                  <div className={styles.introCard}>
+            exhibitions tile; Generátor hodnôt and Metodické materiály always
+            take the second and third column. Without a running exhibition the
+            intro fills the first column on its own, closed off at the bottom by
+            the homepage cover. */}
+        <Container className={styles.tilesWrap}>
+          <div className={styles.tiles}>
+            <div className={styles.tilesColumn}>
+              {home?.intro && (
+                <div
+                  className={`${styles.introCard} ${exhibitionTile ? '' : styles.introCardSolo}`}
+                >
+                  <div className={styles.introText}>
                     <IntroBubble value={home.intro} />
                   </div>
-                )}
-                <HeroTile tile={tiles[0]} />
-              </div>
-              {tiles.slice(1).map((tile) => (
-                <HeroTile key={tile.key} tile={tile} />
-              ))}
+                  {!exhibitionTile && home?.cover?.asset?._id && (
+                    <div className={styles.introMedia}>
+                      <SanityImage
+                        value={home.cover}
+                        width={700}
+                        sizes="(max-width: 900px) 100vw, 400px"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {exhibitionTile && <HeroTile tile={exhibitionTile} />}
             </div>
-          </Container>
-        )}
+            {tiles.map((tile) => (
+              <HeroTile key={tile.key} tile={tile} />
+            ))}
+          </div>
+        </Container>
       </div>
 
       <div className={styles.spacer} />

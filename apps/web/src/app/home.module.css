@@ -80,6 +80,37 @@
   border-radius: var(--radius-lg);
 }
 
+/* Without a running exhibition the intro is alone in its column, so it takes
+   the full height and closes with the homepage cover, matching the tiles. */
+.introCardSolo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1 1 auto;
+  min-height: 0;
+  /* The cover bleeds to the card's edges, so only the text keeps the inline
+     padding (see .introText). */
+  padding: var(--space-md) 0 0;
+  overflow: clip;
+}
+
+.introCardSolo .introText {
+  padding-inline: var(--space-md);
+}
+
+.introMedia {
+  flex: 1 0 auto;
+  min-height: 160px;
+  overflow: clip;
+}
+
+.introMedia :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(0.8) brightness(0.9);
+}
+
 @media (max-width: 900px) {
   .tiles {
     grid-template-columns: 1fr;
@@ -92,7 +123,8 @@
        own padding-top already covers the nav, so subtract it. */
     margin-top: calc(50svh - var(--nav-height, 8.5rem));
   }
-  .tilesColumn .tile {
+  .tilesColumn .tile,
+  .introCardSolo {
     min-height: calc(60svh - var(--space-md));
   }
 }

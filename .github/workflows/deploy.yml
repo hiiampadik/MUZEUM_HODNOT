@@ -22,7 +22,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Trailing-edge debounce for content rebuilds: a publish in Studio waits for a
+  # quiet window, and any further publish cancels this run (see `concurrency`
+  # above) and restarts the wait. Coalesces an editing burst into one build.
+  # Code pushes and manual runs skip the wait.
+  debounce:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for further content edits
+        run: sleep 120
+
   build:
+    needs: debounce
+    # Needed because a skipped `needs` would otherwise skip `build` too.
+    # `!cancelled()` rather than `always()`: `always()` runs the job even when the
+    # run is cancelled, which would defeat the debounce.
+    if: ${{ !cancelled() && contains(fromJSON('["success","skipped"]'), needs.debounce.result) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

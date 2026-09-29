@@ -19,12 +19,12 @@ export const siteSettings = defineType({
   fieldsets: [
     {
       name: 'museumPartners',
-      title: 'Partneri projektu Múzeum hodnôt',
+      title: 'Partneri výstav Múzeum hodnôt',
       options: { columns: 1 },
     },
     {
       name: 'valuesPartners',
-      title: 'Partneri projektu Generátor hodnôt',
+      title: 'Partneri programu Generátor hodnôt',
       options: { columns: 1 },
     },
   ],

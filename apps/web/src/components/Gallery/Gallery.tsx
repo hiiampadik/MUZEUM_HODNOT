@@ -23,7 +23,9 @@ export function Gallery({ images, className }: GalleryProps) {
       <ul className={styles.list}>
         {images.map((photo) => (
           <li key={photo._key} className={styles.photo}>
-            <SanityImage value={photo} width={1000} sizes="80vw" />
+            {/* Width is intrinsic (height-driven), so the sizes hint is the widest
+                a photo can get: strip height × a wide landscape ratio. */}
+            <SanityImage value={photo} width={1000} sizes="(max-width: 700px) 90vw, 960px" />
           </li>
         ))}
       </ul>

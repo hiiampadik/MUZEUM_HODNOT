@@ -20,9 +20,10 @@
   align-self: stretch;
 }
 
+/* All photos share the strip height; the width follows each image's own aspect
+   ratio (portrait photos stay narrow, panoramas get wide). */
 .photo {
   flex: 0 0 auto;
-  width: min(80%, 707px);
   height: clamp(240px, 45vw, 472px);
   position: relative;
   overflow: hidden;
@@ -37,7 +38,10 @@
 }
 
 .photo :global(img) {
-  width: 100%;
+  display: block;
   height: 100%;
-  object-fit: cover;
+  /* `auto` + the intrinsic width/height from next/image = dynamic width. */
+  width: auto;
+  max-width: none;
+  object-fit: contain;
 }

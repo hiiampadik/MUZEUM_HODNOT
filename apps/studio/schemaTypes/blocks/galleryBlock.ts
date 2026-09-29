@@ -1,6 +1,25 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 import { ImagesIcon } from '@sanity/icons';
 
+/**
+ * Preview `select` can't resolve a whole array of objects (it always came back
+ * empty, so the subtitle read "0 fotografie"). Indexed paths do resolve, so the
+ * item keys are selected one by one and counted — up to this cap, beyond which
+ * the subtitle shows "24+".
+ */
+const MAX_COUNTED = 24;
+
+const imageKeySelection = Object.fromEntries(
+  Array.from({ length: MAX_COUNTED }, (_, i) => [`k${i}`, `images.${i}._key`]),
+);
+
+/** Slovak plural for "fotografia" (1 / 2–4 / 0 and 5+). */
+function photoNoun(count: number) {
+  if (count === 1) return 'fotografia';
+  if (count >= 2 && count <= 4) return 'fotografie';
+  return 'fotografií';
+}
+
 /** Page-builder block: a full-width horizontally scrollable photo gallery. */
 export const galleryBlock = defineType({
   name: 'galleryBlock',
@@ -17,11 +36,17 @@ export const galleryBlock = defineType({
     }),
   ],
   preview: {
-    select: { images: 'images', media: 'images.0' },
-    prepare({ images, media }) {
-      const count = Array.isArray(images) ? images.length : 0;
-      const noun = count === 1 ? 'fotografia' : count < 5 ? 'fotografie' : 'fotografií';
-      return { title: 'Galéria', subtitle: `${count} ${noun}`, media };
+    select: { media: 'images.0', ...imageKeySelection },
+    prepare(selection) {
+      const keys = selection as Record<string, unknown>;
+      let count = 0;
+      while (count < MAX_COUNTED && keys[`k${count}`]) count += 1;
+      const suffix = count === MAX_COUNTED ? '+' : '';
+      return {
+        title: 'Galéria',
+        subtitle: `${count}${suffix} ${photoNoun(count)}`,
+        media: selection.media,
+      };
     },
   },
 });

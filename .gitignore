@@ -43,5 +43,8 @@ coverage/
 # misc
 *.tsbuildinfo
 
+# claude code — personal, machine-local settings
+.claude/settings.local.json
+
 # local CMS content drafts (not part of the repo)
 tmp/

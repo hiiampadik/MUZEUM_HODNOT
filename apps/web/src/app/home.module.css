@@ -111,23 +111,6 @@
   filter: contrast(0.8) brightness(0.9);
 }
 
-@media (max-width: 900px) {
-  .tiles {
-    grid-template-columns: 1fr;
-    /* Stacked tiles need more height than fits in one viewport; letting the
-       grid grow past the desktop height avoids clipping into the sections
-       below. */
-    flex: 0 0 auto;
-    grid-template-rows: none;
-    /* Stacked, the first card starts halfway down the viewport — the hero's
-       own padding-top already covers the nav, so subtract it. */
-    margin-top: calc(50svh - var(--nav-height, 8.5rem));
-  }
-  .tilesColumn .tile,
-  .introCardSolo {
-    min-height: calc(60svh - var(--space-md));
-  }
-}
 
 /* ---- Hero tile ---- */
 /* The whole tile is one interactive unit: the title link stretches (via ::after)
@@ -147,8 +130,63 @@
 }
 
 @media (max-width: 900px) {
+  .tiles {
+    grid-template-columns: 1fr;
+    /* Stacked tiles need more height than fits in one viewport; letting the
+       grid grow past the desktop height avoids clipping into the sections
+       below. */
+    flex: 0 0 auto;
+    grid-template-rows: none;
+    /* Stacked, the first card starts halfway down the viewport — the hero's
+       own padding-top already covers the nav, so subtract it. */
+    margin-top: calc(50svh - var(--nav-height, 8.5rem));
+  }
+  .tilesColumn .tile,
+  .introCardSolo {
+    min-height: unset;
+  }
+}
+
+@media (max-width: 900px) {
   .tile {
-    min-height: calc(60svh - var(--space-md));
+    min-height: unset;
+  }
+}
+
+/* Stacked in one column, a tile is as wide as the page, so its content splits
+   into two columns like .pastCard: text on the left, cover on the right. Below
+   640px it goes back to a single column, again matching .pastCard. */
+@media (max-width: 900px) and (min-width: 641px) {
+  .tile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 0;
+    padding-top: 0;
+  }
+  /* The tile's own top padding moves onto the text column, so the cover can
+     bleed to the top edge of the card. */
+  .tileHead {
+    padding-block: var(--space-md);
+  }
+  /* A tile without a cover keeps its text across the whole card. */
+  .tile:not(:has(.tileMedia)) {
+    grid-template-columns: 1fr;
+  }
+
+  /* The solo intro card splits the same way: text left, homepage cover right. */
+  .introCardSolo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+  }
+  .introCardSolo .introText {
+    padding: var(--space-md);
+  }
+  .introCardSolo:not(:has(.introMedia)) {
+    grid-template-columns: 1fr;
   }
 }
 

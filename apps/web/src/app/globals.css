@@ -106,6 +106,13 @@ select {
   /* Reserve enough space at the bottom that the whole bottom cover band
      (its dithered image) is visible below the content, with a gap above it. */
   padding-bottom: 50vw;
+
+  @media (max-width: 1200px) {
+    padding-top: clamp(220px, 50vh, none);
+  }
+  @media (max-width: 900px) {
+    padding-top: clamp(220px, 40vh, none);
+  }
 }
 
 /* Paint the page background INSIDE the shell's stacking context. The colour on

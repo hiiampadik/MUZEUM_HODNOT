@@ -16,7 +16,7 @@ export const routes = {
  */
 export const accents = {
   // home: '#3657ff',
-  home: '#ea6f47',
+  home: '#ff8359',
   exhibition: '#3b976a',
   // contact: '#D2EC57',
   contact: '#ff8359',

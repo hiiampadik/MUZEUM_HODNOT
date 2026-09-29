@@ -159,8 +159,14 @@ export const exhibition = defineType({
       of: [defineArrayMember({ type: 'namedLink' })],
     }),
     defineField({
+      name: 'exhibitingAuthors',
+      title: 'Vystavujúci autori',
+      type: 'string',
+      group: 'credits',
+    }),
+    defineField({
       name: 'contributors',
-      title: 'Ďalej sa podieľali',
+      title: 'Tím',
       type: 'array',
       group: 'credits',
       of: [defineArrayMember({ type: 'roleWithPeople' })],

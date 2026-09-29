@@ -121,7 +121,8 @@ export const exhibitionStrings = {
     materials: 'Materiály',
     fileFallback: 'Súbor',
     links: 'Odkazy',
-    contributors: 'Ďalej sa podieľali',
+    exhibitingAuthors: 'Vystavujúci autori',
+    contributors: 'Tím',
   },
   en: {
     fallbackTitle: 'Exhibition',
@@ -131,7 +132,8 @@ export const exhibitionStrings = {
     materials: 'Materials',
     fileFallback: 'File',
     links: 'Links',
-    contributors: 'Also contributed',
+    exhibitingAuthors: 'Exhibiting authors',
+    contributors: 'Team',
   },
 } satisfies Record<Locale, Record<string, string>>;
 

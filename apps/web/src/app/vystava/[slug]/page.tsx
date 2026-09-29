@@ -69,6 +69,7 @@ export default async function ExhibitionPage({
     abstract,
     materials,
     links,
+    exhibitingAuthors,
     contributors,
   } = exhibition;
 
@@ -195,6 +196,17 @@ export default async function ExhibitionPage({
               ))}
             </div>
           </div>
+        )}
+
+        {exhibitingAuthors && (
+          <section className={styles.credits}>
+            <Title as="h2" className={styles.creditsTitle}>
+              {t.exhibitingAuthors}
+            </Title>
+            <Text as="p" className={styles.metaValue}>
+              {exhibitingAuthors}
+            </Text>
+          </section>
         )}
 
         {contributors && contributors.length > 0 && (

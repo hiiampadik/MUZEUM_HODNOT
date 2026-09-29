@@ -46,9 +46,14 @@ function trimEdges(children: ReactNode): [string, ReactNode[], string] {
 
 const components: PortableTextComponents = {
   marks: {
-    link: ({ children, value }) => (
-      <Link href={toInternalHref((value as { href: string })?.href ?? '#')}>{children}</Link>
-    ),
+    link: ({ children, value }) => {
+      const { href, newTab } = (value ?? {}) as { href?: string; newTab?: boolean };
+      return (
+        <Link href={toInternalHref(href ?? '#')} target={newTab ? '_blank' : '_self'}>
+          {children}
+        </Link>
+      );
+    },
     underline: ({ children }) => <u>{children}</u>,
     strong: ({ children }) => {
       const [lead, inner, trail] = trimEdges(children);

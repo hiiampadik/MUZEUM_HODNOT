@@ -35,6 +35,14 @@ export const richTextFull = defineType({
                     .required()
                     .uri({ scheme: ['http', 'https', 'mailto', 'tel'] }),
               },
+              {
+                name: 'newTab',
+                type: 'boolean',
+                title: 'Otvoriť v novom okne',
+                description:
+                  'Ak je vypnuté, odkaz sa otvorí v tom istom okne.',
+                initialValue: false,
+              },
             ],
           },
         ],

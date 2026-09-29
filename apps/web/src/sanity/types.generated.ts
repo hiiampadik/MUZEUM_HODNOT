@@ -129,6 +129,7 @@ export type RichTextFull = Array<{
   listItem?: 'bullet';
   markDefs?: Array<{
     href?: string;
+    newTab?: boolean;
     _type: 'link';
     _key: string;
   }>;
@@ -148,6 +149,7 @@ export type RichTextBasic = Array<{
   listItem?: never;
   markDefs?: Array<{
     href?: string;
+    newTab?: boolean;
     _type: 'link';
     _key: string;
   }>;

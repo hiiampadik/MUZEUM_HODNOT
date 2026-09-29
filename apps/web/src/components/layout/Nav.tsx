@@ -77,7 +77,7 @@ export function Nav({ donateLink }: NavProps) {
       <nav className={styles.nav} aria-label={nav.ariaLabel}>
         <div ref={columnRef} className={styles.column}>
           <Link href={routes.home} className={styles.brand} aria-label={nav.homeAriaLabel}>
-            <span aria-hidden="true">{nav.brandName}</span>
+            <span aria-hidden="true" className={styles.brandLogo} />
           </Link>
 
           <Container>

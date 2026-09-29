@@ -24,14 +24,15 @@
 }
 
 /* Brand pill — always-visible link home, above the nav row. White surface with
-   the same border as the nav pills; title-size display text. Minimal vertical
-   padding keeps it roughly the same height as the other pills. */
+   the same border as the nav pills; holds the MH logotype, sized to the title
+   font so it matches the height the wordmark text used to have. Minimal
+   vertical padding keeps it roughly the same height as the other pills. */
 .brand {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 38px;
-  padding: 0.05em 30px 0.13em;
+  height: 38px;
+  padding: 0.2em 0.5em;
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-fg);
@@ -40,6 +41,18 @@
   line-height: 1;
   text-decoration: none;
   transition: filter 0.15s ease;
+}
+
+/* Logotype: height locked to one title line (what the text occupied before),
+   width follows from the SVG's own aspect ratio. Drawn as a mask so it takes
+   the pill's text color. */
+.brandLogo {
+  display: block;
+  height: 100%;
+  aspect-ratio: 835 / 65;
+  background-color: currentColor;
+  -webkit-mask: url(/MH.svg) center / contain no-repeat;
+  mask: url(/MH.svg) center / contain no-repeat;
 }
 
 .brand:focus-visible {

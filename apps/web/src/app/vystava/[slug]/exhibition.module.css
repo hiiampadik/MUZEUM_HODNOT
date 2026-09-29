@@ -83,14 +83,14 @@
   height: clamp(240px, 45vw, 472px);
   position: relative;
   overflow: hidden;
+}
 
-  &:first-child {
-    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-  }
+.photo:first-child {
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
 
-  &:last-child {
-    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-  }
+.photo:last-child {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
 .photo :global(img) {

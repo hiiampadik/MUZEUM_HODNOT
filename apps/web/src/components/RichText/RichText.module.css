@@ -22,10 +22,11 @@
   text-decoration-color: var(--accent-link);
   text-decoration-thickness: 1.2px !important;
   text-underline-offset: 0.08em;
-  @media (hover: hover) {
-    &:hover {
-      text-decoration: none;
-    }
+}
+
+@media (hover: hover) {
+  .root a:hover {
+    text-decoration: none;
   }
 }
 

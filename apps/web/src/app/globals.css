@@ -29,6 +29,16 @@ html {
   scroll-behavior: smooth;
 }
 
+/* iOS Safari boosts the font-size of small multi-line text blocks on its own
+   (WebKit text autosizing). A percentage text-size-adjust does not disable it —
+   only `none` does. Scoped to iOS via the -webkit-touch-callout probe so the
+   text-scaling accessibility setting keeps working on desktop. */
+@supports (-webkit-touch-callout: none) {
+  html {
+    -webkit-text-size-adjust: none;
+  }
+}
+
 /* Offset in-page anchors for the sticky nav. */
 :target {
   scroll-margin-top: 72px;
@@ -69,10 +79,11 @@ a {
   color: var(--accent-link);
   text-decoration: underline;
   text-decoration-color: var(--accent-link);
-  @media (hover: hover) {
-    &:hover {
-      text-decoration: none;
-    }
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration: none;
   }
 }
 

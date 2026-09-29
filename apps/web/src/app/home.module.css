@@ -405,10 +405,8 @@
 }
 
 @media (hover: hover) {
-  a.pastCard:hover {
-    img {
-      transform: scale(1.03);
-    }
+  a.pastCard:hover img {
+    transform: scale(1.03);
   }
 }
 

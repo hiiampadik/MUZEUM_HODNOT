@@ -198,6 +198,15 @@ export type TileBlock = {
   >;
 };
 
+export type GalleryBlock = {
+  _type: 'galleryBlock';
+  images?: Array<
+    {
+      _key: string;
+    } & GalleryImage
+  >;
+};
+
 export type DecorativeImage = {
   _type: 'decorativeImage';
   image?: {
@@ -213,6 +222,7 @@ export type DecorativeImage = {
     _type: 'image';
   };
   alt?: string;
+  size?: 'center' | 'text' | 'page';
 };
 
 export type HeadingBlock = {
@@ -236,6 +246,9 @@ export type PageBuilder = Array<
   | ({
       _key: string;
     } & DecorativeImage)
+  | ({
+      _key: string;
+    } & GalleryBlock)
   | ({
       _key: string;
     } & TileBlock)
@@ -266,6 +279,7 @@ export type ValueGenerator = {
   topCover?: CoverImage;
   bottomCover?: CoverImage;
   content?: PageBuilder;
+  showMap?: boolean;
   mapPoints?: Array<
     {
       _key: string;
@@ -531,6 +545,7 @@ export type AllSanitySchemaTypes =
   | CoverImage
   | MaterialsBlock
   | TileBlock
+  | GalleryBlock
   | DecorativeImage
   | HeadingBlock
   | TextBlock
@@ -1011,7 +1026,7 @@ export type CONTACT_QUERYResult =
     }
   | null;
 // Variable: METHODICAL_MATERIALS_QUERY
-// Query: *[_id == "experientialEducation"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  }  }
+// Query: *[_id == "experientialEducation"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },    _type == "galleryBlock" => { images[]{ _key,   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop, photographer } },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  }  }
 export type METHODICAL_MATERIALS_QUERYResult =
   | {
       cover: null;
@@ -1119,6 +1134,26 @@ export type METHODICAL_MATERIALS_QUERYResult =
               crop: SanityImageCrop | null;
             } | null;
             alt: string | null;
+            size: 'center' | 'page' | 'text' | null;
+          }
+        | {
+            _key: string;
+            _type: 'galleryBlock';
+            images: Array<{
+              _key: string;
+              asset: {
+                _id: string;
+                url: string | null;
+                metadata: {
+                  lqip: string | null;
+                  dimensions: SanityImageDimensions | null;
+                } | null;
+              } | null;
+              alt: string | null;
+              hotspot: SanityImageHotspot | null;
+              crop: SanityImageCrop | null;
+              photographer: string | null;
+            }> | null;
           }
         | {
             _key: string;
@@ -1164,6 +1199,7 @@ export type METHODICAL_MATERIALS_QUERYResult =
                     crop: SanityImageCrop | null;
                   } | null;
                   alt: string | null;
+                  size: 'center' | 'page' | 'text' | null;
                 }
               | {
                   _key: string;
@@ -1194,7 +1230,7 @@ export type METHODICAL_MATERIALS_QUERYResult =
     }
   | null;
 // Variable: ABOUT_PLATFORM_QUERY
-// Query: *[_id == "aboutPlatform"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  }  }
+// Query: *[_id == "aboutPlatform"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },    _type == "galleryBlock" => { images[]{ _key,   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop, photographer } },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  }  }
 export type ABOUT_PLATFORM_QUERYResult =
   | {
       cover: null;
@@ -1302,6 +1338,26 @@ export type ABOUT_PLATFORM_QUERYResult =
               crop: SanityImageCrop | null;
             } | null;
             alt: string | null;
+            size: 'center' | 'page' | 'text' | null;
+          }
+        | {
+            _key: string;
+            _type: 'galleryBlock';
+            images: Array<{
+              _key: string;
+              asset: {
+                _id: string;
+                url: string | null;
+                metadata: {
+                  lqip: string | null;
+                  dimensions: SanityImageDimensions | null;
+                } | null;
+              } | null;
+              alt: string | null;
+              hotspot: SanityImageHotspot | null;
+              crop: SanityImageCrop | null;
+              photographer: string | null;
+            }> | null;
           }
         | {
             _key: string;
@@ -1347,6 +1403,7 @@ export type ABOUT_PLATFORM_QUERYResult =
                     crop: SanityImageCrop | null;
                   } | null;
                   alt: string | null;
+                  size: 'center' | 'page' | 'text' | null;
                 }
               | {
                   _key: string;
@@ -1377,13 +1434,14 @@ export type ABOUT_PLATFORM_QUERYResult =
     }
   | null;
 // Variable: VALUE_GENERATOR_QUERY
-// Query: *[_id == "valueGenerator"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  },    mapPoints[]{      _key,      title,      location,      text,      link    }  }
+// Query: *[_id == "valueGenerator"][0]{    cover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      topCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },  bottomCover{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop },      content[]{    _key,    _type,    _type == "textBlock" => { content },    _type == "headingBlock" => { text, level },    _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },    _type == "galleryBlock" => { images[]{ _key,   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop, photographer } },    _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },    _type == "tileBlock" => {      content[]{        _key,        _type,        _type == "textBlock" => { content },        _type == "headingBlock" => { text, level },        _type == "decorativeImage" => { image{   asset->{ _id, url, metadata { lqip, dimensions } },  alt,  hotspot,  crop }, alt, size },        _type == "materialsBlock" => { materials[]{   _key,  title,  emoji,  "url": file.asset->url + "?dl=" + file.asset->originalFilename,  "extension": file.asset->extension,  "size": file.asset->size } },      }    },  },    showMap,    mapPoints[]{      _key,      title,      location,      text,      link    }  }
 export type VALUE_GENERATOR_QUERYResult =
   | {
       cover: null;
       topCover: null;
       bottomCover: null;
       content: null;
+      showMap: null;
       mapPoints: null;
     }
   | {
@@ -1427,6 +1485,7 @@ export type VALUE_GENERATOR_QUERYResult =
         crop: SanityImageCrop | null;
       } | null;
       content: null;
+      showMap: null;
       mapPoints: null;
     }
   | {
@@ -1487,6 +1546,26 @@ export type VALUE_GENERATOR_QUERYResult =
               crop: SanityImageCrop | null;
             } | null;
             alt: string | null;
+            size: 'center' | 'page' | 'text' | null;
+          }
+        | {
+            _key: string;
+            _type: 'galleryBlock';
+            images: Array<{
+              _key: string;
+              asset: {
+                _id: string;
+                url: string | null;
+                metadata: {
+                  lqip: string | null;
+                  dimensions: SanityImageDimensions | null;
+                } | null;
+              } | null;
+              alt: string | null;
+              hotspot: SanityImageHotspot | null;
+              crop: SanityImageCrop | null;
+              photographer: string | null;
+            }> | null;
           }
         | {
             _key: string;
@@ -1532,6 +1611,7 @@ export type VALUE_GENERATOR_QUERYResult =
                     crop: SanityImageCrop | null;
                   } | null;
                   alt: string | null;
+                  size: 'center' | 'page' | 'text' | null;
                 }
               | {
                   _key: string;
@@ -1559,6 +1639,7 @@ export type VALUE_GENERATOR_QUERYResult =
             > | null;
           }
       > | null;
+      showMap: null;
       mapPoints: null;
     }
   | {
@@ -1619,6 +1700,26 @@ export type VALUE_GENERATOR_QUERYResult =
               crop: SanityImageCrop | null;
             } | null;
             alt: string | null;
+            size: 'center' | 'page' | 'text' | null;
+          }
+        | {
+            _key: string;
+            _type: 'galleryBlock';
+            images: Array<{
+              _key: string;
+              asset: {
+                _id: string;
+                url: string | null;
+                metadata: {
+                  lqip: string | null;
+                  dimensions: SanityImageDimensions | null;
+                } | null;
+              } | null;
+              alt: string | null;
+              hotspot: SanityImageHotspot | null;
+              crop: SanityImageCrop | null;
+              photographer: string | null;
+            }> | null;
           }
         | {
             _key: string;
@@ -1664,6 +1765,7 @@ export type VALUE_GENERATOR_QUERYResult =
                     crop: SanityImageCrop | null;
                   } | null;
                   alt: string | null;
+                  size: 'center' | 'page' | 'text' | null;
                 }
               | {
                   _key: string;
@@ -1691,6 +1793,7 @@ export type VALUE_GENERATOR_QUERYResult =
             > | null;
           }
       > | null;
+      showMap: boolean | null;
       mapPoints: Array<{
         _key: string;
         title: string | null;
@@ -1713,8 +1816,8 @@ declare module '@sanity/client' {
     '\n  *[_type == "exhibition" && defined(slug.current) && canOpenDetail == true]{\n    "slug": slug.current,\n    _updatedAt\n  }\n': EXHIBITION_SITEMAP_QUERYResult;
     '\n  *[_type == "exhibition" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    place,\n    openingDate,\n    startDate,\n    endDate,\n    canOpenDetail,\n    foreignLanguage,\n    roles[]{ _key, role, people },\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    gallery[]{ _key, \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer },\n    abstract,\n    materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n },\n    links[]{ _key, label, emoji, href, newTab },\n    exhibitingAuthors,\n    contributors[]{ _key, role, people },\n    "metaDescription": pt::text(abstract)\n  }\n': EXHIBITION_QUERYResult;
     '\n  *[_id == "contactPage"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    phone,\n    email,\n    address,\n    administrativeInfo,\n    people[]{\n      _key,\n      name,\n      position,\n      image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n    }\n  }\n': CONTACT_QUERYResult;
-    '\n  *[_id == "experientialEducation"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n\n  }\n': METHODICAL_MATERIALS_QUERYResult;
-    '\n  *[_id == "aboutPlatform"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n\n  }\n': ABOUT_PLATFORM_QUERYResult;
-    '\n  *[_id == "valueGenerator"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n,\n    mapPoints[]{\n      _key,\n      title,\n      location,\n      text,\n      link\n    }\n  }\n': VALUE_GENERATOR_QUERYResult;
+    '\n  *[_id == "experientialEducation"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n    _type == "galleryBlock" => { images[]{ _key, \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer } },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n\n  }\n': METHODICAL_MATERIALS_QUERYResult;
+    '\n  *[_id == "aboutPlatform"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n    _type == "galleryBlock" => { images[]{ _key, \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer } },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n\n  }\n': ABOUT_PLATFORM_QUERYResult;
+    '\n  *[_id == "valueGenerator"][0]{\n    cover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n    \n  topCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n },\n  bottomCover{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }\n,\n    \n  content[]{\n    _key,\n    _type,\n    _type == "textBlock" => { content },\n    _type == "headingBlock" => { text, level },\n    _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n    _type == "galleryBlock" => { images[]{ _key, \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n, photographer } },\n    _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n    _type == "tileBlock" => {\n      content[]{\n        _key,\n        _type,\n        _type == "textBlock" => { content },\n        _type == "headingBlock" => { text, level },\n        _type == "decorativeImage" => { image{ \n  asset->{ _id, url, metadata { lqip, dimensions } },\n  alt,\n  hotspot,\n  crop\n }, alt, size },\n        _type == "materialsBlock" => { materials[]{ \n  _key,\n  title,\n  emoji,\n  "url": file.asset->url + "?dl=" + file.asset->originalFilename,\n  "extension": file.asset->extension,\n  "size": file.asset->size\n } },\n      }\n    },\n  }\n,\n    showMap,\n    mapPoints[]{\n      _key,\n      title,\n      location,\n      text,\n      link\n    }\n  }\n': VALUE_GENERATOR_QUERYResult;
   }
 }

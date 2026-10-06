@@ -193,6 +193,7 @@ export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `
     ${coverFields},
     ${edgeCoverFields},
     ${pageBuilderFields},
+    showMap,
     mapPoints[]{
       _key,
       title,

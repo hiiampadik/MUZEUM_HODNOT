@@ -25,6 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ValueGeneratorPage() {
   const page = await client.fetch(VALUE_GENERATOR_QUERY);
   const points = page?.mapPoints ?? [];
+  // Unset value means "show".
+  const showMap = page?.showMap !== false;
 
   return (
     <main className="page-main" style={{ '--accent': accents.valueGenerator } as CSSProperties}>
@@ -39,7 +41,7 @@ export default async function ValueGeneratorPage() {
       {/* Full width: the builder constrains each block to its own layout width. */}
       <PageBuilder content={page?.content} />
 
-      {points.length > 0 && (
+      {showMap && points.length > 0 && (
         <Container>
           <ValueMap points={points} />
         </Container>

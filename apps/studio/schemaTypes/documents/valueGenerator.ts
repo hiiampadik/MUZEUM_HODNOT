@@ -35,6 +35,14 @@ export const valueGenerator = defineType({
       type: 'pageBuilder',
     }),
     defineField({
+      name: 'showMap',
+      title: 'Zobraziť mapu',
+      type: 'boolean',
+      initialValue: true,
+      description:
+        'Keď je vypnuté, mapa sa na stránke nezobrazí. Nevyplnená hodnota znamená zobraziť.',
+    }),
+    defineField({
       name: 'mapPoints',
       title: 'Body na mape',
       type: 'array',

@@ -10,6 +10,7 @@ import { siteUrl } from '@/sanity/env';
 import { site } from '@/lib/strings';
 
 const description = site.description;
+const defaultOgImage = `${siteUrl}/icon.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -26,8 +27,22 @@ export const metadata: Metadata = {
     title: site.name,
     description,
     url: siteUrl,
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: site.name,
+        type: 'image/jpeg',
+      },
+    ],
   },
-  twitter: { card: 'summary_large_image' },
+  twitter: {
+    card: 'summary_large_image',
+    title: site.name,
+    description,
+    images: [defaultOgImage],
+  },
 };
 
 export default async function RootLayout({

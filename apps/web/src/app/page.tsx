@@ -7,6 +7,7 @@ import type {SanityImageValue} from '@/components/SanityImage/SanityImage';
 import {SanityImage} from '@/components/SanityImage/SanityImage';
 import {siteUrl} from '@/sanity/env';
 import {pageMetadata} from '@/lib/metadata';
+import {generateOrganizationSchema} from '@/lib/schema';
 import {Container} from '@/components/Container/Container';
 import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {CoverImage} from '@/components/CoverImage/CoverImage';
@@ -48,19 +49,25 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: site.name,
-  url: siteUrl,
-};
-
 export default async function HomePage() {
   const [home, tileCovers, exhibitions] = await Promise.all([
     client.fetch(HOME_QUERY),
     client.fetch(HOME_TILE_COVERS_QUERY),
     client.fetch(EXHIBITIONS_QUERY),
   ]);
+
+  const homeCoverUrl = ogImageUrl(home?.cover) ?? `${siteUrl}/icon.jpg`;
+  const jsonLd = [
+    generateOrganizationSchema(undefined, undefined, [siteUrl], `${siteUrl}/icon.jpg`),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: site.name,
+      url: siteUrl,
+      description: home?.metaDescription || site.description,
+      image: homeCoverUrl,
+    },
+  ];
 
   const { active, upcoming, past } = groupExhibitions(exhibitions);
 

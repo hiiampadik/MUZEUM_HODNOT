@@ -12,10 +12,10 @@ import { Heading, Title, Label, Text } from '@/components/Typography/Typography'
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
 import { ogImageUrl } from '@/sanity/lib/og';
+import { urlFor } from '@/sanity/lib/image';
 import { formatDate, formatDateRange } from '@/lib/format';
 import { categorize } from '@/lib/exhibitions';
-import { getExhibitionStrings, type Locale } from '@/lib/strings';
-import { site, site as siteStrings } from '@/lib/strings';
+import { getExhibitionStrings, type Locale, site } from '@/lib/strings';
 import { siteUrl } from '@/sanity/env';
 import styles from './exhibition.module.css';
 
@@ -80,31 +80,74 @@ export default async function ExhibitionPage({
   const coverImageUrl = ogImageUrl(cover) ?? `${siteUrl}/icon.jpg`;
   const exhibitionUrl = new URL(routes.exhibition(slug), siteUrl).toString();
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: title,
-    url: exhibitionUrl,
-    ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
-    ...(coverImageUrl && { image: coverImageUrl }),
-    ...(startDate && { startDate }),
-    ...(endDate && { endDate }),
-    ...(place && {
-      location: {
-        '@type': 'Place',
-        name: place,
-        address: {
-          '@type': 'PostalAddress',
-          addressCountry: 'SK',
-        },
+  const galleryJsonLd = (gallery ?? []).map((photo, index) => {
+    const contentUrl = photo?.asset?._id
+      ? urlFor({ asset: { _ref: photo.asset._id } }).width(1200).url()
+      : coverImageUrl;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ImageObject',
+      position: index + 1,
+      name: title || 'Fotografie výstavy',
+      contentUrl,
+      url: contentUrl,
+      isPartOf: {
+        '@type': 'Event',
+        name: title,
+        url: exhibitionUrl,
       },
-    }),
-    organizer: {
-      '@type': 'Organization',
-      name: siteStrings.name,
-      url: siteUrl,
-    },
+    };
+  });
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Domov',
+        item: new URL(routes.home, siteUrl).toString(),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: title,
+        item: exhibitionUrl,
+      },
+    ],
   };
+
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name: title,
+      url: exhibitionUrl,
+      ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
+      ...(coverImageUrl && { image: coverImageUrl }),
+      ...(startDate && { startDate }),
+      ...(endDate && { endDate }),
+      ...(place && {
+        location: {
+          '@type': 'Place',
+          name: place,
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'SK',
+          },
+        },
+      }),
+      organizer: {
+        '@type': 'Organization',
+        name: site.name,
+        url: siteUrl,
+      },
+    },
+    breadcrumbJsonLd,
+    ...galleryJsonLd,
+  ];
 
   return (
     <main

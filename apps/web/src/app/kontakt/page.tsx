@@ -10,8 +10,9 @@ import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
-import { pages, contact as contactStrings } from '@/lib/strings';
+import { pages, contact as contactStrings, site } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
+import { siteUrl } from '@/sanity/env';
 import styles from './contact.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,9 +26,38 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const contact = await client.fetch(CONTACT_QUERY);
+  const contactUrl = new URL(routes.contact, siteUrl).toString();
+  const coverImageUrl = ogImageUrl(contact?.cover) ?? `${siteUrl}/icon.jpg`;
+
+  const contactPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: pages.contact,
+    url: contactUrl,
+    image: coverImageUrl,
+    description: 'Kontakt - Múzeum hodnôt',
+    mainEntity: {
+      '@type': 'Organization',
+      name: site.name,
+      url: siteUrl,
+      ...(contact?.phone && { telephone: contact.phone }),
+      ...(contact?.email && { email: contact.email }),
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'Customer Service',
+        ...(contact?.phone && { telephone: contact.phone }),
+        ...(contact?.email && { email: contact.email }),
+      },
+    },
+  };
 
   return (
     <main className="page-main" style={{ '--accent': accents.contact } as CSSProperties}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJsonLd) }}
+      />
+
       {contact?.topCover && (
         <CoverImage value={contact.topCover} placement="top" priority background className="cover-bg-top" />
       )}

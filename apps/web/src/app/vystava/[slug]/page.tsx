@@ -15,6 +15,8 @@ import { ogImageUrl } from '@/sanity/lib/og';
 import { formatDate, formatDateRange } from '@/lib/format';
 import { categorize } from '@/lib/exhibitions';
 import { getExhibitionStrings, type Locale } from '@/lib/strings';
+import { site, site as siteStrings } from '@/lib/strings';
+import { siteUrl } from '@/sanity/env';
 import styles from './exhibition.module.css';
 
 type Params = { slug: string };
@@ -75,16 +77,33 @@ export default async function ExhibitionPage({
   const locale: Locale = exhibition.foreignLanguage ? 'en' : 'sk';
   const t = getExhibitionStrings(locale);
   const isActive = categorize({ startDate, endDate }) === 'active';
+  const coverImageUrl = ogImageUrl(cover) ?? `${siteUrl}/icon.jpg`;
+  const exhibitionUrl = new URL(routes.exhibition(slug), siteUrl).toString();
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ExhibitionEvent',
+    '@type': 'Event',
     name: title,
+    url: exhibitionUrl,
+    ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
+    ...(coverImageUrl && { image: coverImageUrl }),
     ...(startDate && { startDate }),
     ...(endDate && { endDate }),
-    ...(place && { location: { '@type': 'Place', name: place } }),
-    ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
-    ...(ogImageUrl(cover) && { image: ogImageUrl(cover) }),
+    ...(place && {
+      location: {
+        '@type': 'Place',
+        name: place,
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'SK',
+        },
+      },
+    }),
+    organizer: {
+      '@type': 'Organization',
+      name: siteStrings.name,
+      url: siteUrl,
+    },
   };
 
   return (

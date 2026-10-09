@@ -15,9 +15,12 @@ export type MapPointData = {
   text?: readonly unknown[] | null;
   link?: {
     label?: string | null;
+    emoji?: string | null;
     href?: string | null;
     newTab?: boolean | null;
   } | null;
+  /** Fundraising goal in EUR (school list under the map). */
+  goal?: number | null;
 };
 
 /**

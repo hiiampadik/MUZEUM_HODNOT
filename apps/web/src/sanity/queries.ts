@@ -199,7 +199,8 @@ export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `
       title,
       location,
       text,
-      link
+      link,
+      goal
     }
   }
 `);

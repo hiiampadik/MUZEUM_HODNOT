@@ -89,6 +89,16 @@ export const pages = {
   aboutPlatform: 'O platforme',
 } as const;
 
+/** School list under the value-generator map. */
+export const schoolList = {
+  title: 'Školy',
+  donated: 'Zatiaľ ste spolu darovali',
+  goal: 'Potrebujeme',
+  joinOn: 'Zapojte sa na',
+  /** Progress bar aria-label. */
+  progress: 'Priebeh zbierky',
+} as const;
+
 /** Contact page field labels. */
 export const contact = {
   phone: 'Telefón',

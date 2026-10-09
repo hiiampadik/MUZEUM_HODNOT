@@ -3,8 +3,9 @@ import { PinIcon } from '@sanity/icons';
 import { GeopointMapInput } from '../components/GeopointMapInput';
 
 /**
- * A point on the Generátor hodnôt map.
+ * A point on the Generátor hodnôt map (a school).
  * Popover content: title, text block, link (shown as a pill). Position via geopoint.
+ * The same points feed the school list under the map (with the fundraising goal).
  */
 export const mapPoint = defineType({
   name: 'mapPoint',
@@ -37,6 +38,16 @@ export const mapPoint = defineType({
       name: 'link',
       title: 'Odkaz',
       type: 'namedLink',
+      description: 'V zozname škôl pod mapou sa zobrazí ako „Zapojte sa na“.',
+    }),
+    defineField({
+      name: 'goal',
+      title: 'Potrebujeme (€)',
+      type: 'number',
+      description:
+        'Cieľová suma zbierky v eurách. Zobrazí sa v zozname škôl pod mapou; ak je prázdna, ' +
+        'suma ani priebeh zbierky sa nezobrazia.',
+      validation: (rule) => rule.min(0).integer(),
     }),
   ],
   preview: {

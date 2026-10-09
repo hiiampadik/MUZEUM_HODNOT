@@ -18,6 +18,22 @@
   text-decoration-color: var(--accent);
   text-decoration-thickness: 2.4px;
   text-underline-offset: 0.16em;
+  /* Settles in under the title just after the title itself appears (follows
+     the enclosing `.reveal` block's --reveal-order). */
+  animation: underlineIn var(--duration-reveal) var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger) + var(--underline-delay));
+}
+
+@keyframes underlineIn {
+  from {
+    text-decoration-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleUnderline {
+    animation: none;
+  }
 }
 
 .label {

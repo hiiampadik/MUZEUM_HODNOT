@@ -9,6 +9,7 @@ import { ValueMap } from '@/components/ValueMap/ValueMap';
 import { Heading, Title } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { revealOrder } from '@/lib/motion';
 import { breadcrumbSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { pages } from '@/lib/strings';
@@ -39,14 +40,14 @@ export default async function ValueGeneratorPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.titleLeft}>{pages.valueGenerator}</Heading>
+        <Heading className={`${builder.titleLeft} reveal`} style={revealOrder(1)}>{pages.valueGenerator}</Heading>
       </Container>
 
       {/* Full width: the builder constrains each block to its own layout width. */}
       <PageBuilder content={page?.content} />
 
       {showMap && points.length > 0 && (
-        <Container>
+        <Container className="reveal">
           <ValueMap points={points} />
         </Container>
       )}

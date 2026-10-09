@@ -17,6 +17,7 @@ import {Label, Text, Title, Underline} from '@/components/Typography/Typography'
 import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
 import {accents, routes} from '@/lib/routes';
 import {formatDateRange} from '@/lib/format';
+import {revealOrder} from '@/lib/motion';
 import {home as homeStrings, site} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
 import styles from './home.module.css';
@@ -172,13 +173,14 @@ export default async function HomePage() {
             <div className={styles.tilesColumn}>
               {home?.intro && (
                 <div
-                  className={`${styles.introCard} ${exhibitionTile ? '' : styles.introCardSolo}`}
+                  className={`${styles.introCard} ${exhibitionTile ? '' : styles.introCardSolo} reveal`}
+                  style={revealOrder(1)}
                 >
                   <div className={styles.introText}>
                     <IntroBubble value={home.intro} />
                   </div>
                   {!exhibitionTile && home?.cover?.asset?._id && (
-                    <div className={styles.introMedia}>
+                    <div className={`${styles.introMedia} reveal-media`}>
                       <SanityImage
                         value={home.cover}
                         width={700}
@@ -188,10 +190,11 @@ export default async function HomePage() {
                   )}
                 </div>
               )}
-              {exhibitionTile && <HeroTile tile={exhibitionTile} />}
+              {exhibitionTile && <HeroTile tile={exhibitionTile} order={2} />}
             </div>
-            {tiles.map((tile) => (
-              <HeroTile key={tile.key} tile={tile} />
+            {/* Entrance order follows the columns, left to right. */}
+            {tiles.map((tile, i) => (
+              <HeroTile key={tile.key} tile={tile} order={i + 3} />
             ))}
           </div>
         </Container>
@@ -205,7 +208,7 @@ export default async function HomePage() {
           <Title
             as="h2"
             underline
-            className={styles.sectionTitle}
+            className={`${styles.sectionTitle} reveal`}
             style={{ '--accent': accents.exhibition } as CSSProperties}
           >
             {homeStrings.upcoming}
@@ -225,7 +228,7 @@ export default async function HomePage() {
           <Title
             as="h2"
             underline
-            className={styles.sectionTitle}
+            className={`${styles.sectionTitle} reveal`}
             style={{ '--accent': accents.exhibition } as CSSProperties}
           >
             {homeStrings.past}
@@ -246,9 +249,12 @@ export default async function HomePage() {
 }
 
 /** One hero tile: eyebrow label, one or more linked entries, and its cover. */
-function HeroTile({ tile }: { tile: Tile }) {
+function HeroTile({ tile, order }: { tile: Tile; order: number }) {
   return (
-    <article className={`${styles.tile} ${tile.stretch ? styles.tileStretch : ''}`}>
+    <article
+      className={`${styles.tile} ${tile.stretch ? styles.tileStretch : ''} reveal`}
+      style={revealOrder(order)}
+    >
       <div className={styles.tileHead}>
         <Label>{tile.eyebrow}</Label>
         {tile.entries.map((entry) => (
@@ -270,7 +276,7 @@ function HeroTile({ tile }: { tile: Tile }) {
       </div>
       {tile.image?.asset?._id && (
         <div
-          className={styles.tileMedia}
+          className={`${styles.tileMedia} reveal-media`}
           style={{ '--accent': tile.entries[0]?.accent } as CSSProperties}
         >
           <SanityImage value={tile.image} width={700} sizes="(max-width: 900px) 100vw, 400px" />
@@ -285,7 +291,7 @@ function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accen
   const place = exhibition.place;
   const blurb = exhibition.summary;
   return (
-    <div className={styles.upcomingRow} style={{ '--accent': accent } as CSSProperties}>
+    <div className={`${styles.upcomingRow} reveal`} style={{ '--accent': accent } as CSSProperties}>
       <div className={styles.upcomingRowTop}>
         {year && <Label as="p">{year}</Label>}
         {place && <Label as="p">{place}</Label>}
@@ -338,7 +344,7 @@ function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: 
         )}
       </div>
       {cover?.asset?._id && (
-        <div className={styles.pastMedia}>
+        <div className={`${styles.pastMedia} reveal-media`}>
           <SanityImage value={cover} width={800} sizes="(max-width: 640px) 100vw, 50vw" />
         </div>
       )}
@@ -349,13 +355,13 @@ function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: 
 
   if (canOpenDetail && slug) {
     return (
-      <Link href={routes.exhibition(slug)} className={styles.pastCard} style={style}>
+      <Link href={routes.exhibition(slug)} className={`${styles.pastCard} reveal`} style={style}>
         {body}
       </Link>
     );
   }
   return (
-    <div className={styles.pastCard} style={style}>
+    <div className={`${styles.pastCard} reveal`} style={style}>
       {body}
     </div>
   );

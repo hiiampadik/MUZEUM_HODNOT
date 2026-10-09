@@ -17,19 +17,52 @@
  */
 
 .emoji {
-  display: inline-flex;
-  justify-content: center;
+  /* Grid with a single cell: the emoji glyph and the current-page dot sit on
+     top of each other, so they can cross-fade without moving anything. */
+  display: inline-grid;
+  place-items: center;
   flex: none;
   /* Fixed footprint: reserves space + acts as the gap before the label. */
   width: 1.5em;
   opacity: 1;
   transition: opacity 0.2s ease;
-  /* Safari paints native color-emoji glyphs without a compositing layer, so an
-     opacity transition on them jumps 1→0 instead of fading. Promoting the span
-     to its own GPU layer makes the opacity interpolate smoothly. */
+}
+
+/* Safari paints native color-emoji glyphs without a compositing layer, so an
+   opacity transition on them jumps 1→0 instead of fading. Promoting the spans
+   to their own GPU layer makes the opacity interpolate smoothly. */
+.emoji,
+.glyph {
   will-change: opacity;
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
+}
+
+/* Current-page marker: a dot as tall as a capital letter of the label, shown
+   in place of the emoji (see Pill). Inside `.emoji`, it hides on hover like the
+   emoji and comes back once the pointer leaves — e.g. right after clicking
+   through to the page. Leaving the page cross-fades the dot back to the emoji. */
+.glyph,
+.dot {
+  grid-area: 1 / 1;
+  transition: opacity var(--duration-crossfade) ease;
+}
+
+.dot {
+  width: 0.7em; /* fallback ≈ cap height of Geist Mono */
+  width: 1cap;
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  background: var(--color-fg);
+  opacity: 0;
+}
+
+.wrap[aria-current='page'] .glyph {
+  opacity: 0;
+}
+
+.wrap[aria-current='page'] .dot {
+  opacity: 1;
 }
 
 .label {

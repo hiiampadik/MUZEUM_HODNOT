@@ -107,6 +107,75 @@ select {
   }
 }
 
+/* ---- Reveal: content rising into place on load and on scroll ----
+   Put `.reveal` on a block. It plays on first paint (pure CSS, so no-JS and
+   prerendered HTML animate too, without a flash). After hydration
+   RevealObserver hides the blocks that are still below the fold
+   (`.reveal-pending`) and replays the animation as each one scrolls into view.
+   Order: `--reveal-order` (an integer) staggers blocks by --reveal-stagger —
+   set inline for the first screen, set by RevealObserver for scroll batches.
+   Don't nest `.reveal` blocks. */
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance));
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes media-settle {
+  from {
+    transform: scale(var(--media-settle-scale));
+  }
+}
+
+/* Fill mode `backwards` only: once done the block falls back to its own styles,
+   so hover transforms/transitions keep working. */
+.reveal {
+  animation: reveal-rise var(--duration-reveal) var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
+}
+
+/* Variant for full-bleed / absolutely positioned layers that must not move. */
+.reveal--fade {
+  animation-name: reveal-fade;
+}
+
+/* Images inside a frame with overflow clipping: a slow zoom-out as they appear. */
+.reveal-media img {
+  animation: media-settle var(--duration-media) var(--ease-out) backwards;
+  animation-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
+}
+
+/* Waiting below the fold. Dropping `animation` here (also on descendants)
+   restarts every animation in the block once the class is removed. */
+.reveal-pending {
+  opacity: 0;
+}
+
+.reveal-pending,
+.reveal-pending * {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-media img {
+    animation: none !important;
+  }
+}
+
+@media print {
+  .reveal-pending {
+    opacity: 1;
+  }
+}
+
 /* Page shell: establishes a stacking context so background covers sit behind
    content, and reserves space at the top so content overlaps the fading cover. */
 .page-main {

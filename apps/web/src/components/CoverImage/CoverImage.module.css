@@ -40,7 +40,7 @@
      with the page background lets the light areas drop out so the dither melts
      into the page (no plus-darker). */
   mix-blend-mode: multiply;
-  animation: coverFadeIn 0.7s ease both;
+  animation: coverFadeIn var(--duration-media) var(--ease-out) both;
 }
 
 @keyframes coverFadeIn {

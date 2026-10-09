@@ -171,8 +171,46 @@
   }
 }
 
+/* Overlay links rise in one after another (--i set inline per pill). */
+.overlayLinks > * {
+  animation: navRise var(--duration-reveal) var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 50ms + 60ms);
+}
+
+@keyframes navRise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-sm));
+  }
+}
+
+/* ---- First load ----
+   The nav lives in the root layout, so this plays once per visit, not on
+   every client navigation. Brand first, then the pills left to right. */
+.brand,
+.inner > *,
+.mobileMenu > * {
+  animation: navDrop var(--duration-reveal) var(--ease-out) backwards;
+}
+
+.inner > *,
+.mobileMenu > * {
+  animation-delay: calc(var(--i, 0) * 50ms + 80ms);
+}
+
+@keyframes navDrop {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2xs)));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .overlay {
+  .overlay,
+  .overlayLinks > *,
+  .brand,
+  .inner > *,
+  .mobileMenu > * {
     animation: none;
   }
 }

@@ -80,7 +80,7 @@ export function Footer({ settings, contact }: FooterProps) {
       <Container>
         <div className={styles.footerInner}>
           {/* Contact, social links + administrative info — sourced from the Contact page */}
-          <div className={styles.row}>
+          <div className={`${styles.row} reveal`}>
             <div>
               <Title as="h2" className={styles.heading}>
                 {footer.contact}
@@ -140,7 +140,7 @@ export function Footer({ settings, contact }: FooterProps) {
 
           </div>
 
-          <div className={styles.row}>
+          <div className={`${styles.row} reveal`}>
             {/* Partners — Generátor hodnôt */}
             {hasValuesPartners && (
               <div className={styles.columnPartners}>

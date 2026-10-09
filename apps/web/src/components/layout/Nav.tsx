@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Pill } from '../Pill/Pill';
 import { Link } from '../Link/Link';
@@ -23,6 +23,13 @@ const items = [
   { href: routes.methodicalMaterials, label: nav.methodicalMaterials, emoji: '📚' },
   { href: routes.contact, label: nav.contact, emoji: '🤹' },
 ];
+
+/** Static export runs with trailingSlash, so the pathname may end in "/". */
+const isCurrentPath = (pathname: string, href: string) =>
+  pathname.replace(/\/$/, '') === href;
+
+/** Position in the nav's entrance stagger (see Nav.module.css). */
+const staggerIndex = (i: number) => ({ '--i': i }) as CSSProperties;
 
 export function Nav({ donateLink }: NavProps) {
   const pathname = usePathname();
@@ -83,14 +90,15 @@ export function Nav({ donateLink }: NavProps) {
           <Container>
             {/* Desktop: full pill row. Hidden on phones (see .inner media query). */}
             <div className={styles.inner}>
-              {items.map((item) => (
+              {items.map((item, i) => (
                 <Pill
                   key={item.href}
                   href={item.href}
                   variant="surface"
                   size="lg"
                   emoji={item.emoji}
-                  aria-current={pathname === item.href ? 'page' : undefined}
+                  style={staggerIndex(i)}
+                  aria-current={isCurrentPath(pathname, item.href) ? 'page' : undefined}
                 >
                   {item.label}
                 </Pill>
@@ -103,6 +111,7 @@ export function Nav({ donateLink }: NavProps) {
                   variant="surface"
                   size="lg"
                   emoji="💝"
+                  style={staggerIndex(items.length)}
                 >
                   {donateLink.label || nav.donateFallback}
                 </Pill>
@@ -150,14 +159,15 @@ export function Nav({ donateLink }: NavProps) {
           </button>
 
           <div className={styles.overlayLinks}>
-            {items.map((item) => (
+            {items.map((item, i) => (
               <Pill
                 key={item.href}
                 href={item.href}
                 variant="surface"
                 size="lg"
                 emoji={item.emoji}
-                aria-current={pathname === item.href ? 'page' : undefined}
+                style={staggerIndex(i)}
+                aria-current={isCurrentPath(pathname, item.href) ? 'page' : undefined}
               >
                 {item.label}
               </Pill>
@@ -170,6 +180,7 @@ export function Nav({ donateLink }: NavProps) {
                 variant="surface"
                 size="lg"
                 emoji="💝"
+                style={staggerIndex(items.length)}
               >
                 {donateLink.label || nav.donateFallback}
               </Pill>

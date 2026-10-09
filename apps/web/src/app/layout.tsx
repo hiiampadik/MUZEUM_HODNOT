@@ -6,6 +6,7 @@ import { client } from '@/sanity/lib/client';
 import { SETTINGS_QUERY, CONTACT_QUERY } from '@/sanity/queries';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
+import { RevealObserver } from '@/components/Reveal/RevealObserver';
 import { siteUrl } from '@/sanity/env';
 import { site } from '@/lib/strings';
 import { defaultOgImage } from '@/lib/metadata';
@@ -67,6 +68,7 @@ export default async function RootLayout({
           {children}
         </div>
         <Footer settings={settings} contact={contact} />
+        <RevealObserver />
       </body>
     </html>
   );

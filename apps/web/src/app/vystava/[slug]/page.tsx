@@ -11,6 +11,7 @@ import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { revealOrder } from '@/lib/motion';
 import { breadcrumbSchema, exhibitionEventSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { ogImageUrl } from '@/sanity/lib/og';
@@ -121,13 +122,13 @@ export default async function ExhibitionPage({
       )}
 
       <Container width="content">
-        <header className={styles.header}>
+        <header className={`${styles.header} reveal`} style={revealOrder(1)}>
           {place && <Label>{place}</Label>}
           <Heading className={styles.headerTitle}>{title}</Heading>
           {isActive && <span className={styles.tag}>{t.current}</span>}
         </header>
 
-        <dl className={styles.meta}>
+        <dl className={`${styles.meta} reveal`} style={revealOrder(2)}>
           {(startDate || endDate) && (
             <div className={styles.metaItem}>
               <Label as="dt">{t.duration}</Label>
@@ -156,16 +157,16 @@ export default async function ExhibitionPage({
       </Container>
 
       {gallery && gallery.length > 0 && (
-        <Container width="full" className={styles.noPadding}>
+        <Container width="full" className={`${styles.noPadding} reveal`}>
           <Gallery images={gallery} />
         </Container>
       )}
 
       <Container width="narrow">
-        {abstract && <RichText value={abstract} className={styles.abstract} />}
+        {abstract && <RichText value={abstract} className={`${styles.abstract} reveal`} />}
 
         {materials && materials.length > 0 && (
-          <div className={styles.attach}>
+          <div className={`${styles.attach} reveal`}>
             <Title as="h2" className={styles.attachTitle}>
               {t.materials}
             </Title>
@@ -188,7 +189,7 @@ export default async function ExhibitionPage({
         )}
 
         {links && links.length > 0 && (
-          <div className={styles.links}>
+          <div className={`${styles.links} reveal`}>
             <Title as="h2" className={styles.attachTitle}>
               {t.links}
             </Title>
@@ -209,7 +210,7 @@ export default async function ExhibitionPage({
         )}
 
         {exhibitingAuthors && (
-          <section className={styles.credits}>
+          <section className={`${styles.credits} reveal`}>
             <Title as="h2" className={styles.creditsTitle}>
               {t.exhibitingAuthors}
             </Title>
@@ -220,7 +221,7 @@ export default async function ExhibitionPage({
         )}
 
         {contributors && contributors.length > 0 && (
-          <section className={styles.credits}>
+          <section className={`${styles.credits} reveal`}>
             <Title as="h2" className={styles.creditsTitle}>
               {t.contributors}
             </Title>

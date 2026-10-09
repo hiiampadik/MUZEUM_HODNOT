@@ -71,6 +71,19 @@
   --letter-spacing-label: -0.02em; /* ≈ -0.28px @ 14px */
   --letter-spacing-value: 0.02em; /* uppercase meta/name values */
 
+  /* Motion — load / scroll reveals (see the reveal system in globals.css).
+     TODO: tune once motion is reviewed with design. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* soft deceleration (≈ easeOutQuint) */
+  --duration-fast: 0.2s; /* small UI feedback */
+  --duration-crossfade: 0.4s; /* swapping one state for another in place */
+  --duration-reveal: 0.8s; /* content rising into place */
+  --duration-media: 1.4s; /* images settling inside their frame */
+  --reveal-distance: var(--space-md); /* how far content rises */
+  --reveal-stagger: 80ms; /* delay between consecutive items */
+  --reveal-stagger-hero: 180ms; /* homepage hero cards */
+  --underline-delay: 0.25s; /* accent underline follows its title */
+  --media-settle-scale: 1.06;
+
   --text-bg: linear-gradient(transparent 2%, rgb(230 225 223 / 0.7) 2%, rgb(235 230 228 / 0.7) 98%, transparent 98%);
 }
 

@@ -19,10 +19,19 @@
      that jump is never visible — the hero appears once, already in its final
      position. */
   visibility: hidden;
+  /* The hero cards enter one by one with more air between them than the rest
+     of the page (also spaces out their images and underlines). */
+  --reveal-stagger: var(--reveal-stagger-hero);
 }
 
 :global(.nav-measured) .hero {
   visibility: visible;
+}
+
+/* The hero's entrance (`.reveal` on the cards) must not play out while the hero
+   is still hidden above — hold it until the hero actually appears. */
+:global(html:not(.nav-measured)) .hero * {
+  animation-play-state: paused;
 }
 
 /* Side by side, the tiles must never push past the fold: cap the hero at the

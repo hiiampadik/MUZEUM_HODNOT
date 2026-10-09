@@ -38,6 +38,9 @@ export function CoverImage({
         styles.cover,
         styles[placement],
         background && styles.background,
+        // The bottom cover sits far down the page: fade it in when it scrolls
+        // into view instead of on load (see `.reveal` in globals.css).
+        placement === 'bottom' && 'reveal reveal--fade',
         className,
       ]
         .filter(Boolean)

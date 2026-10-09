@@ -5,6 +5,7 @@ import { Gallery, type GalleryPhoto } from '../Gallery/Gallery';
 import { Title } from '../Typography/Typography';
 import { Pill } from '../Pill/Pill';
 import { common } from '@/lib/strings';
+import { revealOrder } from '@/lib/motion';
 import styles from './PageBuilder.module.css';
 
 type MaterialItem = {
@@ -51,33 +52,44 @@ function MaterialPills({ items }: { items: readonly MaterialItem[] }) {
   );
 }
 
+/** Entrance order of the first block: right after the page heading (order 1). */
+const FIRST_BLOCK_ORDER = 2;
+
 /**
  * Wraps a top-level block in its layout width. Nested blocks (inside a tile)
  * skip the wrapper — the tile already constrains them. The data attributes
- * drive the sibling spacing rules in the stylesheet.
+ * drive the sibling spacing rules in the stylesheet. Each slot is one `.reveal`
+ * block; `index` places it in the first-paint stagger.
  */
 function BlockSlot({
   slot,
   type,
   sub,
+  index,
   className,
   children,
 }: {
   slot: Slot;
   type: string;
   sub?: boolean;
+  index: number;
   className?: string;
   children: ReactNode;
 }) {
-  const classNames = [styles[slot], className].filter(Boolean).join(' ');
+  const classNames = [styles[slot], 'reveal', className].filter(Boolean).join(' ');
   return (
-    <div className={classNames} data-block={type} data-sub={sub ? '' : undefined}>
+    <div
+      className={classNames}
+      style={revealOrder(FIRST_BLOCK_ORDER + index)}
+      data-block={type}
+      data-sub={sub ? '' : undefined}
+    >
       {children}
     </div>
   );
 }
 
-function renderBlock(block: Block, nested = false) {
+function renderBlock(block: Block, nested = false, index = 0) {
   switch (block._type) {
     case 'textBlock': {
       const body = (
@@ -86,7 +98,7 @@ function renderBlock(block: Block, nested = false) {
       return nested ? (
         body
       ) : (
-        <BlockSlot key={block._key} slot="narrow" type={block._type}>
+        <BlockSlot key={block._key} index={index} slot="narrow" type={block._type}>
           {body}
         </BlockSlot>
       );
@@ -110,7 +122,7 @@ function renderBlock(block: Block, nested = false) {
       return nested ? (
         heading
       ) : (
-        <BlockSlot key={block._key} slot="narrow" type={block._type} sub={isSub}>
+        <BlockSlot key={block._key} index={index} slot="narrow" type={block._type} sub={isSub}>
           {heading}
         </BlockSlot>
       );
@@ -139,6 +151,7 @@ function renderBlock(block: Block, nested = false) {
       return (
         <BlockSlot
           key={block._key}
+          index={index}
           slot={size === 'page' ? 'pageWide' : 'narrow'}
           type={block._type}
         >
@@ -150,7 +163,7 @@ function renderBlock(block: Block, nested = false) {
     case 'galleryBlock':
       // Nested galleries are not offered in the Studio (tiles exclude the block).
       return (
-        <BlockSlot key={block._key} slot="fullBleed" type={block._type}>
+        <BlockSlot key={block._key} index={index} slot="fullBleed" type={block._type}>
           <Gallery images={block.images} />
         </BlockSlot>
       );
@@ -160,7 +173,7 @@ function renderBlock(block: Block, nested = false) {
       return nested ? (
         pills
       ) : (
-        <BlockSlot key={block._key} slot="narrow" type={block._type} className={styles.pillsSlot}>
+        <BlockSlot key={block._key} index={index} slot="narrow" type={block._type} className={styles.pillsSlot}>
           {pills}
         </BlockSlot>
       );
@@ -169,7 +182,7 @@ function renderBlock(block: Block, nested = false) {
     case 'tileBlock': {
       const inner = Array.isArray(block.content) ? (block.content as Block[]) : [];
       return (
-        <BlockSlot key={block._key} slot="narrow" type={block._type}>
+        <BlockSlot key={block._key} index={index} slot="narrow" type={block._type}>
           <div className={styles.card}>{inner.map((b) => renderBlock(b, true))}</div>
         </BlockSlot>
       );
@@ -182,5 +195,5 @@ function renderBlock(block: Block, nested = false) {
 
 export function PageBuilder({ content }: { content?: readonly Block[] | null }) {
   if (!content || content.length === 0) return null;
-  return <div className={styles.builder}>{content.map((b) => renderBlock(b))}</div>;
+  return <div className={styles.builder}>{content.map((b, i) => renderBlock(b, false, i))}</div>;
 }

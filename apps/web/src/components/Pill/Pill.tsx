@@ -69,7 +69,10 @@ export function Pill(props: PillProps) {
     <>
       {emoji != null && (
         <span aria-hidden="true" className={hover.emoji}>
-          {emoji}
+          {/* Both stay mounted so `aria-current` can cross-fade between them;
+              the pill of the page you're on shows the dot (emojiHover.module.css). */}
+          <span className={hover.glyph}>{emoji}</span>
+          <span className={hover.dot} />
         </span>
       )}
       <span className={hover.label}>{children}</span>

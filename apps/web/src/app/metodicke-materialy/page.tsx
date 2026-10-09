@@ -8,6 +8,7 @@ import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { Heading } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { revealOrder } from '@/lib/motion';
 import { breadcrumbSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { pages } from '@/lib/strings';
@@ -35,7 +36,7 @@ export default async function MethodicalMaterialsPage() {
       )}
 
       <Container width="narrow">
-        <Heading className={builder.titleLeft}>{pages.methodicalMaterials}</Heading>
+        <Heading className={`${builder.titleLeft} reveal`} style={revealOrder(1)}>{pages.methodicalMaterials}</Heading>
       </Container>
 
       {/* Full width: the builder constrains each block to its own layout width. */}

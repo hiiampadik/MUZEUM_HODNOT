@@ -193,9 +193,11 @@ select {
   animation-delay: calc(var(--reveal-order, 0) * var(--reveal-stagger));
 }
 
-/* Variant for full-bleed / absolutely positioned layers that must not move. */
+/* Variant for full-bleed / absolutely positioned layers that must not move
+   (the bottom cover) — a slower, plain fade. */
 .reveal--fade {
   animation-name: reveal-fade;
+  animation-duration: var(--duration-media);
 }
 
 /* Images dither in. Put `.reveal-media` on a wrapper; --media-order staggers
@@ -217,7 +219,8 @@ select {
   animation: none;
 }
 
-/* TEMP: dither dissolve on covers only for now. Delete this rule to bring it
+/* TEMP: dither dissolve switched off — covers now use the live Dither instead
+   (`.reveal-media--cover` is unused). Delete this rule to bring the dissolve
    back on every `.reveal-media` image (cards, gallery, page builder, avatars). */
 .reveal-media:not(.reveal-media--cover) img {
   animation: none;
@@ -257,13 +260,13 @@ select {
   padding-top: clamp(220px, 66vh, none);
   /* Reserve enough space at the bottom that the whole bottom cover band
      (its dithered image) is visible below the content, with a gap above it. */
-  padding-bottom: clamp(220px, 50vh, none);
+  padding-bottom: clamp(220px, 70vh, none);
 
   @media (max-width: 1200px) {
-    padding-top: clamp(220px, 50vh, none);
+    padding-top: clamp(220px, 60vh, none);
   }
   @media (max-width: 900px) {
-    padding-top: clamp(220px, 40vh, none);
+    /*padding-top: clamp(220px, 40vh, none);*/
   }
 }
 
@@ -297,18 +300,18 @@ select {
 /* On wide screens the image keeps its natural aspect ratio. As the viewport
    narrows, width:100% would shrink the image's height and open a gap below the
    fixed content padding-top. Floor the height so the cover stays big and let it
-   crop left/right instead (object-fit:cover) rather than getting shorter. */
-.cover-bg-top img,
-.cover-bg-bottom img {
+   crop left/right instead (Dither cover-fits into the taller box) rather than
+   getting shorter. */
+.cover-bg-top .cover-media,
+.cover-bg-bottom .cover-media {
   min-height: clamp(320px, 55vh, 600px);
-  object-fit: cover;
 }
 
 /* On smaller devices keep the cover roughly 1.5× taller so it stays a bold
    full-bleed band (it just crops more on the sides). */
 @media (max-width: 768px) {
-  .cover-bg-top img,
-  .cover-bg-bottom img {
+  .cover-bg-top .cover-media,
+  .cover-bg-bottom .cover-media {
     min-height: clamp(480px, 82vh, 900px);
   }
 }

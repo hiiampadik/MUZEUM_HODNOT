@@ -5,8 +5,10 @@ export type DitherParams = {
   spread: number;
   /** Extra spread where the pointer trail is at full strength. */
   trailBoost: number;
-  /** Bottom share of the image (0–1) over which the trail fades to nothing. */
+  /** Share of the image height (0–1) over which the trail fades to nothing. */
   trailFadeBottom: number;
+  /** Fade the trail toward the top edge instead of the bottom (bottom covers). */
+  trailFadeTop: boolean;
   palette: readonly RGB[];
   /** Page background the result is multiplied onto (white → page colour). */
   background: RGB;
@@ -56,6 +58,7 @@ uniform float u_matrixSize;
 uniform float u_spread;
 uniform float u_trailBoost;
 uniform float u_trailFadeBottom;
+uniform float u_trailFadeTop;
 uniform vec3 u_palette[${MAX_COLORS}];
 uniform int u_paletteSize;
 uniform vec3 u_background;
@@ -71,9 +74,11 @@ void main() {
 
   float trail = texture2D(u_trail, uv).a;
   trail = clamp((trail - ${TRAIL_FLOOR}) / (1.0 - ${TRAIL_FLOOR}), 0.0, 1.0);
-  // Thin the trail out toward the bottom edge, where the image melts into the
-  // page: boosted noise there would draw the edge of the canvas.
-  trail *= 1.0 - smoothstep(1.0 - max(u_trailFadeBottom, 0.001), 1.0, uv.y);
+  // Thin the trail out toward the edge where the image melts into the page
+  // (bottom, or top for a bottom cover): boosted noise there would draw the edge of
+  // the canvas.
+  float edge = u_trailFadeTop > 0.5 ? 1.0 - uv.y : uv.y;
+  trail *= 1.0 - smoothstep(1.0 - max(u_trailFadeBottom, 0.001), 1.0, edge);
 
   vec2 cell = mod(px, u_matrixSize);
   float threshold = texture2D(u_bayer, (cell + 0.5) / u_matrixSize).r - 0.5;
@@ -182,6 +187,7 @@ class GlDitherRenderer implements DitherRenderer {
       'u_spread',
       'u_trailBoost',
       'u_trailFadeBottom',
+      'u_trailFadeTop',
       'u_palette',
       'u_paletteSize',
       'u_background',
@@ -212,6 +218,7 @@ class GlDitherRenderer implements DitherRenderer {
     spread,
     trailBoost,
     trailFadeBottom,
+    trailFadeTop,
     palette,
     background,
   }: DitherParams) {
@@ -241,6 +248,7 @@ class GlDitherRenderer implements DitherRenderer {
     gl.uniform1f(this.uniforms.u_spread, spread);
     gl.uniform1f(this.uniforms.u_trailBoost, trailBoost);
     gl.uniform1f(this.uniforms.u_trailFadeBottom, trailFadeBottom);
+    gl.uniform1f(this.uniforms.u_trailFadeTop, trailFadeTop ? 1 : 0);
     gl.uniform3fv(this.uniforms.u_palette, flat);
     gl.uniform1i(this.uniforms.u_paletteSize, colors.length);
     gl.uniform3f(

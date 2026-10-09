@@ -53,7 +53,7 @@
   /* Live dither palette (Dither component): red, green, blue, yellow, white.
      White multiplies away into the page background.
      TODO: pick the final RGBY shades with design. */
-  --dither-palette: #ff0000, #00ff00, #0000ff, #ffff00, #ffffff;
+  --dither-palette: #ff0a0a, #13fb13, #0000c7, #ffff00, #ffffff;
 
   /* Active section accent — overridden per section via inline --accent */
   --accent: var(--accent-link);

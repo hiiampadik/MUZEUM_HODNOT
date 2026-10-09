@@ -14,11 +14,12 @@
 }
 
 /* One canvas pixel per dither cell, scaled up without smoothing. Already
-   multiplied onto the page background by the renderer. */
+   multiplied onto the page background by the renderer. Fades in once the first
+   frame is drawn (an undrawn WebGL canvas is black). */
 .canvas {
   image-rendering: pixelated;
   opacity: 0;
-  transition: opacity var(--duration-reveal) var(--ease-out);
+  transition: opacity var(--duration-media) var(--ease-out);
 }
 
 .root[data-ready] .canvas {
@@ -35,5 +36,10 @@
 
 .fallback {
   object-fit: cover;
+  object-position: top;
   mix-blend-mode: multiply;
+}
+
+.root[data-fade-edge='top'] .fallback {
+  object-position: bottom;
 }

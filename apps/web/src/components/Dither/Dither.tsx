@@ -56,21 +56,40 @@ type DitherProps = {
   trailDuration?: number;
   /** Bottom share of the image (0–1) over which the trail fades out. */
   trailFadeBottom?: number;
+  /**
+   * Edge where the image melts into the page: the trail fades out toward it,
+   * and a cover-fit crop keeps the opposite edge anchored. Defaults to bottom
+   * (top cover); a bottom cover fades out at the top.
+   */
+  fadeEdge?: 'top' | 'bottom';
   /** Reserves the box before the image loads (e.g. "1800 / 1055"). */
   aspectRatio?: string;
   className?: string;
 };
 
-/** Image scaled to the dither grid: 1 px per cell, smoothed by the browser. */
-function scaleImage(source: HTMLImageElement, width: number, height: number) {
+/**
+ * Image scaled to the dither grid (1 px per cell, smoothed by the browser),
+ * cover-fitted: when the box is taller than the image's aspect ratio (a CSS
+ * min-height), it is cropped on the sides, anchored at the top — or at the
+ * bottom with `anchorBottom`.
+ */
+function scaleImage(
+  source: HTMLImageElement,
+  width: number,
+  height: number,
+  anchorBottom: boolean,
+) {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (ctx) {
+    const scale = Math.max(width / source.naturalWidth, height / source.naturalHeight);
+    const w = source.naturalWidth * scale;
+    const h = source.naturalHeight * scale;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(source, 0, 0, width, height);
+    ctx.drawImage(source, (width - w) / 2, anchorBottom ? height - h : 0, w, h);
   }
   return canvas;
 }
@@ -107,6 +126,7 @@ export function Dither({
   trailRadius = DITHER_TRAIL_RADIUS,
   trailDuration = DITHER_TRAIL_DURATION,
   trailFadeBottom = DITHER_TRAIL_FADE_BOTTOM,
+  fadeEdge = 'bottom',
   aspectRatio,
   className,
 }: DitherProps) {
@@ -163,6 +183,7 @@ export function Dither({
       spread,
       trailBoost,
       trailFadeBottom,
+      trailFadeTop: fadeEdge === 'top',
       palette: (palette ?? readPalette(root)).map(parseColor),
       background: parseColor(getComputedStyle(root).getPropertyValue('--color-bg')),
     };
@@ -170,7 +191,7 @@ export function Dither({
     renderer.setParams(params);
     renderer.render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, matrixSize, spread, trailBoost, trailFadeBottom, paletteKey]);
+  }, [mode, matrixSize, spread, trailBoost, trailFadeBottom, fadeEdge, paletteKey]);
 
   // Lay the image out on the dither grid — again whenever the box resizes.
   useEffect(() => {
@@ -179,13 +200,11 @@ export function Dither({
     if (!source || !root || !renderer) return;
 
     const layout = () => {
+      // The box follows the image's aspect ratio, unless CSS makes it taller.
       const width = Math.max(1, Math.round(root.clientWidth / cellSize));
-      const height = Math.max(
-        1,
-        Math.round((width * source.naturalHeight) / source.naturalWidth),
-      );
+      const height = Math.max(1, Math.round(root.clientHeight / cellSize));
       try {
-        renderer.setImage(scaleImage(source, width, height));
+        renderer.setImage(scaleImage(source, width, height, fadeEdge === 'top'));
       } catch {
         setFailed(true); // tainted: CORS headers missing
         return;
@@ -199,7 +218,7 @@ export function Dither({
     const ro = new ResizeObserver(layout);
     ro.observe(root);
     return () => ro.disconnect();
-  }, [source, cellSize]);
+  }, [source, cellSize, fadeEdge]);
 
   // Pointer trail: redraw every frame while it's fading, idle otherwise.
   useEffect(() => {
@@ -279,6 +298,7 @@ export function Dither({
       style={style}
       data-ready={ready || undefined}
       data-fallback={failed || undefined}
+      data-fade-edge={fadeEdge}
     >
       {failed ? (
         // eslint-disable-next-line @next/next/no-img-element

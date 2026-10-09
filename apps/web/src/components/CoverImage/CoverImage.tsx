@@ -1,8 +1,18 @@
 import type { SanityImageValue } from '../SanityImage/SanityImage';
-// Dithering is disabled — covers are uploaded as ready-made images (any fade is
-// baked into the file). Kept for easy re-enable. See Dither.tsx.
-// import { Dither } from '../Dither/Dither';
+import { Dither } from '../Dither/Dither';
 import styles from './CoverImage.module.css';
+
+type PreviewCover = { src: string; aspectRatio: string };
+
+/**
+ * TEMP: every cover shows these test images (photos fading to white — the top
+ * one downward, the bottom one upward) instead of the ones from Sanity, while
+ * the live dither is being tuned. Set to null to use the CMS covers again.
+ */
+const PREVIEW_COVERS: Record<'top' | 'bottom', PreviewCover> | null = {
+  top: { src: '/dither-lab/frame-181.jpg', aspectRatio: '1800 / 1055' },
+  bottom: { src: '/dither-lab/frame-182.jpg', aspectRatio: '1800 / 1055' },
+};
 
 type CoverImageProps = {
   value: SanityImageValue;
@@ -11,26 +21,35 @@ type CoverImageProps = {
   priority?: boolean;
   /** Render as an absolutely-positioned background layer behind page content. */
   background?: boolean;
+  /** Pointer trail on the dither (desktop only, see Dither). */
+  interactive?: boolean;
   className?: string;
 };
 
 /**
- * Full-bleed cover image at the top / bottom of a page.
- *
- * The image is served in its ORIGINAL size (the raw asset URL — no CDN resizing
- * or re-encoding) and stretched to the container's edges via CSS. Covers are
- * prepared and uploaded manually, so no gradient or dithering is applied here.
+ * Full-bleed cover image at the top / bottom of a page, dithered live in the
+ * browser (see Dither) and melting into the page background. The source is the
+ * original, unscaled asset — it's resampled to the dither grid anyway. Top
+ * covers fade out at their bottom edge, bottom covers at their top edge.
  */
 export function CoverImage({
   value,
   placement = 'top',
   priority,
   background,
+  interactive,
   className,
 }: CoverImageProps) {
   // Original, unscaled asset URL — do not run it through the resizing loader.
-  const src = value?.asset?.url;
+  const preview = PREVIEW_COVERS?.[placement];
+  const src = preview?.src ?? value?.asset?.url;
   if (!src) return null;
+  const dimensions = value?.asset?.metadata?.dimensions;
+  const aspectRatio =
+    preview?.aspectRatio ??
+    (dimensions?.width && dimensions?.height
+      ? `${dimensions.width} / ${dimensions.height}`
+      : undefined);
 
   return (
     <div
@@ -38,7 +57,6 @@ export function CoverImage({
         styles.cover,
         styles[placement],
         background && styles.background,
-        'reveal-media reveal-media--cover',
         // The bottom cover sits far down the page: fade it in when it scrolls
         // into view instead of on load (see `.reveal` in globals.css).
         placement === 'bottom' && 'reveal reveal--fade',
@@ -47,22 +65,15 @@ export function CoverImage({
         .filter(Boolean)
         .join(' ')}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={background ? '' : (value?.alt ?? '')}
-        loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
-        decoding="async"
-        className={styles.image}
-      />
-      {/*
       <Dither
         src={src}
         alt={background ? '' : (value?.alt ?? '')}
         priority={priority}
+        aspectRatio={aspectRatio}
+        fadeEdge={placement === 'bottom' ? 'top' : 'bottom'}
+        interactive={interactive}
+        className="cover-media"
       />
-      */}
     </div>
   );
 }

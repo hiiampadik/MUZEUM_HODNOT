@@ -22,6 +22,7 @@ export const accents = {
   contact: '#ff8359',
   aboutPlatform: '#ff8359',
   methodicalMaterials: '#ff93cc',
-  valueGenerator: '#A964D9',
+  // valueGenerator: '#A964D9',
+  valueGenerator: '#40a6e6',
 } as const;
 

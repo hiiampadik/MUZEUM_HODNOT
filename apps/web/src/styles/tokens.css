@@ -43,8 +43,8 @@
   /*--accent-blue: #3f5bea;*/
   --accent-strong: #edece4;
   /*--accent-strong: #f9ffcc;*/
-  --accent-link: #1d54fa;
-  --accent-text-selection: #7c90ff;
+  --accent-link: #0099ff;
+  --accent-text-selection: #9ed9ff;
 
   /* Active section accent — overridden per section via inline --accent */
   --accent: var(--accent-link);

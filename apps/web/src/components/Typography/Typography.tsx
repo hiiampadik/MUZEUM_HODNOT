@@ -12,10 +12,10 @@ function cx(...names: (string | false | undefined)[]) {
   return names.filter(Boolean).join(' ');
 }
 
-/** Large display heading (CY font). Defaults to <h1>. */
+/** Large display heading (CY font), always with the accent underline. Defaults to <h1>. */
 export function Heading({ children, as: Tag = 'h1', className, style }: BaseProps) {
   return (
-    <Tag className={cx(styles.heading, className)} style={style}>
+    <Tag className={cx(styles.heading, styles.titleUnderline, className)} style={style}>
       {children}
     </Tag>
   );

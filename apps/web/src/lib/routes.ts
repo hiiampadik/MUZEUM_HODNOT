@@ -19,7 +19,7 @@ export const accents = {
   home: '#ff8359',
   exhibition: '#3b976a',
   // contact: '#D2EC57',
-  contact: '#ff8359',
+  contact: '#904646',
   aboutPlatform: '#ff8359',
   methodicalMaterials: '#ff93cc',
   // valueGenerator: '#A964D9',

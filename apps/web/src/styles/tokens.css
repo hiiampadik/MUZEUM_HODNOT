@@ -33,7 +33,7 @@
   /* Colors */
   --color-bg: #ececf0; /* page background */
   --color-surface: #ffffff; /* cards */
-  --color-surface-opacity: rgb(255 255 255 / 0.75); /* cards */
+  --color-surface-opacity: rgb(255 255 255); /* cards */
   --color-surface-muted: #f8f8fa; /* subtle panels */
   --color-fg: #000000;
   --color-on-accent: #ffffff; /* text on an accent fill */
@@ -49,6 +49,11 @@
   /*--accent-strong: #f9ffcc;*/
   --accent-link: #0099ff;
   --accent-text-selection: #9ed9ff;
+
+  /* Live dither palette (Dither component): red, green, blue, yellow, white.
+     White multiplies away into the page background.
+     TODO: pick the final RGBY shades with design. */
+  --dither-palette: #ff0000, #00ff00, #0000ff, #ffff00, #ffffff;
 
   /* Active section accent — overridden per section via inline --accent */
   --accent: var(--accent-link);

@@ -61,11 +61,7 @@ export function CoverImage({
         src={src}
         alt={background ? '' : (value?.alt ?? '')}
         priority={priority}
-        placement={placement}
-        imgClassName={styles.image}
-        canvasClassName={styles.ditherCanvas}
       />
-      <div className={styles.gradient} aria-hidden="true" />
       */}
     </div>
   );

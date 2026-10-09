@@ -1,0 +1,39 @@
+/* Box sized by the image's aspect ratio (inline style); the canvas fills it. */
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.canvas,
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* One canvas pixel per dither cell, scaled up without smoothing. Already
+   multiplied onto the page background by the renderer. */
+.canvas {
+  image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity var(--duration-reveal) var(--ease-out);
+}
+
+.root[data-ready] .canvas {
+  opacity: 1;
+}
+
+/* Plain image (no CORS / no JS): multiply it in CSS instead. The root paints
+   the page colour and isolates, so the blend has a backdrop even inside a
+   stacking context of its own (e.g. a z-index:-1 cover layer). */
+.root[data-fallback] {
+  background-color: var(--color-bg);
+  isolation: isolate;
+}
+
+.fallback {
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}

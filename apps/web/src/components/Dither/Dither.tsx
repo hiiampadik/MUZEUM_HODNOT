@@ -1,239 +1,303 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type BayerSize, parseColor, readPalette } from './bayer';
+import { createRenderer, type DitherParams, type DitherRenderer } from './renderers';
+import { Trail } from './trail';
+import styles from './Dither.module.css';
+
+export type { BayerSize } from './bayer';
+
+/** Dithering algorithm. Only ordered (Bayer) for now; error diffusion may follow. */
+export type DitherMode = 'bayer';
+
+/** On-screen size of one dithered pixel, in CSS px. */
+export const DITHER_CELL_SIZE = 1;
+/**
+ * How far the Bayer threshold pushes a pixel before it snaps to the nearest
+ * palette colour (fraction of the full 0–255 range). Higher = more mixing
+ * between palette colours, lower = flatter posterized areas.
+ */
+export const DITHER_SPREAD = 0.9;
+/** Extra spread under the pointer trail — the dither "boils" where the mouse passes. */
+export const DITHER_TRAIL_BOOST = 1.25;
+/** Radius of the pointer trail, in CSS px. */
+export const DITHER_TRAIL_RADIUS = 140;
+/** Roughly how long the trail takes to fade out, in seconds. */
+export const DITHER_TRAIL_DURATION = 1.2;
+/** Side of the Bayer matrix. */
+export const DITHER_MATRIX_SIZE: BayerSize = 4;
+/**
+ * Bottom share of the image over which the trail fades to nothing, so the
+ * pointer never lights up the image's lower edge where it melts into the page.
+ */
+export const DITHER_TRAIL_FADE_BOTTOM = 0.5;
 
 type DitherProps = {
-  /** Source image URL (Sanity CDN). */
+  /** Source image URL. Must be same-origin or served with CORS (canvas reads its pixels). */
   src: string;
   alt?: string;
   priority?: boolean;
-  /** Fade direction: top dissolves downward, bottom dissolves upward. */
-  placement?: 'top' | 'bottom';
-  imgClassName?: string;
-  canvasClassName?: string;
-  /** Dither cell size in CSS px (Figma "Size"). Higher = chunkier dots. */
-  size?: number;
-  /** Quantization levels per channel (Figma "Levels"). */
-  levels?: number;
+  mode?: DitherMode;
+  matrixSize?: BayerSize;
+  /** On-screen size of one dithered pixel, in CSS px. */
+  cellSize?: number;
+  spread?: number;
+  /** Palette as CSS colours. Defaults to the `--dither-palette` token. */
+  palette?: readonly string[];
+  /**
+   * React to the mouse: it leaves a fading trail where the spread rises. Only
+   * on devices with a fine hovering pointer (off on phones/tablets), only with
+   * WebGL, and never with prefers-reduced-motion.
+   */
+  interactive?: boolean;
+  trailBoost?: number;
+  trailRadius?: number;
+  trailDuration?: number;
+  /** Bottom share of the image (0–1) over which the trail fades out. */
+  trailFadeBottom?: number;
+  /** Reserves the box before the image loads (e.g. "1800 / 1055"). */
+  aspectRatio?: string;
+  className?: string;
 };
 
-/** Dither cell size in CSS px — the on-screen size of one dithered square. */
-export const DITHER_CELL_SIZE = 2;
-/** Quantization levels per colour channel. */
-export const DITHER_LEVELS = 3;
-/**
- * How strongly a pixel's distance from the page background turns into dot
- * density. Higher = darker/more-saturated pixels fill in sooner; pixels close
- * to the background stay (almost) empty, so light areas dissolve to nothing.
- */
-export const DITHER_INK_GAIN = 1.4;
-
-// 4×4 Bayer ordered-dither matrix (raw 0..15).
-const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-
-function readBg(el: Element): [number, number, number] {
-  const raw = getComputedStyle(el).getPropertyValue('--color-bg').trim() || '#ececf0';
-  const hex = raw.replace('#', '');
-  const n = parseInt(
-    hex.length === 3
-      ? hex
-          .split('')
-          .map((c) => c + c)
-          .join('')
-      : hex,
-    16,
-  );
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
-/**
- * Coverage ramp along the fade axis: 1 = full image (dense dots), 0 = pure
- * background (no dots). The dither dissolves by *density* — dots thin out but
- * never lose opacity — so the cover melts into the page background (Figma).
- * Coverage never reaches 1, so background always shows *between* dots (airy
- * halftone), and it thins early so plain body text below sits on near-clean bg.
- */
-function coverageStops(placement: 'top' | 'bottom'): [number, number][] {
-  const top: [number, number][] = [
-    [0, 1],
-    [0.12, 0.88],
-    [0.32, 0.58],
-    [0.52, 0.1],
-    [1, 0],
-  ];
-  if (placement === 'top') return top;
-  // bottom = vertical mirror
-  return top.map(([p, c]) => [1 - p, c]).reverse() as [number, number][];
-}
-
-function coverageAt(stops: [number, number][], p: number): number {
-  if (p <= stops[0][0]) return stops[0][1];
-  const last = stops[stops.length - 1];
-  if (p >= last[0]) return last[1];
-  for (let i = 1; i < stops.length; i++) {
-    const [p1, c1] = stops[i];
-    if (p <= p1) {
-      const [p0, c0] = stops[i - 1];
-      const t = (p - p0) / (p1 - p0);
-      return c0 + (c1 - c0) * t;
-    }
+/** Image scaled to the dither grid: 1 px per cell, smoothed by the browser. */
+function scaleImage(source: HTMLImageElement, width: number, height: number) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (ctx) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, 0, 0, width, height);
   }
-  return last[1];
+  return canvas;
+}
+
+function canAnimatePointer() {
+  return (
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 }
 
 /**
- * Renders the plain <img> (instant, SSR/no-JS fallback with a CSS gradient) and,
- * on top of it, a <canvas> that ordered-dithers the image and dissolves it into
- * the page background by thinning dot density toward the fade edge.
+ * Live dithering: the image is dithered to a fixed palette in the browser (no
+ * pre-processing) — in a WebGL shader, or once on the CPU as a fallback. The
+ * result is multiplied onto the page background (`--color-bg`) in the shader
+ * itself, so the palette's white becomes the page colour: an image that fades
+ * to white fades out into the page. No CSS blend modes involved.
  *
- * The canvas is drawn from a *separate*, crossOrigin image request so that
- * `getImageData` isn't blocked by canvas tainting. The visible <img> keeps NO
- * crossOrigin, so if the Sanity CDN rejects the cross-origin request (origin not
- * on the project's CORS allow-list) the cover still shows via that fallback —
- * the dither is a progressive enhancement, never a hard dependency.
+ * The pixels come from a separate crossOrigin request so reading them isn't
+ * blocked by canvas tainting. If that fails (origin not on the CDN's CORS
+ * allow-list) the plain image is shown instead; without JS, <noscript> shows it.
  */
 export function Dither({
   src,
   alt = '',
   priority,
-  placement = 'top',
-  imgClassName,
-  canvasClassName,
-  size = DITHER_CELL_SIZE,
-  levels = DITHER_LEVELS,
+  mode = 'bayer',
+  matrixSize = DITHER_MATRIX_SIZE,
+  cellSize = DITHER_CELL_SIZE,
+  spread = DITHER_SPREAD,
+  palette,
+  interactive = false,
+  trailBoost = DITHER_TRAIL_BOOST,
+  trailRadius = DITHER_TRAIL_RADIUS,
+  trailDuration = DITHER_TRAIL_DURATION,
+  trailFadeBottom = DITHER_TRAIL_FADE_BOTTOM,
+  aspectRatio,
+  className,
 }: DitherProps) {
-  const imgRef = useRef<HTMLImageElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<DitherRenderer | null>(null);
+  const paramsRef = useRef<DitherParams | null>(null);
+  const trailRef = useRef<Trail | null>(null);
+  const [source, setSource] = useState<HTMLImageElement | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
 
+  // Renderer for the lifetime of the canvas.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const container = canvas.parentElement;
-    if (!container) return;
-
-    // Dedicated crossOrigin source for the dither. If CORS is blocked this
-    // errors and we reveal the plain <img> as a last-resort fallback.
-    const source = new globalThis.Image();
-    source.crossOrigin = 'anonymous';
-    source.decoding = 'async';
-    let loaded = false;
-
-    function draw() {
-      if (!loaded || !canvas || !container || !source.naturalWidth) return;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      if (!ctx) return;
-
-      const rect = container.getBoundingClientRect();
-      const cw = Math.max(1, Math.round(rect.width / size));
-      const ch = Math.max(1, Math.round(rect.height / size));
-      if (cw < 2 || ch < 2) return;
-      canvas.width = cw;
-      canvas.height = ch;
-
-      // Cover-fit the image into the canvas.
-      const s = Math.max(cw / source.naturalWidth, ch / source.naturalHeight);
-      const dw = source.naturalWidth * s;
-      const dh = source.naturalHeight * s;
-      ctx.drawImage(source, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-
-      let image: ImageData;
-      try {
-        image = ctx.getImageData(0, 0, cw, ch);
-      } catch {
-        return; // tainted (unexpected) — keep the <img> fallback visible
-      }
-
-      const [br, bg, bb] = readBg(container);
-      const stops = coverageStops(placement);
-      const d = image.data;
-      const step = levels - 1;
-
-      for (let y = 0; y < ch; y++) {
-        // Image opacity along the fade axis (1 = full image, 0 = pure bg);
-        // `fade` is how far this row is blended toward the background.
-        const fade = 1 - coverageAt(stops, y / (ch - 1));
-        for (let x = 0; x < cw; x++) {
-          const i = (y * cw + x) * 4;
-
-          // 1) Bake the fade gradient onto the pixel (blend toward background).
-          const fr = d[i] + (br - d[i]) * fade;
-          const fg = d[i + 1] + (bg - d[i + 1]) * fade;
-          const fb = d[i + 2] + (bb - d[i + 2]) * fade;
-
-          // 2) Dot density = how far the (faded) pixel sits from the background.
-          //    Pixels near the bg — light walls, or the faded lower edge — get
-          //    almost no dots and dissolve to nothing; dark/saturated pixels
-          //    fill in densely. This is what makes the dots follow the image.
-          const dist =
-            (Math.abs(fr - br) + Math.abs(fg - bg) + Math.abs(fb - bb)) / 765;
-          const density = Math.min(1, dist * DITHER_INK_GAIN);
-
-          const bi = BAYER[(y & 3) * 4 + (x & 3)];
-          const threshold = (bi + 0.5) / 16;
-          if (density > threshold) {
-            // Posterized image colour — the retro dot look.
-            d[i] = (Math.round((fr / 255) * step) / step) * 255;
-            d[i + 1] = (Math.round((fg / 255) * step) / step) * 255;
-            d[i + 2] = (Math.round((fb / 255) * step) / step) * 255;
-            d[i + 3] = 255;
-          } else {
-            // Background dot — opaque, so gaps read as the page background.
-            d[i] = br;
-            d[i + 1] = bg;
-            d[i + 2] = bb;
-            d[i + 3] = 255;
-          }
-        }
-      }
-
-      ctx.putImageData(image, 0, 0);
-      canvas.classList.add('is-ready');
+    const renderer = createRenderer(canvas);
+    if (!renderer) {
+      setFailed(true);
+      return;
     }
-
-    source.onload = () => {
-      loaded = true;
-      draw();
+    rendererRef.current = renderer;
+    return () => {
+      renderer.dispose();
+      rendererRef.current = null;
     };
-    // CORS-blocked or missing: reveal the plain <img> so the cover isn't blank.
-    // (Only loaded on demand, so the success path stays a single download.)
-    source.onerror = () => {
-      const img = imgRef.current;
-      if (img) {
-        img.src = src;
-        img.dataset.fallback = 'true';
+  }, []);
+
+  // Load the pixel source.
+  useEffect(() => {
+    const img = new globalThis.Image();
+    img.crossOrigin = 'anonymous';
+    img.decoding = 'async';
+    if (priority) img.setAttribute('fetchpriority', 'high');
+    img.onload = () => setSource(img);
+    img.onerror = () => setFailed(true);
+    img.src = src;
+    setSource(null);
+    setReady(false);
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [src, priority]);
+
+  // Dither parameters. `palette` is tracked by value (a new array each render is fine).
+  const paletteKey = palette?.join(',');
+  useEffect(() => {
+    const root = rootRef.current;
+    const renderer = rendererRef.current;
+    if (!root || !renderer) return;
+    const params: DitherParams = {
+      matrixSize: mode === 'bayer' ? matrixSize : DITHER_MATRIX_SIZE,
+      spread,
+      trailBoost,
+      trailFadeBottom,
+      palette: (palette ?? readPalette(root)).map(parseColor),
+      background: parseColor(getComputedStyle(root).getPropertyValue('--color-bg')),
+    };
+    paramsRef.current = params;
+    renderer.setParams(params);
+    renderer.render();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, matrixSize, spread, trailBoost, trailFadeBottom, paletteKey]);
+
+  // Lay the image out on the dither grid — again whenever the box resizes.
+  useEffect(() => {
+    const root = rootRef.current;
+    const renderer = rendererRef.current;
+    if (!source || !root || !renderer) return;
+
+    const layout = () => {
+      const width = Math.max(1, Math.round(root.clientWidth / cellSize));
+      const height = Math.max(
+        1,
+        Math.round((width * source.naturalHeight) / source.naturalWidth),
+      );
+      try {
+        renderer.setImage(scaleImage(source, width, height));
+      } catch {
+        setFailed(true); // tainted: CORS headers missing
+        return;
+      }
+      trailRef.current?.resize(root.clientWidth, root.clientHeight);
+      renderer.render();
+      setReady(true);
+    };
+
+    layout();
+    const ro = new ResizeObserver(layout);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, [source, cellSize]);
+
+  // Pointer trail: redraw every frame while it's fading, idle otherwise.
+  useEffect(() => {
+    const root = rootRef.current;
+    const renderer = rendererRef.current;
+    if (!interactive || !root || !renderer?.interactive || !canAnimatePointer()) return;
+
+    const trail = new Trail();
+    trail.resize(root.clientWidth, root.clientHeight);
+    trailRef.current = trail;
+
+    let raf = 0;
+    let lastFrame = 0;
+    let lastMove = -Infinity;
+
+    const tick = (now: number) => {
+      trail.fade(lastFrame ? (now - lastFrame) / 1000 : 0, trailDuration);
+      lastFrame = now;
+      if (now - lastMove < trailDuration * 1000) {
+        renderer.setTrail(trail.canvas);
+        renderer.render();
+        raf = requestAnimationFrame(tick);
+      } else {
+        // Faded out: drop the residue and stop the loop.
+        trail.clear();
+        renderer.setTrail(null);
+        renderer.render();
+        raf = 0;
+        lastFrame = 0;
       }
     };
-    source.src = src;
 
-    const ro = new ResizeObserver(() => draw());
-    ro.observe(container);
-
-    return () => {
-      source.onload = null;
-      source.onerror = null;
-      ro.disconnect();
+    // The image usually sits behind the content (pointer-events: none), so
+    // listen on the window and map the pointer into the image box.
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      const rect = root.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const outside =
+        x < -trailRadius ||
+        y < -trailRadius ||
+        x > rect.width + trailRadius ||
+        y > rect.height + trailRadius;
+      if (outside) {
+        trail.lift();
+        return;
+      }
+      trail.move(x, y, trailRadius);
+      lastMove = performance.now();
+      if (!raf) raf = requestAnimationFrame(tick);
     };
-  }, [src, size, levels, placement]);
+    const onLeave = (e: PointerEvent) => {
+      if (!e.relatedTarget) trail.lift();
+    };
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('pointerout', onLeave);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerout', onLeave);
+      cancelAnimationFrame(raf);
+      trailRef.current = null;
+      renderer.setTrail(null);
+      renderer.render();
+    };
+  }, [interactive, trailRadius, trailDuration]);
+
+  const style: CSSProperties = {
+    aspectRatio: source ? `${source.naturalWidth} / ${source.naturalHeight}` : aspectRatio,
+  };
 
   return (
-    <>
-      {/* The raw image is hidden by default (CSS): only the dithered canvas is
-          ever shown. It's revealed (data-fallback) only if the dither can't run
-          (CORS), and rendered plainly for no-JS via <noscript>. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
-        alt={alt}
-        loading={priority ? 'eager' : 'lazy'}
-        fetchPriority={priority ? 'high' : 'auto'}
-        decoding="async"
-        className={imgClassName}
-      />
-      <noscript>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt} className={imgClassName} style={{ opacity: 1 }} />
-      </noscript>
-      <canvas ref={canvasRef} aria-hidden="true" className={canvasClassName} />
-    </>
+    <div
+      ref={rootRef}
+      className={[styles.root, className].filter(Boolean).join(' ')}
+      style={style}
+      data-ready={ready || undefined}
+      data-fallback={failed || undefined}
+    >
+      {failed ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={alt} className={styles.fallback} />
+      ) : (
+        <>
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={src} alt={alt} className={styles.fallback} />
+          </noscript>
+          <canvas
+            ref={canvasRef}
+            className={styles.canvas}
+            role={alt ? 'img' : undefined}
+            aria-label={alt || undefined}
+            aria-hidden={alt ? undefined : true}
+          />
+        </>
+      )}
+    </div>
   );
 }

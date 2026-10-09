@@ -1,6 +1,8 @@
 .cover {
   position: relative;
   width: 100%;
+  /* Full-bleed covers dissolve through a coarser dither grid than card images. */
+  --dither-cell: var(--dither-cell-cover);
 }
 
 /* Background layer: sits behind page content, non-interactive. z-index:-1 makes
@@ -40,16 +42,7 @@
      with the page background lets the light areas drop out so the dither melts
      into the page (no plus-darker). */
   mix-blend-mode: multiply;
-  animation: coverFadeIn var(--duration-media) var(--ease-out) both;
-}
-
-@keyframes coverFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  /* Appears with the shared dither dissolve (`.reveal-media` in globals.css). */
 }
 
 

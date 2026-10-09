@@ -136,7 +136,7 @@ function renderBlock(block: Block, nested = false, index = 0) {
       const image = (
         <div
           key={block._key}
-          className={isCenter ? styles.decorative : styles.imageWide}
+          className={`${isCenter ? styles.decorative : styles.imageWide} reveal-media`}
           data-decorative={isCenter ? '' : undefined}
         >
           <SanityImage

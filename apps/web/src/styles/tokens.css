@@ -77,12 +77,15 @@
   --duration-fast: 0.2s; /* small UI feedback */
   --duration-crossfade: 0.4s; /* swapping one state for another in place */
   --duration-reveal: 0.8s; /* content rising into place */
-  --duration-media: 1.4s; /* images settling inside their frame */
+  --duration-media: 1.4s; /* slow fades of large media */
   --reveal-distance: var(--space-md); /* how far content rises */
   --reveal-stagger: 80ms; /* delay between consecutive items */
   --reveal-stagger-hero: 180ms; /* homepage hero cards */
   --underline-delay: 0.25s; /* accent underline follows its title */
-  --media-settle-scale: 1.06;
+  --duration-dither: 0.9s; /* image dissolving in through the dither mask */
+  --dither-delay: 0.15s; /* image follows its card */
+  --dither-cell: 2px; /* size of one dither "pixel" — cards, photos */
+  --dither-cell-cover: 6px; /* coarser grid on full-bleed covers */
 
   --text-bg: linear-gradient(transparent 2%, rgb(230 225 223 / 0.7) 2%, rgb(235 230 228 / 0.7) 98%, transparent 98%);
 }

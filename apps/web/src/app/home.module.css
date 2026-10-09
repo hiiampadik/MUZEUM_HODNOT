@@ -122,7 +122,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: contrast(0.8) brightness(0.9);
+  filter: brightness(0.95);
 }
 
 
@@ -285,7 +285,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease-in-out;
-  filter: contrast(0.8) brightness(0.9);
+  filter: brightness(0.95);
   /*mix-blend-mode: screen;*/
 }
 

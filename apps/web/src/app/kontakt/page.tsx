@@ -91,7 +91,7 @@ export default async function ContactPage() {
                 style={revealOrder(6 + Math.min(i, 4))}
               >
                 {person.image?.asset?._id && (
-                  <div className={styles.avatar}>
+                  <div className={`${styles.avatar} reveal-media`}>
                     <SanityImage value={person.image} width={448} sizes="224px" />
                   </div>
                 )}

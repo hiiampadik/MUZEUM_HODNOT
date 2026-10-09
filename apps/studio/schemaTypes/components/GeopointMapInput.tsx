@@ -28,10 +28,9 @@ async function geocode(query: string): Promise<GeocodeResult[]> {
 }
 
 /**
- * Custom input for the `location` geopoint: an OSM raster map where the editor
+ * Custom input for the `location` geopoint: a vector map where the editor
  * can click (or drag the marker) to set the coordinate, on top of the default
- * Lat/Lng/Alt fields (kept for manual entry). Raster tiles need no web worker,
- * so this works in the Vite-built Studio without extra bundler setup.
+ * Lat/Lng/Alt fields (kept for manual entry).
  */
 export function GeopointMapInput(props: ObjectInputProps) {
   const { value, onChange, renderDefault } = props;
@@ -97,23 +96,22 @@ export function GeopointMapInput(props: ObjectInputProps) {
     void (async () => {
       const maplibregl = await import('maplibre-gl');
       await import('maplibre-gl/dist/maplibre-gl.css');
+      // Vector tiles are parsed in a web worker. Bundling maplibre moves its
+      // module away from the worker file it resolves via import.meta.url, so
+      // let Vite bundle the worker (with its shared chunk) and point at it.
+      const { default: workerUrl } = await import(
+        'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
+      );
+      maplibregl.setWorkerUrl(workerUrl);
       if (disposed || !containerRef.current) return;
 
       const hasPoint = typeof geo?.lat === 'number' && typeof geo?.lng === 'number';
       const map = new maplibregl.Map({
         container,
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: 'raster',
-              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-              tileSize: 256,
-              attribution: '© OpenStreetMap',
-            },
-          },
-          layers: [{ id: 'osm', type: 'raster', source: 'osm' }],
-        },
+        // OpenFreeMap — free vector basemap, no API key; same as the website.
+        // tile.openstreetmap.org must not be used here: its usage policy blocks
+        // embedded apps ("Access blocked"). Attribution is carried by the style.
+        style: 'https://tiles.openfreemap.org/styles/liberty',
         center: hasPoint ? [geo!.lng as number, geo!.lat as number] : DEFAULT_CENTER,
         zoom: hasPoint ? 12 : DEFAULT_ZOOM,
       });

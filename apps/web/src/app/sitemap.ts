@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { client } from '@/sanity/lib/client';
 import { EXHIBITION_SITEMAP_QUERY } from '@/sanity/queries';
-import { siteUrl } from '@/sanity/env';
+import { pageUrl } from '@/lib/url';
 import { routes } from '@/lib/routes';
 
 export const dynamic = 'force-static';
@@ -10,20 +10,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = [
-    { url: new URL(routes.home, siteUrl).toString(), lastModified: now, priority: 1 },
-    { url: new URL(routes.contact, siteUrl).toString(), lastModified: now, priority: 0.7 },
+    { url: pageUrl(routes.home), lastModified: now, priority: 1 },
+    { url: pageUrl(routes.contact), lastModified: now, priority: 0.7 },
     {
-      url: new URL(routes.methodicalMaterials, siteUrl).toString(),
+      url: pageUrl(routes.methodicalMaterials),
       lastModified: now,
       priority: 0.7,
     },
     {
-      url: new URL(routes.valueGenerator, siteUrl).toString(),
+      url: pageUrl(routes.valueGenerator),
       lastModified: now,
       priority: 0.7,
     },
     {
-      url: new URL(routes.aboutPlatform, siteUrl).toString(),
+      url: pageUrl(routes.aboutPlatform),
       lastModified: now,
       priority: 0.6,
     },
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     exhibitionEntries = items
       .filter((i): i is { slug: string; _updatedAt: string } => Boolean(i.slug))
       .map((i) => ({
-        url: new URL(routes.exhibition(i.slug), siteUrl).toString(),
+        url: pageUrl(routes.exhibition(i.slug)),
         lastModified: i._updatedAt ? new Date(i._updatedAt) : now,
         priority: 0.6,
       }));

@@ -3,7 +3,7 @@
  * Used for rich snippets and Knowledge Graph support.
  */
 
-import { siteUrl } from '@/sanity/env';
+import { pageUrl } from '@/lib/url';
 import { site } from '@/lib/strings';
 
 /** JSON-LD compatible schema objects */
@@ -83,7 +83,7 @@ export function generateOrganizationSchema(
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: site.name,
-    url: siteUrl,
+    url: pageUrl('/'),
     ...(logoUrl && { logo: logoUrl }),
     ...(socialLinks && socialLinks.length > 0 && { sameAs: socialLinks }),
     ...(contactPhone || contactEmail) && {
@@ -115,7 +115,7 @@ export function generateEventSchema(exhibition: {
       : undefined;
 
   const url = exhibition.slug
-    ? new URL(`/vystava/${exhibition.slug}`, siteUrl).toString()
+    ? pageUrl(`/vystava/${exhibition.slug}`)
     : undefined;
 
   const location = exhibition.place || exhibition.location;
@@ -142,7 +142,7 @@ export function generateEventSchema(exhibition: {
     organizer: {
       '@type': 'Organization',
       name: site.name,
-      url: siteUrl,
+      url: pageUrl('/'),
     },
   };
 }
@@ -158,7 +158,7 @@ export function generateWebPageSchema(page: {
   breadcrumb?: Array<{ name: string; url?: string }>;
 }): SchemaWithContext<WebPageSchema> {
   const images = page.images && page.images.length > 0 ? page.images : undefined;
-  const url = page.url || siteUrl;
+  const url = page.url || pageUrl('/');
 
   let breadcrumb = undefined;
   if (page.breadcrumb && page.breadcrumb.length > 0) {

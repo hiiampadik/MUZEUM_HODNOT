@@ -10,13 +10,14 @@ import { RichText } from '@/components/RichText/RichText';
 import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
-import { pageMetadata } from '@/lib/metadata';
+import { defaultOgImage, pageMetadata } from '@/lib/metadata';
+import { pageUrl } from '@/lib/url';
+import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { ogImageUrl } from '@/sanity/lib/og';
 import { urlFor } from '@/sanity/lib/image';
 import { formatDate, formatDateRange } from '@/lib/format';
 import { categorize } from '@/lib/exhibitions';
 import { getExhibitionStrings, type Locale, site } from '@/lib/strings';
-import { siteUrl } from '@/sanity/env';
 import styles from './exhibition.module.css';
 
 type Params = { slug: string };
@@ -77,12 +78,12 @@ export default async function ExhibitionPage({
   const locale: Locale = exhibition.foreignLanguage ? 'en' : 'sk';
   const t = getExhibitionStrings(locale);
   const isActive = categorize({ startDate, endDate }) === 'active';
-  const coverImageUrl = ogImageUrl(cover) ?? `${siteUrl}/icon.jpg`;
-  const exhibitionUrl = new URL(routes.exhibition(slug), siteUrl).toString();
+  const coverImageUrl = ogImageUrl(cover) ?? defaultOgImage;
+  const exhibitionUrl = pageUrl(routes.exhibition(slug));
 
   const galleryJsonLd = (gallery ?? []).map((photo, index) => {
     const contentUrl = photo?.asset?._id
-      ? urlFor({ asset: { _ref: photo.asset._id } }).width(1200).url()
+      ? urlFor({ asset: { _ref: photo.asset._id } }).width(1200).format('jpg').url()
       : coverImageUrl;
 
     return {
@@ -108,7 +109,7 @@ export default async function ExhibitionPage({
         '@type': 'ListItem',
         position: 1,
         name: 'Domov',
-        item: new URL(routes.home, siteUrl).toString(),
+        item: pageUrl(routes.home),
       },
       {
         '@type': 'ListItem',
@@ -142,7 +143,7 @@ export default async function ExhibitionPage({
       organizer: {
         '@type': 'Organization',
         name: site.name,
-        url: siteUrl,
+        url: pageUrl(routes.home),
       },
     },
     breadcrumbJsonLd,
@@ -155,10 +156,7 @@ export default async function ExhibitionPage({
       lang={locale}
       style={{ '--accent': accents.exhibition } as CSSProperties}
     >
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {topCover && (
         <CoverImage value={topCover} placement="top" priority background className="cover-bg-top" />

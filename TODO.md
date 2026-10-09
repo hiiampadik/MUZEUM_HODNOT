@@ -70,6 +70,9 @@ Legenda: `[ ]` čeká · `[~]` rozpracováno · `[x]` hotovo
 - [x] Skip-link, focus-visible baseline, `scroll-margin`, `prefers-reduced-motion`
 - [x] `NEXT_PUBLIC_SITE_URL` na produkční doménu (GitHub Actions variable, `https://muzeumhodnot.sk`)
 - [ ] axe / Lighthouse audit *(až s reálným obsahem a schváleným designem)*
+- [ ] Výchozí OG obrázek: teď `/icon.png` (favicon 192×192), ale `layout.tsx` ho deklaruje jako
+      1200×630 + `summary_large_image`. Připravit skutečný sdílecí obrázek 1200×630 (JPEG,
+      např. `public/og-default.jpg`) a přepnout na něj `defaultOgImage` v `src/lib/metadata.ts`
 
 ## Blok 8 — Deploy & DNS
 - [x] Sanity projekt + dataset `production` + CORS (`https://muzeumhodnot.sk` povolen)

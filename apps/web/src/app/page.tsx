@@ -1,13 +1,15 @@
 import type {CSSProperties, ReactNode} from 'react';
 import type {Metadata} from 'next';
 import {client} from '@/sanity/lib/client';
-import {EXHIBITIONS_QUERY, HOME_QUERY, HOME_TILE_COVERS_QUERY} from '@/sanity/queries';
+import {EXHIBITIONS_QUERY, HOME_QUERY, HOME_TILE_COVERS_QUERY, SETTINGS_QUERY} from '@/sanity/queries';
 import {ogImageUrl} from '@/sanity/lib/og';
 import type {SanityImageValue} from '@/components/SanityImage/SanityImage';
 import {SanityImage} from '@/components/SanityImage/SanityImage';
 import {siteUrl} from '@/sanity/env';
-import {pageMetadata} from '@/lib/metadata';
+import {defaultOgImage, pageMetadata} from '@/lib/metadata';
 import {generateOrganizationSchema} from '@/lib/schema';
+import {pageUrl} from '@/lib/url';
+import {JsonLd} from '@/components/JsonLd/JsonLd';
 import {Container} from '@/components/Container/Container';
 import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {CoverImage} from '@/components/CoverImage/CoverImage';
@@ -50,20 +52,24 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [home, tileCovers, exhibitions] = await Promise.all([
+  const [home, tileCovers, exhibitions, settings] = await Promise.all([
     client.fetch(HOME_QUERY),
     client.fetch(HOME_TILE_COVERS_QUERY),
     client.fetch(EXHIBITIONS_QUERY),
+    client.fetch(SETTINGS_QUERY),
   ]);
 
-  const homeCoverUrl = ogImageUrl(home?.cover) ?? `${siteUrl}/icon.jpg`;
+  const homeCoverUrl = ogImageUrl(home?.cover) ?? defaultOgImage;
+  const socialUrls = (settings?.socialLinks ?? [])
+    .map((link) => link.url)
+    .filter((url): url is string => Boolean(url));
   const jsonLd = [
-    generateOrganizationSchema(undefined, undefined, [siteUrl], `${siteUrl}/icon.jpg`),
+    generateOrganizationSchema(undefined, undefined, socialUrls, new URL('/icon.png', siteUrl).toString()),
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: site.name,
-      url: siteUrl,
+      url: pageUrl(routes.home),
       description: home?.metaDescription || site.description,
       image: homeCoverUrl,
     },
@@ -154,10 +160,7 @@ export default async function HomePage() {
 
   return (
     <main className="page-main page-main--home" style={{ '--accent': accents.home } as CSSProperties}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
 
       {home?.topCover && (
         <CoverImage value={home.topCover} placement="top" priority background className="cover-bg-top" />

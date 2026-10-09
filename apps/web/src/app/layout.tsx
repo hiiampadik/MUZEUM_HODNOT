@@ -8,9 +8,10 @@ import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { siteUrl } from '@/sanity/env';
 import { site } from '@/lib/strings';
+import { defaultOgImage } from '@/lib/metadata';
+import { pageUrl } from '@/lib/url';
 
 const description = site.description;
-const defaultOgImage = `${siteUrl}/icon.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     locale: 'sk_SK',
     title: site.name,
     description,
-    url: siteUrl,
+    url: pageUrl('/'),
     images: [
       {
         url: defaultOgImage,

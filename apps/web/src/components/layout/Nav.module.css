@@ -13,6 +13,10 @@
   align-items: center;
   gap: var(--space-2xs);
   padding-block: var(--space-md);
+  @media (max-width: 480px) {
+    padding-block: var(--space-sm);
+    gap: var(--space-3xs);
+  }
 }
 
 /* Keep the pills clickable while the transparent bar ignores pointer events. */
@@ -20,7 +24,6 @@
 .mobileMenu > *,
 .brand {
   pointer-events: auto;
-  border: 1.5px solid var(--color-bg);
 }
 
 /* Brand pill — always-visible link home, above the nav row. White surface with
@@ -34,13 +37,15 @@
   height: 38px;
   padding: 0.2em 0.5em;
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--color-surface-opacity);
+  backdrop-filter: blur(6px);
   color: var(--color-fg);
   font-family: var(--font-display);
   font-size: var(--font-size-title);
   line-height: 1;
   text-decoration: none;
   transition: filter 0.15s ease;
+  max-width: calc(100vw - 2 * var(--container-padding) - 4px);
 }
 
 /* Logotype: height locked to one title line (what the text occupied before),
@@ -49,6 +54,7 @@
 .brandLogo {
   display: block;
   height: 100%;
+  width: 100%;
   aspect-ratio: 835 / 65;
   background-color: currentColor;
   -webkit-mask: url(/MH.svg) center / contain no-repeat;

@@ -20,6 +20,9 @@
   --width-narrow: 600px;
   --width-content: 1200px;
   --container-padding: var(--space-md);
+  @media (max-width: 480px) {
+    --container-padding: var(--space-sm);
+  }
 
   /* Radius */
   --radius-sm: 8px;
@@ -30,6 +33,7 @@
   /* Colors */
   --color-bg: #ececf0; /* page background */
   --color-surface: #ffffff; /* cards */
+  --color-surface-opacity: rgb(255 255 255 / 0.75); /* cards */
   --color-surface-muted: #f8f8fa; /* subtle panels */
   --color-fg: #000000;
   --color-on-accent: #ffffff; /* text on an accent fill */

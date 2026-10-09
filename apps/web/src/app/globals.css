@@ -116,7 +116,7 @@ select {
   padding-top: clamp(220px, 66vh, none);
   /* Reserve enough space at the bottom that the whole bottom cover band
      (its dithered image) is visible below the content, with a gap above it. */
-  padding-bottom: 50vw;
+  padding-bottom: clamp(220px, 50vh, none);
 
   @media (max-width: 1200px) {
     padding-top: clamp(220px, 50vh, none);

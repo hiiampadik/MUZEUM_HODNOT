@@ -46,6 +46,7 @@
 
 /* Outline on a surface (nav links). Border matches the page background. */
 .surface {
-  background: var(--color-surface);
+  background: var(--color-surface-opacity);
+  backdrop-filter: blur(6px);
   color: var(--color-fg);
 }

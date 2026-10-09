@@ -9,10 +9,10 @@ import { RichText } from '@/components/RichText/RichText';
 import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
-import { defaultOgImage, pageMetadata } from '@/lib/metadata';
-import { pageUrl } from '@/lib/url';
+import { pageMetadata } from '@/lib/metadata';
+import { breadcrumbSchema, contactPageSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/JsonLd/JsonLd';
-import { pages, contact as contactStrings, site } from '@/lib/strings';
+import { pages, contact as contactStrings } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import styles from './contact.module.css';
 
@@ -27,34 +27,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const contact = await client.fetch(CONTACT_QUERY);
-  const contactUrl = pageUrl(routes.contact);
-  const coverImageUrl = ogImageUrl(contact?.cover) ?? defaultOgImage;
-
-  const contactPageJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: pages.contact,
-    url: contactUrl,
-    image: coverImageUrl,
-    description: 'Kontakt - Múzeum hodnôt',
-    mainEntity: {
-      '@type': 'Organization',
-      name: site.name,
-      url: pageUrl(routes.home),
-      ...(contact?.phone && { telephone: contact.phone }),
-      ...(contact?.email && { email: contact.email }),
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'Customer Service',
-        ...(contact?.phone && { telephone: contact.phone }),
-        ...(contact?.email && { email: contact.email }),
-      },
-    },
-  };
+  const jsonLd = [
+    contactPageSchema({
+      name: pages.contact,
+      path: routes.contact,
+      phone: contact?.phone,
+      email: contact?.email,
+    }),
+    breadcrumbSchema({ name: pages.contact, path: routes.contact }),
+  ];
 
   return (
     <main className="page-main" style={{ '--accent': accents.contact } as CSSProperties}>
-      <JsonLd data={contactPageJsonLd} />
+      <JsonLd data={jsonLd} />
 
       {contact?.topCover && (
         <CoverImage value={contact.topCover} placement="top" priority background className="cover-bg-top" />

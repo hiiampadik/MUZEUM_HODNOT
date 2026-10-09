@@ -8,6 +8,8 @@ import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { Heading } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { breadcrumbSchema } from '@/lib/schema';
+import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { pages } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import builder from '@/components/pagebuilder/builderPage.module.css';
@@ -26,6 +28,8 @@ export default async function AboutPlatformPage() {
 
   return (
     <main className="page-main" style={{ '--accent': accents.aboutPlatform } as CSSProperties}>
+      <JsonLd data={breadcrumbSchema({ name: pages.aboutPlatform, path: routes.aboutPlatform })} />
+
       {page?.topCover && (
         <CoverImage value={page.topCover} placement="top" priority background className="cover-bg-top" />
       )}

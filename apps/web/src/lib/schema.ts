@@ -1,210 +1,154 @@
 /**
- * Schema.org structured data generators.
+ * Schema.org structured data builders (rendered via the `JsonLd` component).
  * Used for rich snippets and Knowledge Graph support.
  */
 
+import { siteUrl } from '@/sanity/env';
+import { site, common } from '@/lib/strings';
+import { routes } from '@/lib/routes';
 import { pageUrl } from '@/lib/url';
-import { site } from '@/lib/strings';
 
-/** JSON-LD compatible schema objects */
-type SchemaWithContext<T> = T & {
-  '@context': 'https://schema.org';
-};
+const context = 'https://schema.org';
 
-/** Organization schema */
-export interface OrganizationSchema {
-  '@type': 'Organization';
-  name: string;
-  url: string;
-  logo?: string;
-  sameAs?: string[];
-  contactPoint?: {
-    '@type': 'ContactPoint';
-    contactType: string;
-    telephone?: string;
-    email?: string;
-  };
-}
-
-/** Event/Exhibition schema */
-export interface EventSchema {
-  '@type': 'Event';
-  name: string;
-  url?: string;
-  description?: string;
-  image?: string | string[];
-  startDate?: string;
-  endDate?: string;
-  location?: {
-    '@type': 'Place';
-    name: string;
-    address?: {
-      '@type': 'PostalAddress';
-      addressLocality?: string;
-      addressCountry: string;
-    };
-  };
-  organizer?: {
-    '@type': 'Organization';
-    name: string;
-    url?: string;
-  };
-}
-
-/** WebPage schema */
-export interface WebPageSchema {
-  '@type': 'WebPage';
-  name?: string;
-  description?: string;
-  image?: string | string[];
-  url?: string;
-  datePublished?: string;
-  dateModified?: string;
-  mainEntity?: unknown;
-  breadcrumb?: {
-    '@type': 'BreadcrumbList';
-    itemListElement: Array<{
-      '@type': 'ListItem';
-      position: number;
-      name: string;
-      item?: string;
-    }>;
-  };
-}
-
-/** Generate Organization schema */
-export function generateOrganizationSchema(
-  contactPhone?: string,
-  contactEmail?: string,
-  socialLinks?: string[],
-  logoUrl?: string,
-): SchemaWithContext<OrganizationSchema> {
+/** The organisation itself; referenced as organizer/publisher elsewhere. */
+function organization() {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'Organization' as const,
     name: site.name,
-    url: pageUrl('/'),
-    ...(logoUrl && { logo: logoUrl }),
-    ...(socialLinks && socialLinks.length > 0 && { sameAs: socialLinks }),
-    ...(contactPhone || contactEmail) && {
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'Customer Service',
-        ...(contactPhone && { telephone: contactPhone }),
-        ...(contactEmail && { email: contactEmail }),
-      },
+    url: pageUrl(routes.home),
+  };
+}
+
+/** Organization (homepage): logo + social profiles. */
+export function organizationSchema({ sameAs }: { sameAs: string[] }) {
+  return {
+    '@context': context,
+    ...organization(),
+    logo: new URL('/icon.png', siteUrl).toString(),
+    ...(sameAs.length > 0 && { sameAs }),
+  };
+}
+
+/** WebSite (homepage). */
+export function webSiteSchema({ description, image }: { description: string; image: string }) {
+  return {
+    '@context': context,
+    '@type': 'WebSite',
+    name: site.name,
+    url: pageUrl(routes.home),
+    inLanguage: 'sk',
+    description,
+    image,
+  };
+}
+
+/** ContactPage with the organisation's contact details as its main entity. */
+export function contactPageSchema({
+  name,
+  path,
+  phone,
+  email,
+}: {
+  name: string;
+  path: string;
+  phone?: string | null;
+  email?: string | null;
+}) {
+  const contact = {
+    ...(phone && { telephone: phone }),
+    ...(email && { email }),
+  };
+  const hasContact = Object.keys(contact).length > 0;
+
+  return {
+    '@context': context,
+    '@type': 'ContactPage',
+    name,
+    url: pageUrl(path),
+    mainEntity: {
+      ...organization(),
+      ...contact,
+      ...(hasContact && {
+        contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', ...contact },
+      }),
     },
   };
 }
 
-/** Generate Event schema for exhibitions */
-export function generateEventSchema(exhibition: {
+type ExhibitionPhoto = { url: string; caption?: string | null; photographer?: string | null };
+
+/**
+ * ExhibitionEvent for an exhibition detail page. Returns null without a start
+ * date — Google treats an Event without `startDate` as invalid.
+ */
+export function exhibitionEventSchema({
+  title,
+  path,
+  locale,
+  description,
+  cover,
+  photos,
+  startDate,
+  endDate,
+  place,
+}: {
   title: string;
-  slug?: string;
-  description?: string;
-  image?: string | string[];
-  startDate?: string;
-  endDate?: string;
-  place?: string;
-  location?: string;
-}): SchemaWithContext<EventSchema> {
-  const images = Array.isArray(exhibition.image)
-    ? exhibition.image
-    : exhibition.image
-      ? [exhibition.image]
-      : undefined;
+  path: string;
+  locale: string;
+  description?: string | null;
+  cover?: string | null;
+  photos: ExhibitionPhoto[];
+  startDate?: string | null;
+  endDate?: string | null;
+  place?: string | null;
+}) {
+  if (!startDate) return null;
 
-  const url = exhibition.slug
-    ? pageUrl(`/vystava/${exhibition.slug}`)
-    : undefined;
-
-  const location = exhibition.place || exhibition.location;
+  const images = [
+    ...(cover ? [cover] : []),
+    ...photos.map((photo) => ({
+      '@type': 'ImageObject',
+      contentUrl: photo.url,
+      ...(photo.caption && { caption: photo.caption }),
+      ...(photo.photographer && { creator: { '@type': 'Person', name: photo.photographer } }),
+    })),
+  ];
 
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: exhibition.title,
-    ...(url && { url }),
-    ...(exhibition.description && { description: exhibition.description }),
-    ...(images && { image: images }),
-    ...(exhibition.startDate && { startDate: exhibition.startDate }),
-    ...(exhibition.endDate && { endDate: exhibition.endDate }),
-    ...(location && {
-      location: {
-        '@type': 'Place',
-        name: location,
-        address: {
-          '@type': 'PostalAddress',
-          addressCountry: 'SK',
-        },
-      },
-    }),
-    organizer: {
-      '@type': 'Organization',
-      name: site.name,
-      url: pageUrl('/'),
-    },
+    '@context': context,
+    '@type': 'ExhibitionEvent',
+    name: title,
+    url: pageUrl(path),
+    inLanguage: locale,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    startDate,
+    ...(endDate && { endDate }),
+    ...(description && { description }),
+    ...(images.length > 0 && { image: images }),
+    // The CMS only stores the venue name (exhibitions run in Slovakia and
+    // abroad), so the venue doubles as a free-text address.
+    ...(place && { location: { '@type': 'Place', name: place, address: place } }),
+    organizer: organization(),
   };
 }
 
-/** Generate WebPage schema */
-export function generateWebPageSchema(page: {
-  title?: string;
-  description?: string;
-  images?: string[];
-  url?: string;
-  datePublished?: string;
-  dateModified?: string;
-  breadcrumb?: Array<{ name: string; url?: string }>;
-}): SchemaWithContext<WebPageSchema> {
-  const images = page.images && page.images.length > 0 ? page.images : undefined;
-  const url = page.url || pageUrl('/');
-
-  let breadcrumb = undefined;
-  if (page.breadcrumb && page.breadcrumb.length > 0) {
-    breadcrumb = {
-      '@type': 'BreadcrumbList' as const,
-      itemListElement: page.breadcrumb.map((item, index) => ({
-        '@type': 'ListItem' as const,
-        position: index + 1,
-        name: item.name,
-        ...(item.url && { item: item.url }),
-      })),
-    };
-  }
-
+/** BreadcrumbList: Home › current page. */
+export function breadcrumbSchema({
+  name,
+  path,
+  homeLabel = common.breadcrumbHome,
+}: {
+  name: string;
+  path: string;
+  homeLabel?: string;
+}) {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    ...(page.title && { name: page.title }),
-    ...(page.description && { description: page.description }),
-    ...(images && { image: images }),
-    url,
-    ...(page.datePublished && { datePublished: page.datePublished }),
-    ...(page.dateModified && { dateModified: page.dateModified }),
-    ...(breadcrumb && { breadcrumb }),
+    '@context': context,
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: homeLabel, item: pageUrl(routes.home) },
+      { '@type': 'ListItem', position: 2, name, item: pageUrl(path) },
+    ],
   };
-}
-
-/** Generate schema for image collections (gallery) */
-export function generateImageGallerySchema(images: Array<{
-  url: string;
-  title?: string;
-  description?: string;
-  photographer?: string;
-}>) {
-  return images.map((img, index) => ({
-    '@context': 'https://schema.org',
-    '@type': 'ImageObject' as const,
-    url: img.url,
-    ...(img.title && { name: img.title }),
-    ...(img.description && { description: img.description }),
-    ...(img.photographer && {
-      author: {
-        '@type': 'Person',
-        name: img.photographer,
-      },
-    }),
-    position: index + 1,
-  }));
 }

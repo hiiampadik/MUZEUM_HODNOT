@@ -107,6 +107,8 @@ export const common = {
   mapClose: 'Zavrieť',
   /** "Active exhibition" tag. */
   currentTag: 'Aktuálne',
+  /** First item of the structured-data breadcrumb. */
+  breadcrumbHome: 'Domov',
 } as const;
 
 export type Locale = 'sk' | 'en';
@@ -123,6 +125,7 @@ export const exhibitionStrings = {
     links: 'Odkazy',
     exhibitingAuthors: 'Vystavujúci autori',
     contributors: 'Tím',
+    breadcrumbHome: 'Domov',
   },
   en: {
     fallbackTitle: 'Exhibition',
@@ -134,6 +137,7 @@ export const exhibitionStrings = {
     links: 'Links',
     exhibitingAuthors: 'Exhibiting authors',
     contributors: 'Team',
+    breadcrumbHome: 'Home',
   },
 } satisfies Record<Locale, Record<string, string>>;
 

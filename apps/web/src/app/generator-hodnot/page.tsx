@@ -9,6 +9,8 @@ import { ValueMap } from '@/components/ValueMap/ValueMap';
 import { Heading, Title } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
+import { breadcrumbSchema } from '@/lib/schema';
+import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { pages } from '@/lib/strings';
 import { ogImageUrl } from '@/sanity/lib/og';
 import builder from '@/components/pagebuilder/builderPage.module.css';
@@ -30,6 +32,8 @@ export default async function ValueGeneratorPage() {
 
   return (
     <main className="page-main" style={{ '--accent': accents.valueGenerator } as CSSProperties}>
+      <JsonLd data={breadcrumbSchema({ name: pages.valueGenerator, path: routes.valueGenerator })} />
+
       {page?.topCover && (
         <CoverImage value={page.topCover} placement="top" priority background className="cover-bg-top" />
       )}

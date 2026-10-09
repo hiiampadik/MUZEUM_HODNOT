@@ -10,14 +10,14 @@ import { RichText } from '@/components/RichText/RichText';
 import { Pill } from '@/components/Pill/Pill';
 import { Heading, Title, Label, Text } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
-import { defaultOgImage, pageMetadata } from '@/lib/metadata';
-import { pageUrl } from '@/lib/url';
+import { pageMetadata } from '@/lib/metadata';
+import { breadcrumbSchema, exhibitionEventSchema } from '@/lib/schema';
 import { JsonLd } from '@/components/JsonLd/JsonLd';
 import { ogImageUrl } from '@/sanity/lib/og';
 import { urlFor } from '@/sanity/lib/image';
 import { formatDate, formatDateRange } from '@/lib/format';
 import { categorize } from '@/lib/exhibitions';
-import { getExhibitionStrings, type Locale, site } from '@/lib/strings';
+import { getExhibitionStrings, type Locale } from '@/lib/strings';
 import styles from './exhibition.module.css';
 
 type Params = { slug: string };
@@ -78,77 +78,35 @@ export default async function ExhibitionPage({
   const locale: Locale = exhibition.foreignLanguage ? 'en' : 'sk';
   const t = getExhibitionStrings(locale);
   const isActive = categorize({ startDate, endDate }) === 'active';
-  const coverImageUrl = ogImageUrl(cover) ?? defaultOgImage;
-  const exhibitionUrl = pageUrl(routes.exhibition(slug));
-
-  const galleryJsonLd = (gallery ?? []).map((photo, index) => {
-    const contentUrl = photo?.asset?._id
-      ? urlFor({ asset: { _ref: photo.asset._id } }).width(1200).format('jpg').url()
-      : coverImageUrl;
-
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'ImageObject',
-      position: index + 1,
-      name: title || 'Fotografie výstavy',
-      contentUrl,
-      url: contentUrl,
-      isPartOf: {
-        '@type': 'Event',
-        name: title,
-        url: exhibitionUrl,
-      },
-    };
-  });
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Domov',
-        item: pageUrl(routes.home),
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: title,
-        item: exhibitionUrl,
-      },
-    ],
-  };
-
-  const jsonLd = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Event',
-      name: title,
-      url: exhibitionUrl,
-      ...(exhibition.metaDescription && { description: exhibition.metaDescription }),
-      ...(coverImageUrl && { image: coverImageUrl }),
-      ...(startDate && { startDate }),
-      ...(endDate && { endDate }),
-      ...(place && {
-        location: {
-          '@type': 'Place',
-          name: place,
-          address: {
-            '@type': 'PostalAddress',
-            addressCountry: 'SK',
+  const photos = (gallery ?? []).flatMap((photo) =>
+    photo?.asset?._id
+      ? [
+          {
+            url: urlFor({ asset: { _ref: photo.asset._id } }).width(1200).format('jpg').url(),
+            caption: photo.alt,
+            photographer: photo.photographer,
           },
-        },
-      }),
-      organizer: {
-        '@type': 'Organization',
-        name: site.name,
-        url: pageUrl(routes.home),
-      },
-    },
-    breadcrumbJsonLd,
-    ...galleryJsonLd,
-  ];
+        ]
+      : [],
+  );
+  const jsonLd = [
+    exhibitionEventSchema({
+      title: title ?? t.fallbackTitle,
+      path: routes.exhibition(slug),
+      locale,
+      description: exhibition.metaDescription,
+      cover: ogImageUrl(cover),
+      photos,
+      startDate,
+      endDate,
+      place,
+    }),
+    breadcrumbSchema({
+      name: title ?? t.fallbackTitle,
+      path: routes.exhibition(slug),
+      homeLabel: t.breadcrumbHome,
+    }),
+  ].filter(Boolean);
 
   return (
     <main

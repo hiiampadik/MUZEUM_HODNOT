@@ -12,11 +12,6 @@ type PageMetaInput = {
   image?: string | null;
   /** Path for canonical + og:url, e.g. "/kontakt". */
   path: string;
-  /** Optional author name (used in article-type pages). */
-  author?: string;
-  /** Optional publish/modification date (ISO 8601). */
-  publishedTime?: string;
-  modifiedTime?: string;
 };
 
 /** Build consistent per-page Metadata (canonical + Open Graph + Twitter). */
@@ -25,9 +20,6 @@ export function pageMetadata({
   description,
   image,
   path,
-  author,
-  publishedTime,
-  modifiedTime,
 }: PageMetaInput): Metadata {
   const url = pageUrl(path);
   // Every key set here replaces the layout's value wholesale, so fall back to
@@ -58,9 +50,6 @@ export function pageMetadata({
             },
           ]
         : [{ url: defaultOgImage, alt: site.name }],
-      ...(publishedTime && { publishedTime }),
-      ...(modifiedTime && { modifiedTime }),
-      ...(author && { authors: [author] }),
     },
     twitter: {
       card: 'summary_large_image',

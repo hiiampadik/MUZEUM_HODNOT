@@ -5,10 +5,8 @@ import {EXHIBITIONS_QUERY, HOME_QUERY, HOME_TILE_COVERS_QUERY, SETTINGS_QUERY} f
 import {ogImageUrl} from '@/sanity/lib/og';
 import type {SanityImageValue} from '@/components/SanityImage/SanityImage';
 import {SanityImage} from '@/components/SanityImage/SanityImage';
-import {siteUrl} from '@/sanity/env';
 import {defaultOgImage, pageMetadata} from '@/lib/metadata';
-import {generateOrganizationSchema} from '@/lib/schema';
-import {pageUrl} from '@/lib/url';
+import {organizationSchema, webSiteSchema} from '@/lib/schema';
 import {JsonLd} from '@/components/JsonLd/JsonLd';
 import {Container} from '@/components/Container/Container';
 import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
@@ -59,20 +57,15 @@ export default async function HomePage() {
     client.fetch(SETTINGS_QUERY),
   ]);
 
-  const homeCoverUrl = ogImageUrl(home?.cover) ?? defaultOgImage;
   const socialUrls = (settings?.socialLinks ?? [])
     .map((link) => link.url)
     .filter((url): url is string => Boolean(url));
   const jsonLd = [
-    generateOrganizationSchema(undefined, undefined, socialUrls, new URL('/icon.png', siteUrl).toString()),
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: site.name,
-      url: pageUrl(routes.home),
+    organizationSchema({ sameAs: socialUrls }),
+    webSiteSchema({
       description: home?.metaDescription || site.description,
-      image: homeCoverUrl,
-    },
+      image: ogImageUrl(home?.cover) ?? defaultOgImage,
+    }),
   ];
 
   const { active, upcoming, past } = groupExhibitions(exhibitions);

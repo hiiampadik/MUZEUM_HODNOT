@@ -5,13 +5,15 @@ import styles from './CoverImage.module.css';
 type PreviewCover = { src: string; aspectRatio: string };
 
 /**
- * TEMP: every cover shows these test images (photos fading to white — the top
- * one downward, the bottom one upward) instead of the ones from Sanity, while
- * the live dither is being tuned. Set to null to use the CMS covers again.
+ * TEMP: every page uses these shared covers (photos fading to white — the top
+ * one downward, the bottom one upward, in public/covers/) instead of the ones
+ * from Sanity. Set to null to use the CMS covers again; those then need the
+ * site's origin on the Sanity CORS allow-list, or Dither falls back to the
+ * plain image.
  */
 const PREVIEW_COVERS: Record<'top' | 'bottom', PreviewCover> | null = {
-  top: { src: '/dither-lab/frame-181.jpg', aspectRatio: '1800 / 1055' },
-  bottom: { src: '/dither-lab/frame-182.jpg', aspectRatio: '1800 / 1055' },
+  top: { src: '/covers/top.jpg', aspectRatio: '1800 / 1055' },
+  bottom: { src: '/covers/bottom.jpg', aspectRatio: '1800 / 1055' },
 };
 
 type CoverImageProps = {

@@ -76,6 +76,9 @@ jobs:
           path: apps/web/out
 
   deploy:
+    # The implicit `success()` checks every ancestor job, including the skipped
+    # `debounce`, so without an explicit condition deploy is skipped on pushes.
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

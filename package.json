@@ -10,6 +10,7 @@
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
     "studio": "pnpm --filter studio dev",
+    "studio:deploy": "pnpm --filter studio run deploy",
     "lint": "pnpm --filter web lint",
     "format": "prettier --write ."
   },

@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "muzeum-hodnot-donations",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-10",
+  "compatibility_flags": ["nodejs_compat"],
+  // Served on <name>.<account>.workers.dev; switch to a custom domain later.
+  "workers_dev": true,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  // Sanity read-only (Viewer) token, needed to read the private feed mapping:
+  //   pnpm --filter donations exec wrangler secret put SANITY_READ_TOKEN
+  "secrets": {
+    "required": ["SANITY_READ_TOKEN"]
+  },
+  "vars": {
+    "SANITY_PROJECT_ID": "kqwm7tyx",
+    "SANITY_DATASET": "production",
+    "SANITY_API_VERSION": "2025-02-19"
+  }
+}

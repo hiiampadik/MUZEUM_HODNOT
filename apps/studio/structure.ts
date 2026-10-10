@@ -7,8 +7,10 @@ import {
   EarthGlobeIcon,
   CalendarIcon,
   InfoOutlineIcon,
+  LockIcon,
 } from '@sanity/icons';
 import { SINGLETONS } from './schemaTypes';
+import { DARUJME_FEEDS_ID } from './schemaTypes/documents/darujmeFeeds';
 
 /**
  * Studio structure: singletons at the top (fixed document IDs), then exhibitions.
@@ -44,6 +46,16 @@ export const structure: StructureResolver = (S) =>
           S.document()
             .schemaType('valueGenerator')
             .documentId('valueGenerator'),
+        ),
+
+      // Private document (dotted ID) — see darujmeFeeds.ts.
+      S.listItem()
+        .title('Darujme.sk feedy')
+        .icon(LockIcon)
+        .child(
+          S.document()
+            .schemaType('darujmeFeeds')
+            .documentId(DARUJME_FEEDS_ID),
         ),
 
       S.listItem()

@@ -258,6 +258,21 @@ export type PageBuilder = Array<
     } & MaterialsBlock)
 >;
 
+export type DarujmeFeeds = {
+  _id: string;
+  _type: 'darujmeFeeds';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  feeds?: Array<{
+    schoolKey?: string;
+    schoolTitle?: string;
+    feedId?: string;
+    _type: 'darujmeFeed';
+    _key: string;
+  }>;
+};
+
 export type AboutPlatform = {
   _id: string;
   _type: 'aboutPlatform';
@@ -551,6 +566,7 @@ export type AllSanitySchemaTypes =
   | HeadingBlock
   | TextBlock
   | PageBuilder
+  | DarujmeFeeds
   | AboutPlatform
   | ValueGenerator
   | Geopoint

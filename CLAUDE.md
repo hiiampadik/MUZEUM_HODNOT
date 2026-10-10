@@ -22,6 +22,7 @@ driven by the Sanity CMS. A static site deployed to GitHub Pages; content is edi
 ```
 apps/web       Next.js frontend (→ static export → Pages)
 apps/studio    Sanity Studio (schemas = source of truth for content)
+apps/donations Cloudflare Worker: raised amounts from Darujme.sk (see its README)
 packages/*     shared code (add when needed)
 ```
 
@@ -71,6 +72,10 @@ packages/*     shared code (add when needed)
   After editing Sanity content, a rebuild that reuses `.next` can serve a stale homepage.
   CI/webhook builds must run clean (fresh runner or `rm -rf .next` first) — do NOT persist the
   `.next` cache across content-triggered rebuilds.
+- **Private data:** the dataset is public; documents with a dot in `_id` (e.g.
+  `secrets.darujmeFeeds`) are readable only with a token. Darujme.sk feed IDs live
+  there because the feeds expose donor names/e-mails — never put them in public
+  fields, web queries or the HTML; only the donations Worker reads them.
 - Images: `SanityImage` (next/image + custom CDN loader in `src/sanity/imageLoader.ts`).
   Sizing is done by the loader via the Sanity CDN; the base URL keeps hotspot/crop.
 

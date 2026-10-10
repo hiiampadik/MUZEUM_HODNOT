@@ -30,6 +30,7 @@ import { contactPage } from './documents/contactPage';
 import { experientialEducation } from './documents/experientialEducation';
 import { valueGenerator } from './documents/valueGenerator';
 import { aboutPlatform } from './documents/aboutPlatform';
+import { darujmeFeeds } from './documents/darujmeFeeds';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
@@ -40,6 +41,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   experientialEducation,
   valueGenerator,
   aboutPlatform,
+  darujmeFeeds,
 
   // Page-builder blocks
   pageBuilder,
@@ -72,4 +74,5 @@ export const SINGLETONS = [
   'experientialEducation',
   'valueGenerator',
   'aboutPlatform',
+  'darujmeFeeds',
 ];

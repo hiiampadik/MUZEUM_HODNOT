@@ -12,7 +12,16 @@ export type { BayerSize } from './bayer';
 export type DitherMode = 'bayer';
 
 /** On-screen size of one dithered pixel, in CSS px. */
-export const DITHER_CELL_SIZE = 1;
+// export const DITHER_CELL_SIZE = 2;
+/** Side of the Bayer matrix. */
+// export const DITHER_MATRIX_SIZE: BayerSize = 2;
+
+/** On-screen size of one dithered pixel, in CSS px. */
+export const DITHER_CELL_SIZE = 2;
+/** Side of the Bayer matrix. */
+export const DITHER_MATRIX_SIZE: BayerSize = 2;
+
+
 /**
  * How far the Bayer threshold pushes a pixel before it snaps to the nearest
  * palette colour (fraction of the full 0–255 range). Higher = more mixing
@@ -25,8 +34,7 @@ export const DITHER_TRAIL_BOOST = 1.25;
 export const DITHER_TRAIL_RADIUS = 140;
 /** Roughly how long the trail takes to fade out, in seconds. */
 export const DITHER_TRAIL_DURATION = 1.2;
-/** Side of the Bayer matrix. */
-export const DITHER_MATRIX_SIZE: BayerSize = 4;
+
 /**
  * Bottom share of the image over which the trail fades to nothing, so the
  * pointer never lights up the image's lower edge where it melts into the page.

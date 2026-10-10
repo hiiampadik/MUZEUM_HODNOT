@@ -15,7 +15,6 @@
   padding-block: var(--space-md);
   @media (max-width: 480px) {
     padding-block: var(--space-sm);
-    gap: var(--space-3xs);
   }
 }
 

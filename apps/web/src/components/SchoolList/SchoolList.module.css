@@ -1,0 +1,108 @@
+/* Mirrors the homepage's upcoming-exhibition rows (home.module.css). */
+.section {
+  margin-block: var(--space-2xl);
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-top: 2px dashed var(--color-border-strong);
+}
+
+.row:last-child {
+  border-bottom: 2px dashed var(--color-border-strong);
+}
+
+/* 4 equal columns: funding spans the first two, the join link sits in the last. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.funding {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-xs);
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.amount {
+  margin: 0;
+}
+
+/* Bar height = its corner diameter, so a tiny amount still shows a full dot. */
+.track {
+  --bar-size: calc(var(--radius-md) * 2);
+  height: var(--bar-size);
+  border-radius: var(--radius-md);
+  background: var(--color-track);
+  overflow: hidden;
+}
+
+.fill {
+  /* Never narrower than it is tall. */
+  width: max(var(--bar-size), var(--progress));
+  height: 100%;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+}
+
+.join {
+  grid-column: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+}
+
+.text {
+  max-width: 420px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .funding,
+  .join {
+    grid-column: auto;
+  }
+}
+
+/* Phones: stack the donated / goal stats. */
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

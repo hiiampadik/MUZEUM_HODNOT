@@ -41,6 +41,7 @@
   --color-muted-underline: #989898;
   --color-border: #ececf0;
   --color-border-strong: #d2d2d2; /* dashed dividers */
+  --color-track: #e3e3e3; /* progress bar track */
 
   /* Accent palette (underline + button color per section) */
 

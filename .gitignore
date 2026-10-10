@@ -16,6 +16,10 @@ apps/studio/schema.json
 # maplibre worker — copied from node_modules by copy-maplibre-worker (pre/dev/build)
 apps/web/public/maplibre/
 
+# cloudflare worker (apps/donations)
+.wrangler/
+.dev.vars*
+
 # production
 build/
 dist/

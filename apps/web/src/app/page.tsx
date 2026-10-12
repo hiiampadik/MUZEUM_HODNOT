@@ -156,16 +156,13 @@ export default async function HomePage() {
     <main className="page-main page-main--home" style={{ '--accent': accents.home } as CSSProperties}>
       <JsonLd data={jsonLd} />
 
-      {home?.topCover && (
-        <CoverImage
-          value={home.topCover}
-          placement="top"
-          priority
-          background
-          interactive
-          className="cover-bg-top"
-        />
-      )}
+      <CoverImage
+        value={home?.topCover}
+        placement="top"
+        priority
+        background
+        className="cover-bg-top"
+      />
 
       <h1 className={'sr-only'}>{site.name}</h1>
 
@@ -248,15 +245,12 @@ export default async function HomePage() {
         </Container>
       )}
 
-      {home?.bottomCover && (
-        <CoverImage
-          value={home.bottomCover}
-          placement="bottom"
-          background
-          interactive
-          className="cover-bg-bottom"
-        />
-      )}
+      <CoverImage
+        value={home?.bottomCover}
+        placement="bottom"
+        background
+        className="cover-bg-bottom"
+      />
     </main>
   );
 }

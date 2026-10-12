@@ -39,9 +39,7 @@ export default async function ValueGeneratorPage() {
     <main className="page-main" style={{ '--accent': accents.valueGenerator } as CSSProperties}>
       <JsonLd data={breadcrumbSchema({ name: pages.valueGenerator, path: routes.valueGenerator })} />
 
-      {page?.topCover && (
-        <CoverImage value={page.topCover} placement="top" priority background className="cover-bg-top" />
-      )}
+      <CoverImage value={page?.topCover} placement="top" priority background className="cover-bg-top" />
 
       <Container width="narrow">
         <Heading className={`${builder.titleLeft} reveal`} style={revealOrder(1)}>{pages.valueGenerator}</Heading>
@@ -57,9 +55,7 @@ export default async function ValueGeneratorPage() {
         </Container>
       )}
 
-      {page?.bottomCover && (
-        <CoverImage value={page.bottomCover} placement="bottom" background className="cover-bg-bottom" />
-      )}
+      <CoverImage value={page?.bottomCover} placement="bottom" background className="cover-bg-bottom" />
     </main>
   );
 }

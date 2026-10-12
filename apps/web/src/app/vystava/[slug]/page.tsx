@@ -117,9 +117,7 @@ export default async function ExhibitionPage({
     >
       <JsonLd data={jsonLd} />
 
-      {topCover && (
-        <CoverImage value={topCover} placement="top" priority background className="cover-bg-top" />
-      )}
+      <CoverImage value={topCover} placement="top" priority background className="cover-bg-top" />
 
       <Container width="content">
         <header className={`${styles.header} reveal`} style={revealOrder(1)}>
@@ -239,9 +237,7 @@ export default async function ExhibitionPage({
         )}
       </Container>
 
-      {bottomCover && (
-        <CoverImage value={bottomCover} placement="bottom" background className="cover-bg-bottom" />
-      )}
+      <CoverImage value={bottomCover} placement="bottom" background className="cover-bg-bottom" />
     </main>
   );
 }

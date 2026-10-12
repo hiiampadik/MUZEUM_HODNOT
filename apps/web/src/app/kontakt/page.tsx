@@ -42,9 +42,7 @@ export default async function ContactPage() {
     <main className="page-main" style={{ '--accent': accents.contact } as CSSProperties}>
       <JsonLd data={jsonLd} />
 
-      {contact?.topCover && (
-        <CoverImage value={contact.topCover} placement="top" priority background className="cover-bg-top" />
-      )}
+      <CoverImage value={contact?.topCover} placement="top" priority background className="cover-bg-top" />
 
       <Container width="narrow">
         <Heading className={`${styles.headerTitle} reveal`} style={revealOrder(1)}>
@@ -105,9 +103,7 @@ export default async function ContactPage() {
         </Container>
       )}
 
-      {contact?.bottomCover && (
-        <CoverImage value={contact.bottomCover} placement="bottom" background className="cover-bg-bottom" />
-      )}
+      <CoverImage value={contact?.bottomCover} placement="bottom" background className="cover-bg-bottom" />
     </main>
   );
 }

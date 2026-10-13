@@ -6,6 +6,7 @@ export const routes = {
   methodicalMaterials: '/metodicke-materialy',
   aboutPlatform: '/o-platforme',
   valueGenerator: '/generator-hodnot',
+  exhibitions: '/vystavy',
   exhibition: (slug: string) => `/vystava/${slug}`,
 } as const;
 

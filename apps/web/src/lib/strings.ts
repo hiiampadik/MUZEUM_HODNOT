@@ -31,6 +31,7 @@ export const nav = {
   brandAbbr: 'MH',
   /** Full brand name (nav brand pill; uppercased via CSS). */
   brandName: 'Múzeum hodnôt',
+  exhibitions: 'Výstavy',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
   methodicalMaterials: 'Metodické materiály',
@@ -72,8 +73,6 @@ export const home = {
   forTeachersLead: 'Zážitkové vzdelávanie',
   forTeachersSuffix: 'pre učiteľov',
   methodicalMaterialsTitle: 'Metodické materiály',
-  upcoming: 'Pripravované výstavy',
-  past: 'Minulé výstavy',
   /**
    * Project-intro heading (moved out of the CMS). Only the lead is underlined;
    * note the intentional capital H, matching the footer's brand heading.
@@ -83,10 +82,20 @@ export const home = {
 
 /** Page metadata titles + <h1>/heading copy. */
 export const pages = {
+  exhibitions: 'Výstavy',
   contact: 'Kontakt',
   valueGenerator: 'Generátor hodnôt',
   methodicalMaterials: 'Metodické materiály',
   aboutPlatform: 'O platforme',
+} as const;
+
+/** Exhibition listing section titles (homepage + exhibitions page). */
+export const exhibitionList = {
+  active: 'Aktuálne výstavy',
+  upcoming: 'Pripravované výstavy',
+  past: 'Minulé výstavy',
+  /** Meta description of the exhibitions page. */
+  description: 'Prehľad aktuálnych, pripravovaných a minulých výstav Múzea hodnôt.',
 } as const;
 
 /** School list under the value-generator map. */

@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries: MetadataRoute.Sitemap = [
     { url: pageUrl(routes.home), lastModified: now, priority: 1 },
+    { url: pageUrl(routes.exhibitions), lastModified: now, priority: 0.8 },
     { url: pageUrl(routes.contact), lastModified: now, priority: 0.7 },
     {
       url: pageUrl(routes.methodicalMaterials),

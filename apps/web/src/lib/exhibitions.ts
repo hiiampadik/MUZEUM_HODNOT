@@ -1,6 +1,6 @@
 import type { EXHIBITIONS_QUERYResult } from '@/sanity/types.generated';
 
-export type ExhibitionCard = EXHIBITIONS_QUERYResult[number];
+export type ExhibitionSummary = EXHIBITIONS_QUERYResult[number];
 
 export type ExhibitionCategory = 'active' | 'upcoming' | 'past';
 
@@ -13,7 +13,7 @@ export type ExhibitionCategory = 'active' | 'upcoming' | 'past';
  * relative to `today`.
  */
 export function categorize(
-  exhibition: Pick<ExhibitionCard, 'status' | 'startDate' | 'endDate'>,
+  exhibition: Pick<ExhibitionSummary, 'status' | 'startDate' | 'endDate'>,
   today: Date = new Date(),
 ): ExhibitionCategory {
   const { status, startDate, endDate } = exhibition;
@@ -31,9 +31,9 @@ export function groupExhibitions(
   exhibitions: EXHIBITIONS_QUERYResult,
   today: Date = new Date(),
 ) {
-  const active: ExhibitionCard[] = [];
-  const upcoming: ExhibitionCard[] = [];
-  const past: ExhibitionCard[] = [];
+  const active: ExhibitionSummary[] = [];
+  const upcoming: ExhibitionSummary[] = [];
+  const past: ExhibitionSummary[] = [];
 
   for (const ex of exhibitions) {
     const category = categorize(ex, today);

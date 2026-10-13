@@ -13,12 +13,12 @@ import {IntroBubble} from '@/components/IntroBubble/IntroBubble';
 import {CoverImage} from '@/components/CoverImage/CoverImage';
 import {Button} from '@/components/Button/Button';
 import {Link} from '@/components/Link/Link';
-import {Label, Text, Title, Underline} from '@/components/Typography/Typography';
-import {type ExhibitionCard, groupExhibitions} from '@/lib/exhibitions';
+import {ExhibitionSection} from '@/components/Exhibitions/ExhibitionSection';
+import {Label, Title, Underline} from '@/components/Typography/Typography';
+import {groupExhibitions} from '@/lib/exhibitions';
 import {accents, routes} from '@/lib/routes';
-import {formatDateRange} from '@/lib/format';
 import {revealOrder} from '@/lib/motion';
-import {home as homeStrings, site} from '@/lib/strings';
+import {exhibitionList, home as homeStrings, site} from '@/lib/strings';
 import hover from '@/components/shared/emojiHover.module.css';
 import styles from './home.module.css';
 
@@ -206,50 +206,12 @@ export default async function HomePage() {
 
       <div className={styles.spacer} />
 
-      {/* Upcoming exhibitions */}
-      {upcoming.length > 0 && (
-        <Container as="section" className={styles.section}>
-          <Title
-            as="h2"
-            underline
-            className={`${styles.sectionTitle} reveal`}
-            style={{ '--accent': accents.exhibition } as CSSProperties}
-          >
-            {homeStrings.upcoming}
-          </Title>
-          <div className={styles.upcomingList}>
-            {/* Exhibitions with a detail page get the same card as the past
-                ones; the rest stay plain rows separated by dashed lines. */}
-            {upcoming.map((ex) =>
-              ex.canOpenDetail && ex.slug ? (
-                <PastCard key={ex._id} exhibition={ex} accent={accents.exhibition} />
-              ) : (
-                <UpcomingRow key={ex._id} exhibition={ex} accent={accents.exhibition} />
-              ),
-            )}
-          </div>
-        </Container>
-      )}
-
-      {/* Past exhibitions */}
-      {past.length > 0 && (
-        <Container as="section" className={styles.section}>
-          <div id="vystavy" />
-          <Title
-            as="h2"
-            underline
-            className={`${styles.sectionTitle} reveal`}
-            style={{ '--accent': accents.exhibition } as CSSProperties}
-          >
-            {homeStrings.past}
-          </Title>
-          <div className={styles.pastList}>
-            {past.map((ex) => (
-              <PastCard key={ex._id} exhibition={ex} accent={accents.exhibition} />
-            ))}
-          </div>
-        </Container>
-      )}
+      <ExhibitionSection
+        title={exhibitionList.upcoming}
+        exhibitions={upcoming}
+        layout="mixed"
+      />
+      <ExhibitionSection id="vystavy" title={exhibitionList.past} exhibitions={past} />
 
       <CoverImage
         value={home?.bottomCover}
@@ -296,86 +258,5 @@ function HeroTile({ tile, order }: { tile: Tile; order: number }) {
         </div>
       )}
     </article>
-  );
-}
-
-function UpcomingRow({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
-  const year = exhibition.startDate?.slice(0, 4);
-  const place = exhibition.place;
-  const blurb = exhibition.summary;
-  return (
-    <div className={`${styles.upcomingRow} reveal`} style={{ '--accent': accent } as CSSProperties}>
-      <div className={styles.upcomingRowTop}>
-        {year && <Label as="p">{year}</Label>}
-        {place && <Label as="p">{place}</Label>}
-        <Title as="h3">
-          <Underline>{exhibition.title}</Underline>
-        </Title>
-      </div>
-      {blurb && (
-        <Text className={styles.rowExcerpt}>{blurb}</Text>
-      )}
-    </div>
-  );
-}
-
-function PastCard({ exhibition, accent }: { exhibition: ExhibitionCard; accent: string }) {
-  const { title, slug, startDate, endDate, canOpenDetail, cover, summary, roles, place } = exhibition;
-  const roleList = roles ?? [];
-  const body = (
-    <>
-      <div className={styles.pastBody}>
-        <div className={styles.pastSection}>
-          <div>
-            <Label as="p">{formatDateRange(startDate, endDate)}</Label>
-            {place && <Label as="p">{place}</Label>}
-          </div>
-          <Title as="h3">
-            <Underline className={styles.pastCardUnderline}>{title}</Underline>
-          </Title>
-        </div>
-        {roleList.length > 0 && (
-          <>
-            <hr className={styles.pastDivider} />
-            <dl className={styles.pastRoles}>
-              {roleList.map((r) => (
-                <div key={r._key} className={styles.pastRole}>
-                  <dt className={styles.pastRoleLabel}>{r.role}</dt>
-                  <dd className={styles.pastRolePeople}>{r.people}</dd>
-                </div>
-              ))}
-            </dl>
-          </>
-        )}
-        {summary && (
-          <>
-            <hr className={styles.pastDivider} />
-            <div className={styles.pastSection}>
-              <Text className={styles.rowExcerpt}>{summary}</Text>
-            </div>
-          </>
-        )}
-      </div>
-      {cover?.asset?._id && (
-        <div className={`${styles.pastMedia} reveal-media`}>
-          <SanityImage value={cover} width={800} sizes="(max-width: 640px) 100vw, 50vw" />
-        </div>
-      )}
-    </>
-  );
-
-  const style = { '--accent': accent } as CSSProperties;
-
-  if (canOpenDetail && slug) {
-    return (
-      <Link href={routes.exhibition(slug)} className={`${styles.pastCard} reveal`} style={style}>
-        {body}
-      </Link>
-    );
-  }
-  return (
-    <div className={`${styles.pastCard} reveal`} style={style}>
-      {body}
-    </div>
   );
 }

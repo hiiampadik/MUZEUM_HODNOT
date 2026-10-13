@@ -18,9 +18,10 @@ type NavProps = {
 };
 
 const items = [
-  { href: routes.aboutPlatform, label: nav.aboutPlatform, emoji: '👻' },
+  { href: routes.exhibitions, label: nav.exhibitions, emoji: '👀' },
   { href: routes.valueGenerator, label: nav.valueGenerator, emoji: '🔮' },
   { href: routes.methodicalMaterials, label: nav.methodicalMaterials, emoji: '📚' },
+  { href: routes.aboutPlatform, label: nav.aboutPlatform, emoji: '👻' },
   { href: routes.contact, label: nav.contact, emoji: '🤹' },
 ];
 

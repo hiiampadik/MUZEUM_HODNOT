@@ -82,7 +82,7 @@ packages/*     shared code (add when needed)
 ## Conventions — pages & routing
 - Routes + provisional section accent colors live in `src/lib/routes.ts`. Set the accent
   per page via inline `style={{ '--accent': accents.x }}` on the page's `<main>`.
-- Slovak URL slugs: `/kontakt`, `/zazitkove-vzdelavanie`, `/generator-hodnot`, `/vystava/[slug]`.
+- Slovak URL slugs: `/kontakt`, `/zazitkove-vzdelavanie`, `/generator-hodnot`, `/vystavy` (listing), `/vystava/[slug]`.
 - Exhibition categories (active/upcoming/past) are set manually in the CMS (`status` select
   on the exhibition); documents without it fall back to their dates
   (`src/lib/exhibitions.ts`).

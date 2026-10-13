@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from 'react';
+import type { CSSProperties, ElementType, ReactNode } from 'react';
 import styles from './Container.module.css';
 
 type Width = 'full' | 'content' | 'narrow';
@@ -9,6 +9,8 @@ type ContainerProps = {
   width?: Width;
   as?: ElementType;
   className?: string;
+  id?: string;
+  style?: CSSProperties;
 };
 
 /**
@@ -20,9 +22,15 @@ export function Container({
   width = 'content',
   as: Tag = 'div',
   className,
+  id,
+  style,
 }: ContainerProps) {
   const classNames = [styles.container, styles[width], className]
     .filter(Boolean)
     .join(' ');
-  return <Tag className={classNames}>{children}</Tag>;
+  return (
+    <Tag id={id} className={classNames} style={style}>
+      {children}
+    </Tag>
+  );
 }

@@ -133,6 +133,39 @@ export function exhibitionEventSchema({
   };
 }
 
+/** CollectionPage listing the exhibitions that have a detail page. */
+export function exhibitionListSchema({
+  name,
+  path,
+  description,
+  items,
+}: {
+  name: string;
+  path: string;
+  description: string;
+  items: { title: string; path: string }[];
+}) {
+  return {
+    '@context': context,
+    '@type': 'CollectionPage',
+    name,
+    url: pageUrl(path),
+    inLanguage: 'sk',
+    description,
+    ...(items.length > 0 && {
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: items.map((item, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: item.title,
+          url: pageUrl(item.path),
+        })),
+      },
+    }),
+  };
+}
+
 /** BreadcrumbList: Home › current page. */
 export function breadcrumbSchema({
   name,

@@ -2,7 +2,7 @@ import { defineType, defineField } from 'sanity';
 import { LinkIcon } from '@sanity/icons';
 import { EmojiInput } from '../components/EmojiInput';
 
-/** A link with a display label (exhibition links, tile targets, map point link). */
+/** A link with a display label (exhibition links, tile targets). */
 export const namedLink = defineType({
   name: 'namedLink',
   title: 'Odkaz',

@@ -3,9 +3,19 @@ import { CalendarIcon } from '@sanity/icons';
 
 /**
  * Exhibition (multiple documents).
- * The "Aktuálne" tag and homepage categories (upcoming / active / past) are derived
- * on the frontend from startDate/endDate — not stored here.
+ * The "Aktuálne" tag and homepage categories (upcoming / active / past) are set
+ * manually via `status` — the dates are informational only.
  */
+/** Homepage categories, in display order. Shared by the field and the Studio structure. */
+export const EXHIBITION_STATUSES = [
+  { title: 'Aktuálna', listTitle: 'Aktuálne', value: 'active' },
+  { title: 'Chystaná', listTitle: 'Chystané', value: 'upcoming' },
+  { title: 'Uplynulá', listTitle: 'Uplynulé', value: 'past' },
+] as const;
+
+/** Initial value template that presets `status` (used by the per-status lists). */
+export const EXHIBITION_BY_STATUS_TEMPLATE = 'exhibition-by-status';
+
 export const exhibition = defineType({
   name: 'exhibition',
   title: 'Výstava',
@@ -52,6 +62,19 @@ export const exhibition = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'status',
+      title: 'Zaradenie',
+      type: 'string',
+      group: 'main',
+      description:
+        'Určuje, v ktorej sekcii domovskej stránky sa výstava zobrazí. Nemení sa automaticky podľa dátumov — po skončení výstavy ho treba prepnúť ručne.',
+      options: {
+        list: EXHIBITION_STATUSES.map(({ title, value }) => ({ title, value })),
+      },
+      initialValue: 'upcoming',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'place',
       title: 'Miesto',
       type: 'string',
@@ -79,7 +102,6 @@ export const exhibition = defineType({
       type: 'date',
       group: 'main',
       options: { dateFormat: 'DD.MM.YYYY' },
-      description: 'Podľa konca sa určuje, či je výstava „Aktuálna".',
       validation: (rule) =>
         rule.required().custom((endDate, context) => {
           const start = (context.document as { startDate?: string })?.startDate;

@@ -1,4 +1,4 @@
-/* Mirrors the homepage's upcoming-exhibition rows (home.module.css). */
+/* Dashed rows mirror the homepage's upcoming-exhibition rows (home.module.css). */
 .section {
   margin-block: var(--space-2xl);
 }
@@ -17,28 +17,113 @@
   list-style: none;
 }
 
-.row {
+/* Header and rows share one layout: the content columns + a chevron slot. */
+.line {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-md);
-  border-top: 2px dashed var(--color-border-strong);
+  align-items: center;
+  gap: var(--space-xs);
 }
 
-.row:last-child {
-  border-bottom: 2px dashed var(--color-border-strong);
-}
-
-/* 4 equal columns: funding spans the first two, the join link sits in the last. */
-.grid {
+.cells {
+  flex: 1;
+  min-width: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xs);
   align-items: start;
 }
 
+.head {
+  padding: var(--space-xs) var(--space-md);
+}
+
+.row {
+  /* One line weight for the text underline and the chevron. */
+  --line-width: 1px;
+  position: relative;
+  padding: var(--space-2xs) var(--space-md);
+  border-top: 2px dashed var(--color-border-strong);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cell h3,
+.cell p {
+  margin: 0;
+}
+
+/* Column names are only visible in the desktop header; kept for screen readers. */
+.cellLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Only as wide as the icon; the columns take the rest. */
+.chevron {
+  flex: none;
+  width: var(--space-md);
+  height: var(--space-md);
+  stroke-width: var(--line-width);
+  transition: transform 0.25s ease;
+}
+
+/* ---- Row with a campaign URL: the whole row is one link ---- */
+.linked .value {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: var(--line-width);
+  text-underline-offset: 0.15em;
+}
+
+.rowLink {
+  color: inherit;
+  text-decoration: inherit;
+  outline: none;
+}
+
+/* Stretches the title link over the row. */
+.rowLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.rowLink:focus-visible::after {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .linked:hover .value {
+    text-decoration-color: transparent;
+  }
+  .linked:hover .chevron {
+    transform: translateX(var(--space-3xs));
+  }
+}
+
+.linked:focus-within .chevron {
+  transform: translateX(var(--space-3xs));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+/* Funding (SchoolFunding) — temporarily hidden, see SchoolList.tsx. */
 .funding {
-  grid-column: span 2;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -78,25 +163,21 @@
   background: var(--accent);
 }
 
-.join {
-  grid-column: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2xs);
-}
-
-.text {
-  max-width: 420px;
-}
-
+/* Narrow screens: rows stack, without the header or any column names. */
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
+  .head {
+    display: none;
   }
-  .funding,
-  .join {
-    grid-column: auto;
+  .cells {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .row {
+    padding-block: var(--space-sm);
+  }
+  /* Skip columns with no content. */
+  .cell:has(> .cellLabel:only-child) {
+    display: none;
   }
 }
 

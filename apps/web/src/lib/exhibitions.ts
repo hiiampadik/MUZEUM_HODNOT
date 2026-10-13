@@ -5,17 +5,21 @@ export type ExhibitionCard = EXHIBITIONS_QUERYResult[number];
 export type ExhibitionCategory = 'active' | 'upcoming' | 'past';
 
 /**
- * Categorize an exhibition by its date range relative to `today`:
- *  - upcoming: starts in the future
+ * Category of an exhibition — set manually in the CMS (`status`):
+ *  - upcoming: not yet running
  *  - active:   currently running (gets the "Aktuálne" tag)
  *  - past:     already ended
+ * Documents without a status (not yet migrated) fall back to their date range
+ * relative to `today`.
  */
 export function categorize(
-  exhibition: Pick<ExhibitionCard, 'startDate' | 'endDate'>,
+  exhibition: Pick<ExhibitionCard, 'status' | 'startDate' | 'endDate'>,
   today: Date = new Date(),
 ): ExhibitionCategory {
+  const { status, startDate, endDate } = exhibition;
+  if (status) return status;
+
   const now = today.toISOString().slice(0, 10); // YYYY-MM-DD
-  const { startDate, endDate } = exhibition;
 
   if (endDate && endDate < now) return 'past';
   if (startDate && startDate > now) return 'upcoming';

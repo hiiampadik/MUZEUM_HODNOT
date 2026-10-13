@@ -83,8 +83,9 @@ packages/*     shared code (add when needed)
 - Routes + provisional section accent colors live in `src/lib/routes.ts`. Set the accent
   per page via inline `style={{ '--accent': accents.x }}` on the page's `<main>`.
 - Slovak URL slugs: `/kontakt`, `/zazitkove-vzdelavanie`, `/generator-hodnot`, `/vystava/[slug]`.
-- Exhibition categories (active/upcoming/past) are derived at build time from dates in
-  `src/lib/exhibitions.ts` — not stored in the CMS.
+- Exhibition categories (active/upcoming/past) are set manually in the CMS (`status` select
+  on the exhibition); documents without it fall back to their dates
+  (`src/lib/exhibitions.ts`).
 - Homepage hero tiles are **fixed and derived on the frontend** (not editable in the CMS):
   tile 1 = current exhibitions (omitted when none), tile 2 = Generátor hodnôt, tile 3 =
   Zážitkové vzdelávanie. Tile images use the target's cover.

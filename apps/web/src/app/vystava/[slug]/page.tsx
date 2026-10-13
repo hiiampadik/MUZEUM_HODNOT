@@ -61,6 +61,7 @@ export default async function ExhibitionPage({
   const {
     title,
     place,
+    status,
     openingDate,
     startDate,
     endDate,
@@ -78,7 +79,7 @@ export default async function ExhibitionPage({
 
   const locale: Locale = exhibition.foreignLanguage ? 'en' : 'sk';
   const t = getExhibitionStrings(locale);
-  const isActive = categorize({ startDate, endDate }) === 'active';
+  const isActive = categorize({ status, startDate, endDate }) === 'active';
   const photos = (gallery ?? []).flatMap((photo) =>
     photo?.asset?._id
       ? [

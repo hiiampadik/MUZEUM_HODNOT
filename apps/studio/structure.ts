@@ -7,13 +7,18 @@ import {
   EarthGlobeIcon,
   CalendarIcon,
   InfoOutlineIcon,
-  LockIcon,
+  // LockIcon,
 } from '@sanity/icons';
 import { SINGLETONS } from './schemaTypes';
-import { DARUJME_FEEDS_ID } from './schemaTypes/documents/darujmeFeeds';
+import {
+  EXHIBITION_BY_STATUS_TEMPLATE,
+  EXHIBITION_STATUSES,
+} from './schemaTypes/documents/exhibition';
+// import { DARUJME_FEEDS_ID } from './schemaTypes/documents/darujmeFeeds';
 
 /**
- * Studio structure: singletons at the top (fixed document IDs), then exhibitions.
+ * Studio structure: singletons at the top (fixed document IDs), then exhibitions
+ * grouped by their manually set status.
  * Singletons are excluded from the generic document lists to avoid duplicates.
  */
 export const structure: StructureResolver = (S) =>
@@ -48,15 +53,16 @@ export const structure: StructureResolver = (S) =>
             .documentId('valueGenerator'),
         ),
 
+      // Temporarily hidden together with the funding in the school list.
       // Private document (dotted ID) — see darujmeFeeds.ts.
-      S.listItem()
-        .title('Darujme.sk feedy')
-        .icon(LockIcon)
-        .child(
-          S.document()
-            .schemaType('darujmeFeeds')
-            .documentId(DARUJME_FEEDS_ID),
-        ),
+      // S.listItem()
+      //   .title('Darujme.sk feedy')
+      //   .icon(LockIcon)
+      //   .child(
+      //     S.document()
+      //       .schemaType('darujmeFeeds')
+      //       .documentId(DARUJME_FEEDS_ID),
+      //   ),
 
       S.listItem()
         .title('O platforme')
@@ -69,7 +75,39 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      S.documentTypeListItem('exhibition').title('Výstavy').icon(CalendarIcon),
+      S.listItem()
+        .title('Výstavy')
+        .icon(CalendarIcon)
+        .child(
+          S.list()
+            .title('Výstavy')
+            .items([
+              ...EXHIBITION_STATUSES.map(({ listTitle, value }) =>
+                S.listItem()
+                  .title(listTitle)
+                  .id(value)
+                  .icon(CalendarIcon)
+                  .child(
+                    S.documentTypeList('exhibition')
+                      .title(listTitle)
+                      .filter('_type == "exhibition" && status == $status')
+                      .params({ status: value })
+                      .defaultOrdering([{ field: 'startDate', direction: 'desc' }])
+                      // New documents created here start in this category.
+                      .initialValueTemplates([
+                        S.initialValueTemplateItem(
+                          EXHIBITION_BY_STATUS_TEMPLATE,
+                          { status: value },
+                        ),
+                      ]),
+                  ),
+              ),
+              S.divider(),
+              S.documentTypeListItem('exhibition')
+                .title('Všetky výstavy')
+                .icon(CalendarIcon),
+            ]),
+        ),
 
       S.divider(),
 

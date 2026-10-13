@@ -33,7 +33,7 @@
   /* Colors */
   --color-bg: #ececf0; /* page background */
   --color-surface: #ffffff; /* cards */
-  --color-surface-opacity: rgb(255 255 255); /* cards */
+  --color-surface-opacity: rgb(255 255 255 / 0.85); /* translucent surface (nav pills) */
   --color-surface-muted: #f8f8fa; /* subtle panels */
   --color-fg: #000000;
   --color-on-accent: #ffffff; /* text on an accent fill */

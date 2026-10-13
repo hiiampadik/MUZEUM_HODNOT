@@ -92,9 +92,13 @@ export const pages = {
 /** School list under the value-generator map. */
 export const schoolList = {
   title: 'Školy',
+  /** Column names. */
+  school: 'Škola',
+  address: 'Adresa',
+  /** Label of the campaign link pill in the map popover (points only store the URL). */
+  campaignLink: 'Darujme.sk',
   donated: 'Zatiaľ ste spolu darovali',
   goal: 'Potrebujeme',
-  joinOn: 'Zapojte sa na',
   /** Progress bar aria-label. */
   progress: 'Priebeh zbierky',
 } as const;

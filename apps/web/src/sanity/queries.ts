@@ -99,6 +99,7 @@ export const EXHIBITIONS_QUERY = defineQuery(/* groq */ `
     title,
     "slug": slug.current,
     place,
+    status,
     openingDate,
     startDate,
     endDate,
@@ -129,6 +130,7 @@ export const EXHIBITION_QUERY = defineQuery(/* groq */ `
     title,
     "slug": slug.current,
     place,
+    status,
     openingDate,
     startDate,
     endDate,
@@ -198,9 +200,9 @@ export const VALUE_GENERATOR_QUERY = defineQuery(/* groq */ `
       _key,
       title,
       location,
-      text,
-      link,
-      goal
+      address,
+      // Legacy points stored the URL inside a namedLink object.
+      "url": coalesce(url, link.href)
     }
   }
 `);

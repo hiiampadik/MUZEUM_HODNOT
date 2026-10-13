@@ -2,9 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { common } from '@/lib/strings';
-import { Title } from '@/components/Typography/Typography';
-import { RichText } from '@/components/RichText/RichText';
+import { common, schoolList } from '@/lib/strings';
+import { Label, Text, Title } from '@/components/Typography/Typography';
 import { Pill } from '@/components/Pill/Pill';
 import styles from './ValueMap.module.css';
 
@@ -12,15 +11,10 @@ export type MapPointData = {
   _key: string;
   title: string | null;
   location?: { lat?: number | null; lng?: number | null } | null;
-  text?: readonly unknown[] | null;
-  link?: {
-    label?: string | null;
-    emoji?: string | null;
-    href?: string | null;
-    newTab?: boolean | null;
-  } | null;
-  /** Fundraising goal in EUR (school list under the map). */
-  goal?: number | null;
+  /** Shown in the school list under the map. */
+  address?: string | null;
+  /** Campaign page (Darujme.sk). */
+  url?: string | null;
 };
 
 /**
@@ -138,7 +132,8 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
         });
 
         const cs = getComputedStyle(container);
-        const green = cs.getPropertyValue('--accent-green').trim() || '#66a755';
+        // Section accent (inherited from the page's <main>), same as the pills.
+        const accent = cs.getPropertyValue('--accent').trim() || '#40a6e6';
 
         map.addLayer({
           id: 'clusters',
@@ -146,7 +141,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           source: 'points',
           filter: ['has', 'point_count'],
           paint: {
-            'circle-color': green,
+            'circle-color': accent,
             'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 30, 30],
             'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
@@ -166,20 +161,20 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
           source: 'points',
           filter: ['!', ['has', 'point_count']],
           paint: {
-            // Default: green fill / white stroke. Selected: white fill / green
+            // Default: accent fill / white stroke. Selected: white fill / accent
             // stroke (feature-state driven).
             'circle-color': [
               'case',
               ['boolean', ['feature-state', 'selected'], false],
               '#ffffff',
-              green,
+              accent,
             ],
             'circle-radius': 9,
             'circle-stroke-width': 2,
             'circle-stroke-color': [
               'case',
               ['boolean', ['feature-state', 'selected'], false],
-              green,
+              accent,
               '#ffffff',
             ],
           },
@@ -265,14 +260,21 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
                 {selected.title}
               </Title>
             )}
-            {selected.text && <RichText value={selected.text} className={styles.panelText} />}
-            {selected.link?.href && (
+            {selected.address && (
+              <div className={styles.panelField}>
+                <Label>{schoolList.address}</Label>
+                <Text>{selected.address}</Text>
+              </div>
+            )}
+            {selected.url && (
               <Pill
-                href={selected.link.href}
+                href={selected.url}
                 className={styles.panelPill}
-                target={selected.link.newTab === false ? '_self' : undefined}
+                target="_blank"
+                color="var(--accent)"
+                emoji="🌐"
               >
-                {selected.link.label || common.moreLink}
+                {schoolList.campaignLink}
               </Pill>
             )}
           </div>
@@ -283,7 +285,7 @@ export function ValueMap({ points }: { points: readonly MapPointData[] }) {
         {points.map((p) => (
           <li key={p._key}>
             {p.title}
-            {p.link?.href ? ` – ${p.link.label || p.link.href}` : ''}
+            {p.url ? ` – ${p.url}` : ''}
           </li>
         ))}
       </ul>

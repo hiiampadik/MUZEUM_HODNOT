@@ -4,8 +4,8 @@ import { GeopointMapInput } from '../components/GeopointMapInput';
 
 /**
  * A point on the Generátor hodnôt map (a school).
- * Popover content: title, text block, link (shown as a pill). Position via geopoint.
- * The same points feed the school list under the map (with the fundraising goal).
+ * Popover content: title, address, campaign URL (shown as a pill). Position via geopoint.
+ * The same points feed the school list under the map (with the address).
  */
 export const mapPoint = defineType({
   name: 'mapPoint',
@@ -30,30 +30,26 @@ export const mapPoint = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'text',
-      title: 'Text',
-      type: 'richTextBasic',
+      name: 'address',
+      title: 'Adresa',
+      type: 'string',
+      description: 'Zobrazí sa v zozname škôl pod mapou a v okne bodu na mape.',
     }),
     defineField({
-      name: 'link',
+      name: 'url',
       title: 'Odkaz',
-      type: 'namedLink',
-      description: 'V zozname škôl pod mapou sa zobrazí ako „Zapojte sa na“.',
-    }),
-    defineField({
-      name: 'goal',
-      title: 'Potrebujeme (€)',
-      type: 'number',
-      description:
-        'Cieľová suma zbierky v eurách. Zobrazí sa v zozname škôl pod mapou; ak je prázdna, ' +
-        'suma ani priebeh zbierky sa nezobrazia.',
-      validation: (rule) => rule.min(0).integer(),
+      type: 'url',
+      description: 'Adresa stránky kampane (napr. na Darujme.sk).',
+      validation: (rule) => rule.uri({ scheme: ['http', 'https'] }),
     }),
   ],
   preview: {
-    select: { title: 'title' },
-    prepare({ title }) {
-      return { title: title || 'Bod na mape', subtitle: 'Bod na mape' };
+    select: { title: 'title', address: 'address', url: 'url' },
+    prepare({ title, address, url }) {
+      return {
+        title: title || 'Bod na mape',
+        subtitle: [address, url].filter(Boolean).join(' · '),
+      };
     },
   },
 });

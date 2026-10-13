@@ -77,8 +77,14 @@
   padding-right: var(--space-2xl);
 }
 
-.panelText {
-  flex: 0 1 auto;
+.panelField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.panelField p {
+  margin: 0;
 }
 
 /* Pill sits at the bottom of the fixed-height panel. */

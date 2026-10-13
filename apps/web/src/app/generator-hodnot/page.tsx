@@ -7,7 +7,7 @@ import { CoverImage } from '@/components/CoverImage/CoverImage';
 import { PageBuilder } from '@/components/pagebuilder/PageBuilder';
 import { ValueMap } from '@/components/ValueMap/ValueMap';
 import { SchoolList } from '@/components/SchoolList/SchoolList';
-import { fetchDonationAmounts } from '@/lib/donations';
+// import { fetchDonationAmounts } from '@/lib/donations';
 import { Heading, Title } from '@/components/Typography/Typography';
 import { accents, routes } from '@/lib/routes';
 import { pageMetadata } from '@/lib/metadata';
@@ -32,8 +32,9 @@ export default async function ValueGeneratorPage() {
   const points = page?.mapPoints ?? [];
   // Unset value means "show".
   const showMap = page?.showMap !== false;
+  // Funding is temporarily hidden in SchoolList, so the amounts are not fetched.
   // Last known raised amounts, baked into the HTML; refreshed in the browser.
-  const amounts = showMap && points.length > 0 ? await fetchDonationAmounts() : null;
+  // const amounts = showMap && points.length > 0 ? await fetchDonationAmounts() : null;
 
   return (
     <main className="page-main" style={{ '--accent': accents.valueGenerator } as CSSProperties}>
@@ -51,7 +52,7 @@ export default async function ValueGeneratorPage() {
       {showMap && points.length > 0 && (
         <Container className="reveal">
           <ValueMap points={points} />
-          <SchoolList schools={points} initialAmounts={amounts} />
+          <SchoolList schools={points} />
         </Container>
       )}
 

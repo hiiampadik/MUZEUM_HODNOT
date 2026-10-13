@@ -324,6 +324,16 @@
   border-bottom: 2px dashed var(--color-border-strong);
 }
 
+/* Cards (exhibitions with a detail page) carry no dashed line above or below:
+   the line only separates plain rows from each other. */
+.upcomingList .pastCard + .upcomingRow {
+  border-top: none;
+}
+
+.upcomingList .pastCard + .pastCard {
+  margin-top: var(--space-md);
+}
+
 .rowExcerpt {
   max-width: 420px;
 }

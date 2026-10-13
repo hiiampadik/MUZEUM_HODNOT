@@ -218,9 +218,15 @@ export default async function HomePage() {
             {homeStrings.upcoming}
           </Title>
           <div className={styles.upcomingList}>
-            {upcoming.map((ex) => (
-              <UpcomingRow key={ex._id} exhibition={ex} accent={accents.exhibition} />
-            ))}
+            {/* Exhibitions with a detail page get the same card as the past
+                ones; the rest stay plain rows separated by dashed lines. */}
+            {upcoming.map((ex) =>
+              ex.canOpenDetail && ex.slug ? (
+                <PastCard key={ex._id} exhibition={ex} accent={accents.exhibition} />
+              ) : (
+                <UpcomingRow key={ex._id} exhibition={ex} accent={accents.exhibition} />
+              ),
+            )}
           </div>
         </Container>
       )}

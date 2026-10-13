@@ -42,5 +42,11 @@ export function groupExhibitions(
     else past.push(ex);
   }
 
+  // The query orders by end date, newest first; upcoming ones read the other
+  // way round: the nearest start on top, undated ones last.
+  upcoming.sort((a, b) =>
+    (a.startDate ?? '9999').localeCompare(b.startDate ?? '9999'),
+  );
+
   return { active, upcoming, past };
 }

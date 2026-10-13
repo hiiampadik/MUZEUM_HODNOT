@@ -51,6 +51,15 @@ export const exhibition = defineType({
       description:
         'Ak je vypnuté, výstava sa zobrazí len so základnými údajmi bez prekliku na detail.',
       initialValue: true,
+      // Only upcoming exhibitions have a homepage layout without a detail link.
+      validation: (rule) =>
+        rule.custom((canOpenDetail, context) => {
+          const status = (context.document as { status?: string })?.status;
+          if (!canOpenDetail && (status === 'active' || status === 'past')) {
+            return 'Aktuálna a uplynulá výstava musí mať povolený detail.';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'foreignLanguage',

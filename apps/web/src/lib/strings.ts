@@ -15,6 +15,8 @@
 export const site = {
   /** Brand / organisation name. */
   name: 'Múzeum hodnôt',
+  /** Homepage <title> (absolute, no template) — brand + what the site offers, for search results. */
+  homeTitle: 'Múzeum hodnôt — interaktívne výstavy a zážitkové vzdelávanie pre školy',
   /** Per-page <title> template; `%s` is the page title. */
   titleTemplate: '%s — Múzeum hodnôt',
   /** Site-wide meta description. */

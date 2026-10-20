@@ -24,12 +24,13 @@ export function pageMetadata({
   const url = pageUrl(path);
   // Every key set here replaces the layout's value wholesale, so fall back to
   // the site defaults instead of leaving title/description/image undefined.
-  const shareTitle = title || site.name;
+  // Only the homepage omits `title`, so the fallback is the homepage title.
+  const shareTitle = title || site.homeTitle;
   const desc = description || site.description;
 
   const metadata: Metadata = {
     // `absolute` skips the title template on pages without their own title.
-    title: title || { absolute: site.name },
+    title: title || { absolute: site.homeTitle },
     description: desc,
     alternates: { canonical: path },
     openGraph: {

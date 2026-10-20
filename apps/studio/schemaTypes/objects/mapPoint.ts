@@ -20,6 +20,13 @@ export const mapPoint = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'url',
+      title: 'Odkaz',
+      type: 'url',
+      description: 'Adresa stránky kampane (napr. na Darujme.sk).',
+      validation: (rule) => rule.uri({ scheme: ['http', 'https'] }),
+    }),
+    defineField({
       name: 'location',
       title: 'Poloha',
       type: 'geopoint',
@@ -34,13 +41,6 @@ export const mapPoint = defineType({
       title: 'Adresa',
       type: 'string',
       description: 'Zobrazí sa v zozname škôl pod mapou a v okne bodu na mape.',
-    }),
-    defineField({
-      name: 'url',
-      title: 'Odkaz',
-      type: 'url',
-      description: 'Adresa stránky kampane (napr. na Darujme.sk).',
-      validation: (rule) => rule.uri({ scheme: ['http', 'https'] }),
     }),
   ],
   preview: {

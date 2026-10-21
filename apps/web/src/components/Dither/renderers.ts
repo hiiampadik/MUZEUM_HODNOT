@@ -1,6 +1,16 @@
-import { type BayerSize, bayerMatrix, ditherBayer, type RGB } from './bayer';
+import {
+  type BayerSize,
+  type ColorWeights,
+  bayerMatrix,
+  ditherAtkinson,
+  ditherBayer,
+  type DitherMode,
+  type RGB,
+} from './bayer';
 
 export type DitherParams = {
+  mode: DitherMode;
+  /** Bayer matrix — with `atkinson` it's only used under the pointer trail. */
   matrixSize: BayerSize;
   spread: number;
   /** Extra spread where the pointer trail is at full strength. */
@@ -10,6 +20,10 @@ export type DitherParams = {
   /** Fade the trail toward the top edge instead of the bottom (bottom covers). */
   trailFadeTop: boolean;
   palette: readonly RGB[];
+  /** Per-colour weights, parallel to `palette` (see parsePaletteEntry). */
+  paletteWeights: readonly number[];
+  /** Channel weights of the distance to the nearest palette colour. */
+  colorWeights: ColorWeights;
   /** Page background the result is multiplied onto (white → page colour). */
   background: RGB;
 };
@@ -53,6 +67,8 @@ precision highp float;
 uniform sampler2D u_image;
 uniform sampler2D u_bayer;
 uniform sampler2D u_trail;
+uniform sampler2D u_diffused;
+uniform float u_diffusion;
 uniform vec2 u_size;
 uniform float u_matrixSize;
 uniform float u_spread;
@@ -60,10 +76,10 @@ uniform float u_trailBoost;
 uniform float u_trailFadeBottom;
 uniform float u_trailFadeTop;
 uniform vec3 u_palette[${MAX_COLORS}];
+uniform float u_paletteScale[${MAX_COLORS}];
 uniform int u_paletteSize;
 uniform vec3 u_background;
-
-const vec3 WEIGHTS = vec3(0.299, 0.587, 0.114);
+uniform vec3 u_colorWeights;
 
 void main() {
   // Canvas pixel, counted from the top-left like the image and the CPU path.
@@ -81,19 +97,25 @@ void main() {
   trail *= 1.0 - smoothstep(1.0 - max(u_trailFadeBottom, 0.001), 1.0, edge);
 
   vec2 cell = mod(px, u_matrixSize);
-  float threshold = texture2D(u_bayer, (cell + 0.5) / u_matrixSize).r - 0.5;
-  vec3 c = color + threshold * (u_spread + u_trailBoost * trail);
+  float rank = texture2D(u_bayer, (cell + 0.5) / u_matrixSize).r;
+  vec3 c = color + (rank - 0.5) * (u_spread + u_trailBoost * trail);
 
   vec3 best = u_palette[0];
   float bestDist = 1e9;
   for (int i = 0; i < ${MAX_COLORS}; i++) {
     if (i >= u_paletteSize) break;
     vec3 d = c - u_palette[i];
-    float dist = dot(WEIGHTS, d * d);
+    float dist = dot(u_colorWeights, d * d) * u_paletteScale[i];
     if (dist < bestDist) {
       bestDist = dist;
       best = u_palette[i];
     }
+  }
+  // Error diffusion is precomputed on the CPU and can't follow the pointer, so
+  // under the trail it gives way to the boiling Bayer pattern — picked by the
+  // Bayer rank, so the boundary between the two is dithered too.
+  if (u_diffusion > 0.5 && trail < rank) {
+    best = texture2D(u_diffused, uv).rgb;
   }
   // Multiply onto the page background, so white melts into the page.
   gl_FragColor = vec4(best * u_background, 1.0);
@@ -125,16 +147,24 @@ function createTexture(gl: WebGLRenderingContext, filter: number, wrap: number) 
 /**
  * Dithering in a fragment shader — cheap enough to redraw every frame, so the
  * pointer trail can modulate it live. Texture units: 0 image, 1 Bayer matrix,
- * 2 trail.
+ * 2 trail, 3 error-diffused image (Atkinson mode, computed on the CPU).
  */
 class GlDitherRenderer implements DitherRenderer {
   readonly interactive = true;
   private readonly gl: WebGLRenderingContext;
   private readonly program: WebGLProgram;
   private readonly buffer: WebGLBuffer;
-  private readonly textures: { image: WebGLTexture; bayer: WebGLTexture; trail: WebGLTexture };
+  private readonly textures: {
+    image: WebGLTexture;
+    bayer: WebGLTexture;
+    trail: WebGLTexture;
+    diffused: WebGLTexture;
+  };
   private readonly uniforms: Record<string, WebGLUniformLocation | null>;
-  private hasImage = false;
+  private image: HTMLCanvasElement | null = null;
+  private params: DitherParams | null = null;
+  /** The error-diffused texture is out of date with the image or the params. */
+  private diffusedStale = true;
   private bayerSize = 0;
   private disposed = false;
 
@@ -176,12 +206,15 @@ class GlDitherRenderer implements DitherRenderer {
       image: createTexture(gl, gl.NEAREST, gl.CLAMP_TO_EDGE),
       bayer: createTexture(gl, gl.NEAREST, gl.CLAMP_TO_EDGE),
       trail: createTexture(gl, gl.LINEAR, gl.CLAMP_TO_EDGE),
+      diffused: createTexture(gl, gl.NEAREST, gl.CLAMP_TO_EDGE),
     };
 
     const names = [
       'u_image',
       'u_bayer',
       'u_trail',
+      'u_diffused',
+      'u_diffusion',
       'u_size',
       'u_matrixSize',
       'u_spread',
@@ -189,13 +222,16 @@ class GlDitherRenderer implements DitherRenderer {
       'u_trailFadeBottom',
       'u_trailFadeTop',
       'u_palette',
+      'u_paletteScale',
       'u_paletteSize',
       'u_background',
+      'u_colorWeights',
     ];
     this.uniforms = Object.fromEntries(names.map((n) => [n, gl.getUniformLocation(program, n)]));
     gl.uniform1i(this.uniforms.u_image, 0);
     gl.uniform1i(this.uniforms.u_bayer, 1);
     gl.uniform1i(this.uniforms.u_trail, 2);
+    gl.uniform1i(this.uniforms.u_diffused, 3);
     this.setTrail(null);
   }
 
@@ -210,20 +246,27 @@ class GlDitherRenderer implements DitherRenderer {
     gl.canvas.height = image.height;
     gl.viewport(0, 0, image.width, image.height);
     gl.uniform2f(this.uniforms.u_size, image.width, image.height);
-    this.hasImage = true;
+    this.image = image;
+    this.diffusedStale = true;
   }
 
-  setParams({
-    matrixSize,
-    spread,
-    trailBoost,
-    trailFadeBottom,
-    trailFadeTop,
-    palette,
-    background,
-  }: DitherParams) {
+  setParams(params: DitherParams) {
     if (this.disposed) return;
     const { gl } = this;
+    const {
+      mode,
+      matrixSize,
+      spread,
+      trailBoost,
+      trailFadeBottom,
+      trailFadeTop,
+      palette,
+      paletteWeights,
+      colorWeights,
+      background,
+    } = params;
+    this.params = params;
+    this.diffusedStale = true;
     if (matrixSize !== this.bayerSize) {
       const bytes = Uint8Array.from(bayerMatrix(matrixSize), (v) => Math.round(v * 255));
       gl.activeTexture(gl.TEXTURE1);
@@ -244,13 +287,19 @@ class GlDitherRenderer implements DitherRenderer {
     const colors = palette.slice(0, MAX_COLORS);
     const flat = new Float32Array(MAX_COLORS * 3);
     colors.forEach((c, i) => flat.set([c[0] / 255, c[1] / 255, c[2] / 255], i * 3));
+    gl.uniform1f(this.uniforms.u_diffusion, mode === 'atkinson' ? 1 : 0);
     gl.uniform1f(this.uniforms.u_matrixSize, matrixSize);
     gl.uniform1f(this.uniforms.u_spread, spread);
     gl.uniform1f(this.uniforms.u_trailBoost, trailBoost);
     gl.uniform1f(this.uniforms.u_trailFadeBottom, trailFadeBottom);
     gl.uniform1f(this.uniforms.u_trailFadeTop, trailFadeTop ? 1 : 0);
     gl.uniform3fv(this.uniforms.u_palette, flat);
+    // 1 / weight², so the shader multiplies instead of dividing.
+    const scale = new Float32Array(MAX_COLORS).fill(1);
+    colors.forEach((_, i) => (scale[i] = 1 / (paletteWeights[i] ?? 1) ** 2));
+    gl.uniform1fv(this.uniforms.u_paletteScale, scale);
     gl.uniform1i(this.uniforms.u_paletteSize, colors.length);
+    gl.uniform3fv(this.uniforms.u_colorWeights, colorWeights);
     gl.uniform3f(
       this.uniforms.u_background,
       background[0] / 255,
@@ -273,8 +322,29 @@ class GlDitherRenderer implements DitherRenderer {
   }
 
   render() {
-    if (this.disposed || !this.hasImage || this.bayerSize === 0) return;
+    if (this.disposed || !this.image || this.bayerSize === 0) return;
+    if (this.params?.mode === 'atkinson' && this.diffusedStale) this.updateDiffused();
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+  }
+
+  /** Runs the error diffusion on the CPU — only when the image or params change, not per frame. */
+  private updateDiffused() {
+    const { gl, image, params } = this;
+    if (!image || !params || params.palette.length === 0) return;
+    const pixels = image.getContext('2d')?.getImageData(0, 0, image.width, image.height);
+    if (!pixels) return;
+    ditherAtkinson(
+      pixels.data,
+      pixels.width,
+      pixels.height,
+      params.palette,
+      params.paletteWeights,
+      params.colorWeights,
+    );
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, this.textures.diffused);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    this.diffusedStale = false;
   }
 
   dispose() {
@@ -319,7 +389,27 @@ class CpuDitherRenderer implements DitherRenderer {
     const { source, params } = this;
     if (!source || !params || params.palette.length === 0) return;
     const out = new ImageData(new Uint8ClampedArray(source.data), source.width, source.height);
-    ditherBayer(out.data, out.width, out.height, params.palette, params.matrixSize, params.spread);
+    if (params.mode === 'atkinson') {
+      ditherAtkinson(
+        out.data,
+        out.width,
+        out.height,
+        params.palette,
+        params.paletteWeights,
+        params.colorWeights,
+      );
+    } else {
+      ditherBayer(
+        out.data,
+        out.width,
+        out.height,
+        params.palette,
+        params.paletteWeights,
+        params.colorWeights,
+        params.matrixSize,
+        params.spread,
+      );
+    }
     const [br, bg, bb] = params.background;
     for (let i = 0; i < out.data.length; i += 4) {
       out.data[i] = (out.data[i] * br) / 255;

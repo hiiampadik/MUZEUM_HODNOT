@@ -1,15 +1,25 @@
 'use client';
 
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
-import { type BayerSize, parseColor, readPalette } from './bayer';
+import {
+  type BayerSize,
+  type ColorWeights,
+  type DitherMode,
+  parseColor,
+  parsePaletteEntry,
+  readPalette,
+} from './bayer';
 import { createRenderer, type DitherParams, type DitherRenderer } from './renderers';
 import { Trail } from './trail';
 import styles from './Dither.module.css';
 
-export type { BayerSize } from './bayer';
+export type { BayerSize, DitherMode } from './bayer';
 
-/** Dithering algorithm. Only ordered (Bayer) for now; error diffusion may follow. */
-export type DitherMode = 'bayer';
+/**
+ * Dithering algorithm. `bayer` = ordered, `atkinson` = error diffusion
+ * (computed on the CPU on load/resize; the pointer trail still boils in Bayer).
+ */
+export const DITHER_MODE: DitherMode = 'bayer';
 
 /** On-screen size of one dithered pixel, in CSS px. */
 // export const DITHER_CELL_SIZE = 2;
@@ -17,10 +27,16 @@ export type DitherMode = 'bayer';
 // export const DITHER_MATRIX_SIZE: BayerSize = 2;
 
 /** On-screen size of one dithered pixel, in CSS px. */
-export const DITHER_CELL_SIZE = 2;
+export const DITHER_CELL_SIZE = 1;
 /** Side of the Bayer matrix. */
 export const DITHER_MATRIX_SIZE: BayerSize = 2;
 
+/**
+ * Channel weights for picking the nearest palette colour. Plain RGB [1, 1, 1]
+ * mixes all palette colours into greys; luma weights [0.299, 0.587, 0.114]
+ * match by brightness, so greys fall to the darkest colour and white only.
+ */
+export const DITHER_COLOR_WEIGHTS: ColorWeights = [1, 1, 1];
 
 /**
  * How far the Bayer threshold pushes a pixel before it snaps to the nearest
@@ -51,7 +67,10 @@ type DitherProps = {
   /** On-screen size of one dithered pixel, in CSS px. */
   cellSize?: number;
   spread?: number;
-  /** Palette as CSS colours. Defaults to the `--dither-palette` token. */
+  /**
+   * Palette as CSS colours, each optionally with a weight ("#ff00dc 1.2").
+   * Defaults to the `--dither-palette` token.
+   */
   palette?: readonly string[];
   /**
    * React to the mouse: it leaves a fading trail where the spread rises. Only
@@ -124,7 +143,7 @@ export function Dither({
   src,
   alt = '',
   priority,
-  mode = 'bayer',
+  mode = DITHER_MODE,
   matrixSize = DITHER_MATRIX_SIZE,
   cellSize = DITHER_CELL_SIZE,
   spread = DITHER_SPREAD,
@@ -186,13 +205,17 @@ export function Dither({
     const root = rootRef.current;
     const renderer = rendererRef.current;
     if (!root || !renderer) return;
+    const entries = (palette ?? readPalette(root)).map(parsePaletteEntry);
     const params: DitherParams = {
-      matrixSize: mode === 'bayer' ? matrixSize : DITHER_MATRIX_SIZE,
+      mode,
+      matrixSize,
       spread,
       trailBoost,
       trailFadeBottom,
       trailFadeTop: fadeEdge === 'top',
-      palette: (palette ?? readPalette(root)).map(parseColor),
+      palette: entries.map((e) => parseColor(e.color)),
+      paletteWeights: entries.map((e) => e.weight),
+      colorWeights: DITHER_COLOR_WEIGHTS,
       background: parseColor(getComputedStyle(root).getPropertyValue('--color-bg')),
     };
     paramsRef.current = params;

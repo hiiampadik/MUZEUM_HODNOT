@@ -1,3 +1,9 @@
+/**
+ * Dithering algorithm: ordered (Bayer threshold matrix, per pixel — computed
+ * in the shader) or Atkinson error diffusion (sequential — computed on the CPU).
+ */
+export type DitherMode = 'bayer' | 'atkinson';
+
 /** Side of the Bayer threshold matrix: 2×2, 4×4 or 8×8. */
 export type BayerSize = 2 | 4 | 8;
 
@@ -42,7 +48,10 @@ export function parseColor(color: string): RGB {
   return [r, g, b];
 }
 
-/** The `--dither-palette` token: a comma-separated list of colours. */
+/**
+ * The `--dither-palette` token: a comma-separated list of palette entries
+ * (see parsePaletteEntry).
+ */
 export function readPalette(el: Element): string[] {
   return getComputedStyle(el)
     .getPropertyValue('--dither-palette')
@@ -51,12 +60,52 @@ export function readPalette(el: Element): string[] {
     .filter(Boolean);
 }
 
-// Perceptual weights for the colour distance (Rec. 601 luma), so e.g. black
-// lands on the darkest palette colour (blue) rather than an arbitrary one.
-// Mirrored in the shader (renderers.ts).
-const WR = 0.299;
-const WG = 0.587;
-const WB = 0.114;
+/**
+ * A palette entry: a CSS colour, optionally followed by a weight ("#ff00dc 1.2").
+ * The weight scales how far the colour reaches: > 1 makes it win pixels that
+ * are farther away (used more), < 1 the opposite. Default 1. Colours share the
+ * greys about evenly, so small steps (±0.05) already shift the balance a lot.
+ */
+export function parsePaletteEntry(entry: string): { color: string; weight: number } {
+  const match = /^(.*\S)\s+(\d*\.?\d+)$/.exec(entry.trim());
+  return match ? { color: match[1], weight: Number(match[2]) } : { color: entry.trim(), weight: 1 };
+}
+
+/**
+ * Per-channel weights of the squared RGB distance used to pick the nearest
+ * palette colour. [1, 1, 1] = plain RGB distance; Rec. 601 luma weights
+ * (0.299, 0.587, 0.114) match by brightness instead — then every dark tone
+ * lands on the palette's darkest colour.
+ */
+export type ColorWeights = readonly [number, number, number];
+
+/**
+ * Palette colour closest to (r, g, b) by the weighted distance, divided by the
+ * square of the colour's own weight.
+ */
+function nearestColor(
+  palette: readonly RGB[],
+  paletteWeights: readonly number[],
+  [wr, wg, wb]: ColorWeights,
+  r: number,
+  g: number,
+  b: number,
+): RGB {
+  let best = palette[0];
+  let bestDist = Infinity;
+  palette.forEach((p, i) => {
+    const dr = r - p[0];
+    const dg = g - p[1];
+    const db = b - p[2];
+    const w = paletteWeights[i] ?? 1;
+    const dist = (wr * dr * dr + wg * dg * dg + wb * db * db) / (w * w);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = p;
+    }
+  });
+  return best;
+}
 
 /**
  * Ordered dithering of `data` in place (CPU fallback of the shader): each
@@ -68,6 +117,8 @@ export function ditherBayer(
   width: number,
   height: number,
   palette: readonly RGB[],
+  paletteWeights: readonly number[],
+  weights: ColorWeights,
   matrixSize: BayerSize,
   spread: number,
 ) {
@@ -78,26 +129,74 @@ export function ditherBayer(
     for (let x = 0; x < width; x++) {
       const i = (y * width + x) * 4;
       const t = (matrix[row + (x % matrixSize)] - 0.5) * amount;
-      const r = data[i] + t;
-      const g = data[i + 1] + t;
-      const b = data[i + 2] + t;
-
-      let best = palette[0];
-      let bestDist = Infinity;
-      for (const p of palette) {
-        const dr = r - p[0];
-        const dg = g - p[1];
-        const db = b - p[2];
-        const dist = WR * dr * dr + WG * dg * dg + WB * db * db;
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = p;
-        }
-      }
+      const best = nearestColor(
+        palette,
+        paletteWeights,
+        weights,
+        data[i] + t,
+        data[i + 1] + t,
+        data[i + 2] + t,
+      );
       data[i] = best[0];
       data[i + 1] = best[1];
       data[i + 2] = best[2];
       data[i + 3] = 255;
+    }
+  }
+}
+
+/**
+ * Neighbours that receive 1/8 of a pixel's error each, as [dx, dy]. The
+ * remaining 2/8 is dropped, which keeps highlights and shadows clean.
+ */
+const ATKINSON: readonly (readonly [number, number])[] = [
+  [1, 0],
+  [2, 0],
+  [-1, 1],
+  [0, 1],
+  [1, 1],
+  [0, 2],
+];
+
+/**
+ * Atkinson error diffusion of `data` in place: each pixel snaps to the nearest
+ * palette colour and passes its error on to the not-yet-visited neighbours.
+ * Sequential, so it can't run in the shader.
+ */
+export function ditherAtkinson(
+  data: Uint8ClampedArray,
+  width: number,
+  height: number,
+  palette: readonly RGB[],
+  paletteWeights: readonly number[],
+  weights: ColorWeights,
+) {
+  // Unclamped working copy: accumulated error may overshoot 0–255.
+  const work = Float32Array.from(data);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const r = work[i];
+      const g = work[i + 1];
+      const b = work[i + 2];
+      const best = nearestColor(palette, paletteWeights, weights, r, g, b);
+      data[i] = best[0];
+      data[i + 1] = best[1];
+      data[i + 2] = best[2];
+      data[i + 3] = 255;
+
+      const er = (r - best[0]) / 8;
+      const eg = (g - best[1]) / 8;
+      const eb = (b - best[2]) / 8;
+      for (const [dx, dy] of ATKINSON) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || nx >= width || ny >= height) continue;
+        const j = (ny * width + nx) * 4;
+        work[j] += er;
+        work[j + 1] += eg;
+        work[j + 2] += eb;
+      }
     }
   }
 }

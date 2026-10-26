@@ -10,3 +10,9 @@
   margin: 0 auto var(--space-md);
   width: 100%;
 }
+
+.titleCenter {
+  text-align: center;
+  margin: 0 auto var(--space-md);
+  width: 100%;
+}

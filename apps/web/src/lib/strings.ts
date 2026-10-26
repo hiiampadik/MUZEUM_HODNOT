@@ -102,10 +102,20 @@ export const exhibitionList = {
 
 /** School list under the value-generator map. */
 export const schoolList = {
-  title: 'Školy',
+  title: 'Školy, ktoré čakajú na Váš dar:',
   /** Column names. */
   school: 'Škola',
   address: 'Adresa',
+  /** Search field above the list (filters by name and address). */
+  searchLabel: 'Hľadať školu',
+  searchPlaceholder: 'Hľadať podľa názvu alebo adresy',
+  noResults: 'Hľadaniu nezodpovedá žiadna škola.',
+  /** Clears the search field. */
+  searchClear: 'Vymazať hľadanie',
+  /** Expands the list past the first rows; `n` = number of hidden schools. */
+  showAll: (n: number) => `Zobraziť ďalšie (${n})`,
+  /** Collapses the list back to the first rows. */
+  showLess: 'Zobraziť menej',
   /** Label of the campaign link pill in the map popover (points only store the URL). */
   campaignLink: 'Darujme.sk',
   donated: 'Zatiaľ ste spolu darovali',

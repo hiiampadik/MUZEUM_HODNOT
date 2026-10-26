@@ -1,12 +1,118 @@
 /* Dashed rows mirror the homepage's upcoming-exhibition rows (home.module.css). */
 .section {
-  margin-block: var(--space-2xl);
+  margin: var(--space-3xl) 0 var(--space-4xl);
 }
 
 .title {
   display: block;
   text-align: center;
   margin-bottom: var(--space-lg);
+}
+
+/* ---- Search field (between the map and the rows) ---- */
+/* Narrow layout width, like the map above it. The lens (left) and the clear
+   cross (right) sit in mirrored slots of the same size and inset. */
+.search {
+  --icon-slot: var(--space-lg);
+  --icon-inset: var(--space-2xs);
+  position: relative;
+  max-width: var(--width-narrow);
+  margin: 0 auto var(--space-md);
+}
+
+.searchLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--space-xs) calc(var(--icon-inset) + var(--icon-slot));
+  border: none;
+  border-radius: 20px;
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  height: 38px;
+}
+
+/* The browser's own cross is replaced by .searchClear (always visible). */
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* 1px black lines, sized by the slot. */
+.searchIcon {
+  width: var(--space-sm);
+  height: var(--space-sm);
+  color: var(--color-fg);
+  stroke-width: 1px;
+  stroke-linecap: square;
+}
+
+.searchLens,
+.searchClear {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+/* Centered in a slot as big as the clear button. */
+.searchLens {
+  left: calc(var(--icon-inset) + (var(--icon-slot) - var(--space-sm)) / 2);
+  pointer-events: none;
+}
+
+.searchClear {
+  right: var(--icon-inset);
+  width: var(--icon-slot);
+  height: var(--icon-slot);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+@media (hover: hover) {
+  .searchClear:hover {
+    background: var(--color-bg);
+  }
+}
+
+.searchClear:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
+}
+
+.searchInput::placeholder {
+  color: var(--color-muted);
+}
+
+.searchInput:focus-visible {
+  outline: 2px solid var(--accent, var(--color-fg));
+  outline-offset: 2px;
+}
+
+.empty {
+  margin: 0;
+  padding: 0 var(--space-md);
+  text-align: center;
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-md);
 }
 
 .list {

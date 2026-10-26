@@ -9,7 +9,7 @@
 
 .map {
   width: 100%;
-  height: min(70vh, 600px);
+  height: min(60vh, 500px);
   @media (max-width: 768px) {
     height: min(50vh, 400px);
   }

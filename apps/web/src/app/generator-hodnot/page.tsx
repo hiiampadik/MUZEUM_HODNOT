@@ -43,18 +43,24 @@ export default async function ValueGeneratorPage() {
       <CoverImage value={page?.topCover} placement="top" priority background className="cover-bg-top" />
 
       <Container width="narrow">
-        <Heading className={`${builder.titleLeft} reveal`} style={revealOrder(1)}>{pages.valueGenerator}</Heading>
+        <Heading className={`${builder.titleCenter} reveal`} style={revealOrder(1)}>{pages.valueGenerator}</Heading>
       </Container>
+
+      {showMap && points.length > 0 && (
+        <>
+          <Container width="narrow" className="reveal">
+            <ValueMap points={points} />
+          </Container>
+          <Container className="reveal">
+            <SchoolList schools={points} />
+          </Container>
+        </>
+      )}
 
       {/* Full width: the builder constrains each block to its own layout width. */}
       <PageBuilder content={page?.content} />
 
-      {showMap && points.length > 0 && (
-        <Container className="reveal">
-          <ValueMap points={points} />
-          <SchoolList schools={points} />
-        </Container>
-      )}
+
 
       <CoverImage value={page?.bottomCover} placement="bottom" background className="cover-bg-bottom" />
     </main>

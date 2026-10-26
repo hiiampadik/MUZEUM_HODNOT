@@ -27,7 +27,7 @@ export const DITHER_MODE: DitherMode = 'bayer';
 // export const DITHER_MATRIX_SIZE: BayerSize = 2;
 
 /** On-screen size of one dithered pixel, in CSS px. */
-export const DITHER_CELL_SIZE = 1;
+export const DITHER_CELL_SIZE = 2;
 /** Side of the Bayer matrix. */
 export const DITHER_MATRIX_SIZE: BayerSize = 2;
 

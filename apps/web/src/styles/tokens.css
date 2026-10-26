@@ -51,14 +51,14 @@
   --accent-link: #0099ff;
   --accent-text-selection: #9ed9ff;
 
-  /* Live dither palette (Dither component): yellow, blue, magenta, white.
-     White multiplies away into the page background. An optional number after
-     a colour is its weight: > 1 = used more, < 1 = less (steps of ~0.02 are
-     already visible). Tuned on the fallback covers to ~34 % yellow, 29 % blue,
-     37 % magenta of the coloured pixels.
-     TODO: pick the final shades with design. */
-  /*--dither-palette: #ff0000, #00ff00, #0000ff, #ffff00, #ffffff;*/
-  --dither-palette: #fff300 1.3, #00b2ff 1.15, #ff2b8a 0.9, #ffffff;
+  /* Live dither palette (Dither component): red, green, magenta, white.
+     White multiplies away into the page background. Matched to the approved
+     homepage render; mind that macOS screenshots are Display P3, so #ff0000
+     multiplied onto the page bg shows up there as #d82e20 (not a darker red).
+     An optional number after a colour is its weight: > 1 = used more,
+     < 1 = less (steps of ~0.02 are already visible). */
+  --dither-palette: #ff0000, #00ff00, #ff00f2, #ffffff;
+  /*--dither-palette: #fff300 1.3, #00b2ff 1.15, #ff2b8a 0.9, #ffffff;*/
 
   /* Active section accent — overridden per section via inline --accent */
   --accent: var(--accent-link);
